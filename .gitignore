@@ -1,0 +1,10 @@
+# Rust target build output
+/target/
+
+# Base de datos SQLite local
+*.db
+portafolio.db
+
+# Datos exportados
+datos_cartera.json
+datos_cartera.js
