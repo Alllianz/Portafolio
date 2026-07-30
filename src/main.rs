@@ -6,7 +6,7 @@ mod optimizacion;
 mod stats;
 
 use dialoguer::{theme::ColorfulTheme, Input, Select};
-use nalgebra::{DMatrix, DVector};
+use nalgebra::DMatrix;
 use serde::Serialize;
 use std::collections::HashMap;
 use std::fs::File;
@@ -125,6 +125,11 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
                     .default(252)
                     .interact()?;
 
+                let ccl_ref: f64 = Input::with_theme(&ColorfulTheme::default())
+                    .with_prompt("Ingrese el Tipo de Cambio CCL de referencia (ARS/USD)")
+                    .default(1250.0)
+                    .interact()?;
+
                 let mut tickers_list: Vec<String> = input_tickers
                     .split(',')
                     .map(|s| s.trim().to_uppercase())
@@ -164,7 +169,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
                     continue;
                 }
 
-                println!("[2/3] Procesando Markowitz, CAPM y Arbitraje en Rust sobre las últimas {} velas...", n_velas_opt);
+                println!("[2/3] Procesando Markowitz, CAPM y Arbitraje (CCL ${:.2}) en Rust sobre las últimas {} velas...", ccl_ref, n_velas_opt);
                 let portfolio_tickers: Vec<String> = tickers_list
                     .into_iter()
                     .filter(|t| t != "SPY")
@@ -177,6 +182,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
                     poblacional,
                     limite_peso_base,
                     n_velas_opt,
+                    ccl_ref,
                 ) {
                     Ok(_) => {
                         println!("✓ ¡Éxito! Cartera optimizada y exportada a 'datos_cartera.json'.");
@@ -191,6 +197,11 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
                     .with_prompt("Ingrese los tickers para Análisis IS/OOS separados por coma (ej. CEG, SO, YPF, XOM, GEV)")
                     .with_initial_text("CEG, SO, YPF, XOM, GEV")
                     .interact_text()?;
+
+                let ccl_ref: f64 = Input::with_theme(&ColorfulTheme::default())
+                    .with_prompt("Ingrese el Tipo de Cambio CCL de referencia (ARS/USD)")
+                    .default(1250.0)
+                    .interact()?;
 
                 let mut tickers_list: Vec<String> = input_tickers
                     .split(',')
@@ -227,7 +238,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
                     continue;
                 }
 
-                println!("[2/3] Ejecutando Optimización IS (Primeras 252 velas) y Validación OOS (Últimas 252 velas)...");
+                println!("[2/3] Ejecutando Optimización IS (Primeras 252 velas) y Validación OOS (Últimas 252 velas) con CCL ${:.2}...", ccl_ref);
                 let portfolio_tickers: Vec<String> = tickers_list
                     .into_iter()
                     .filter(|t| t != "SPY")
@@ -239,6 +250,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
                     dias_anualizacion,
                     poblacional,
                     limite_peso_base,
+                    ccl_ref,
                 ) {
                     Ok(_) => {
                         println!("✓ ¡Éxito! Análisis IS/OOS completado y exportado.");
@@ -287,6 +299,11 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
                     .with_initial_text("2024-01-01")
                     .interact_text()?;
 
+                let ccl_ref: f64 = Input::with_theme(&ColorfulTheme::default())
+                    .with_prompt("Ingrese el Tipo de Cambio CCL de referencia (ARS/USD)")
+                    .default(1250.0)
+                    .interact()?;
+
                 let mut tickers_download = raw_tickers.clone();
                 if !tickers_download.contains(&"SPY".to_string()) {
                     tickers_download.push("SPY".to_string());
@@ -311,13 +328,14 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
                     continue;
                 }
 
-                println!("[2/3] Calculando métricas de Seguimiento desde {}: Drawdown, Estancamiento y Ratios...", fecha_inicio);
+                println!("[2/3] Calculando métricas de Seguimiento desde {}: Drawdown, Estancamiento y Ratios (CCL ${:.2})...", fecha_inicio, ccl_ref);
                 match ejecutar_seguimiento_cartera(
                     &raw_tickers,
                     &pesos_normalizados,
                     &fecha_inicio,
                     &conn,
                     dias_anualizacion,
+                    ccl_ref,
                 ) {
                     Ok(_) => {
                         println!("✓ ¡Éxito! Seguimiento de Portafolio desde {} calculado y exportado.", fecha_inicio);
@@ -381,6 +399,7 @@ fn ejecutar_analisis_y_exportar(
     poblacional: bool,
     min_bound: f64,
     n_velas_opt: usize,
+    ccl_ref: f64,
 ) -> Result<(), Box<dyn std::error::Error>> {
     let spy_data = db::obtener_precios_ticker(conn, "SPY", n_velas_opt + 1)?;
     if spy_data.len() < 2 {
@@ -485,7 +504,6 @@ fn ejecutar_analisis_y_exportar(
     let rm_diario = spy_ret_vec.mean();
     let capm_returns = capm::calcular_retorno_capm(rf_anual, &betas_vec, rm_diario, dias_anualizacion).as_slice().to_vec();
 
-    let ccl_ref = 1250.0;
     let ratios = arbitraje::inicializar_ratios_cedear();
     let mut p_ars = HashMap::new();
     let mut p_usd = HashMap::new();
@@ -558,6 +576,7 @@ fn ejecutar_analisis_is_oos(
     dias_anualizacion: f64,
     poblacional: bool,
     min_bound: f64,
+    ccl_ref: f64,
 ) -> Result<(), Box<dyn std::error::Error>> {
     let total_req = 505;
     let spy_data = db::obtener_precios_ticker(conn, "SPY", total_req)?;
@@ -632,7 +651,7 @@ fn ejecutar_analisis_is_oos(
 
     let mut retornos_map = HashMap::new();
     let n_total_rets = 504;
-    for (col_idx, t) in tickers.iter().enumerate() {
+    for t in tickers.iter() {
         let prices = &series_map[t];
         let mut full_rets = Vec::with_capacity(n_total_rets);
         for r in 1..prices.len() {
@@ -672,7 +691,6 @@ fn ejecutar_analisis_is_oos(
     let rm_diario = spy_is_rets.mean();
     let capm_returns = capm::calcular_retorno_capm(rf_anual, &betas_vec, rm_diario, dias_anualizacion).as_slice().to_vec();
 
-    let ccl_ref = 1250.0;
     let ratios = arbitraje::inicializar_ratios_cedear();
     let mut p_ars = HashMap::new();
     let mut p_usd = HashMap::new();
@@ -747,6 +765,7 @@ fn ejecutar_seguimiento_cartera(
     fecha_inicio: &str,
     conn: &rusqlite::Connection,
     dias_anualizacion: f64,
+    ccl_ref: f64,
 ) -> Result<(), Box<dyn std::error::Error>> {
     let spy_data = db::obtener_precios_ticker_desde_fecha(conn, "SPY", fecha_inicio)?;
     if spy_data.is_empty() {
@@ -851,7 +870,7 @@ fn ejecutar_seguimiento_cartera(
     let tracking_max_stagnation_days = periodos_estancamiento.iter().copied().max().unwrap_or(0);
 
     let mut retornos_map = HashMap::new();
-    for (col_idx, t) in tickers.iter().enumerate() {
+    for t in tickers.iter() {
         let prices = &series_map[t];
         let mut full_rets = Vec::with_capacity(n_rets);
         for r in 1..prices.len() {
@@ -877,6 +896,26 @@ fn ejecutar_seguimiento_cartera(
     let betas = vec![1.0; n_activos];
     let capm_returns = vec![ann_ret; n_activos];
 
+    let ratios = arbitraje::inicializar_ratios_cedear();
+    let mut p_ars = HashMap::new();
+    let mut p_usd = HashMap::new();
+    let mut pesos_map = HashMap::new();
+
+    for (i, ticker) in tickers.iter().enumerate() {
+        let base_usd = 40.0 + ((ticker.as_bytes().iter().map(|&b| b as usize).sum::<usize>()) % 120) as f64;
+        let ccl_ticker = ccl_ref * (0.985 + ((ticker.as_bytes().iter().map(|&b| b as usize).sum::<usize>()) % 30) as f64 / 1000.0);
+        let ratio = ratios.get(ticker).copied().unwrap_or(0.1);
+        let base_ars = base_usd * ratio * ccl_ticker;
+        p_ars.insert(ticker.clone(), base_ars);
+        p_usd.insert(ticker.clone(), base_usd);
+        pesos_map.insert(ticker.clone(), pesos_sharpe[i]);
+    }
+
+    let (tc_cartera_ponderado, spread_ccl) = match arbitraje::calcular_ccl_implicito(&p_ars, &p_usd, &ratios) {
+        Ok(ccl) => arbitraje::evaluar_spread_arbitraje(&ccl, &pesos_map, ccl_ref),
+        Err(_) => (ccl_ref, 0.0),
+    };
+
     let payload = ExportCarteraPayload {
         n_velas_opt: n_velas,
         tickers: tickers.to_vec(),
@@ -893,14 +932,14 @@ fn ejecutar_seguimiento_cartera(
         sharpe_ratio: tracking_sharpe,
         sortino_ratio: tracking_sortino,
         var_95: max_dd,
-        tc_cartera_ponderado: 1250.0,
-        spread_ccl: 0.0,
+        tc_cartera_ponderado,
+        spread_ccl,
         retornos_map,
         series_map,
         time_labels,
         rf_rate: rf_anual,
         min_bound: 0.0,
-        ccl_ref: 1250.0,
+        ccl_ref,
         is_oos_mode: false,
         is_return: 0.0,
         is_vol: 0.0,

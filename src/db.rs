@@ -17,7 +17,7 @@ pub fn init_db(db_path: &str) -> Result<Connection> {
 
 /// Guarda o reemplaza los registros de precios de un ticker en la base de datos.
 pub fn guardar_precios(conn: &Connection, ticker: &str, datas: &[(String, f64)]) -> Result<usize> {
-    let mut tx = conn.unchecked_transaction()?;
+    let tx = conn.unchecked_transaction()?;
     let mut count = 0;
     {
         let mut stmt = tx.prepare(

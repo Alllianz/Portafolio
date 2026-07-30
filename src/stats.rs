@@ -58,7 +58,6 @@ pub fn calcular_matriz_covarianza(retornos: &DMatrix<f64>, poblacional: bool) ->
     let divisor = if poblacional { n } else { n - 1.0 };
     let cols = retornos.ncols();
     
-    let mut cov_matrix = DMatrix::zeros(cols, cols);
     let medias = calcular_retorno_esperado(retornos);
     
     // Centrar los retornos
@@ -71,7 +70,7 @@ pub fn calcular_matriz_covarianza(retornos: &DMatrix<f64>, poblacional: bool) ->
     }
     
     // Covarianza = (X^T * X) / divisor
-    cov_matrix = (centrados.transpose() * centrados) / divisor;
+    let cov_matrix = (centrados.transpose() * centrados) / divisor;
     cov_matrix
 }
 
