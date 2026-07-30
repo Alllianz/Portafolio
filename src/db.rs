@@ -49,6 +49,22 @@ pub fn obtener_precios_ticker(conn: &Connection, ticker: &str, limite_velas: usi
     Ok(res)
 }
 
+/// Obtiene todos los registros de precios para un ticker desde una fecha de inicio (YYYY-MM-DD), ordenados cronológicamente.
+pub fn obtener_precios_ticker_desde_fecha(conn: &Connection, ticker: &str, fecha_inicio: &str) -> Result<Vec<(String, f64)>> {
+    let mut stmt = conn.prepare(
+        "SELECT fecha, precio FROM precios_historicos WHERE ticker = ? AND fecha >= ? ORDER BY fecha ASC",
+    )?;
+    let rows = stmt.query_map(params![ticker, fecha_inicio], |row| {
+        Ok((row.get(0)?, row.get(1)?))
+    })?;
+
+    let mut res = Vec::new();
+    for row in rows {
+        res.push(row?);
+    }
+    Ok(res)
+}
+
 /// Obtiene la lista de todos los tickers almacenados en la base de datos.
 pub fn obtener_tickers_guardados(conn: &Connection) -> Result<Vec<String>> {
     let mut stmt = conn.prepare("SELECT DISTINCT ticker FROM precios_historicos ORDER BY ticker")?;
