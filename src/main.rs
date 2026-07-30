@@ -180,8 +180,8 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
                 ) {
                     Ok(_) => {
                         println!("✓ ¡Éxito! Cartera optimizada y exportada a 'datos_cartera.json'.");
-                        println!("[3/3] Proyectando Dashboard HTML automáticamente en el navegador...\n");
-                        proyectar_dashboard();
+                        println!("[3/3] Proyectando Dashboard_Estandar.html automáticamente en el navegador...\n");
+                        proyectar_dashboard_especifico("Dashboard_Estandar.html");
                     }
                     Err(e) => println!("❌ Error durante la optimización: {}\n", e),
                 }
@@ -242,8 +242,8 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
                 ) {
                     Ok(_) => {
                         println!("✓ ¡Éxito! Análisis IS/OOS completado y exportado.");
-                        println!("[3/3] Proyectando Dashboard HTML con reporte IS/OOS...\n");
-                        proyectar_dashboard();
+                        println!("[3/3] Proyectando Dashboard_IS_OOS.html con reporte IS/OOS...\n");
+                        proyectar_dashboard_especifico("Dashboard_IS_OOS.html");
                     }
                     Err(e) => println!("❌ Error en análisis IS/OOS: {}\n", e),
                 }
@@ -321,8 +321,8 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
                 ) {
                     Ok(_) => {
                         println!("✓ ¡Éxito! Seguimiento de Portafolio desde {} calculado y exportado.", fecha_inicio);
-                        println!("[3/3] Proyectando Dashboard HTML de Seguimiento...\n");
-                        proyectar_dashboard();
+                        println!("[3/3] Proyectando Dashboard_Seguimiento.html...\n");
+                        proyectar_dashboard_especifico("Dashboard_Seguimiento.html");
                     }
                     Err(e) => println!("❌ Error en seguimiento: {}\n", e),
                 }
@@ -356,21 +356,21 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     Ok(())
 }
 
-fn proyectar_dashboard() {
-    let parent_path = std::path::Path::new("../Dashboard_Motor_Portafolio.html");
-    let current_path = std::path::Path::new("Dashboard_Motor_Portafolio.html");
+fn proyectar_dashboard_especifico(filename: &str) {
+    let parent_path = std::path::Path::new("../").join(filename);
+    let current_path = std::path::Path::new(filename);
 
     let target = if parent_path.exists() {
-        "../Dashboard_Motor_Portafolio.html"
+        format!("../{}", filename)
     } else if current_path.exists() {
-        "Dashboard_Motor_Portafolio.html"
+        filename.to_string()
     } else {
-        "../Dashboard_Motor_Portafolio.html"
+        format!("../{}", filename)
     };
 
     #[cfg(target_os = "windows")]
     let _ = std::process::Command::new("cmd")
-        .args(["/C", "start", "", target])
+        .args(["/C", "start", "", &target])
         .spawn();
 }
 
