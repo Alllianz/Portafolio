@@ -36,6 +36,10 @@ struct ExportCarteraPayload {
     rf_rate: f64,
     min_bound: f64,
     ccl_ref: f64,
+    // Frontera Eficiente real calculada por optimización de Lagrange
+    frontera_puntos: Vec<(f64, f64)>, // Vec<(volatilidad_anual, retorno_anual)>
+    // Matriz de Correlación empírica real
+    matriz_correlacion: Vec<Vec<f64>>,
     // Campos de Validación IS / OOS
     is_oos_mode: bool,
     is_return: f64,
@@ -76,8 +80,9 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
             "2. Optimizar Cartera Estándar (Últimas N Velas) y Proyectar Dashboard",
             "3. Optimización & Validación IS / OOS (In-Sample 252v / Out-Of-Sample 252v)",
             "4. Seguimiento de Portafolio Personalizado (Evolución de Capital vs SPY)",
-            "5. Ver Tickers y Resumen de Base de Datos",
-            "6. Salir",
+            "5. Generar y Proyectar Reporte Institucional (Colores & Gráficos 1920x1080)",
+            "6. Ver Tickers y Resumen de Base de Datos",
+            "7. Salir",
         ];
 
         let seleccion = Select::with_theme(&ColorfulTheme::default())
@@ -121,8 +126,8 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
                     .interact_text()?;
 
                 let n_velas_opt: usize = Input::with_theme(&ColorfulTheme::default())
-                    .with_prompt("Ingrese la cantidad de velas a utilizar para la optimización (ej. 50, 126, 252, 715)")
-                    .default(252)
+                    .with_prompt("Ingrese la cantidad de velas a utilizar para la optimización (ej. 252, 504, 1260, 2520)")
+                    .default(2520)
                     .interact()?;
 
                 let ccl_ref: f64 = Input::with_theme(&ColorfulTheme::default())
@@ -346,6 +351,16 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
                 }
             }
             4 => {
+                println!("\n[1/2] Compilando y ejecutando generador de Reporte Institucional...");
+                #[cfg(target_os = "windows")]
+                let _ = std::process::Command::new("cargo")
+                    .args(["run", "--bin", "generar_reporte"])
+                    .status();
+
+                println!("[2/2] Proyectando Portafolio_Agosto_16_9.html en el navegador...\n");
+                proyectar_dashboard_especifico("Portafolio_Agosto_16_9.html");
+            }
+            5 => {
                 println!("\n--- Resumen de la Base de Datos SQLite (portafolio.db) ---");
                 match db::obtener_resumen_db(&conn) {
                     Ok(resumen) => {
@@ -363,7 +378,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
                 }
                 println!("--------------------------------------------------\n");
             }
-            5 => {
+            6 => {
                 println!("Saliendo de la consola del motor...");
                 break;
             }
@@ -524,6 +539,34 @@ fn ejecutar_analisis_y_exportar(
         Err(_) => (ccl_ref, 0.0),
     };
 
+    // Matriz de Correlación Empírica Real calculada a partir de los retornos históricos reales
+    let mut matriz_correlacion = vec![vec![0.0; n_activos]; n_activos];
+    for r in 0..n_activos {
+        let std_r = covarianza[(r, r)].sqrt().max(1e-12);
+        for c in 0..n_activos {
+            let std_c = covarianza[(c, c)].sqrt().max(1e-12);
+            let corr = covarianza[(r, c)] / (std_r * std_c);
+            matriz_correlacion[r][c] = (corr * 100.0).round() / 100.0;
+        }
+    }
+
+    // Frontera Eficiente Real calculada variando los retornos objetivos
+    let mut frontera_puntos = Vec::new();
+    let min_ret = esperados.iter().copied().fold(f64::INFINITY, f64::min);
+    let max_ret = esperados.iter().copied().fold(f64::NEG_INFINITY, f64::max);
+    let n_puntos_frontera = 15;
+    for step in 0..=n_puntos_frontera {
+        let target_ret_anual = min_ret + (max_ret - min_ret) * (step as f64 / n_puntos_frontera as f64);
+        let target_ret_diario = target_ret_anual / dias_anualizacion;
+        
+        let res_point = optimizacion::optimizar_maximo_sharpe(&esperados_diarios, &covarianza, target_ret_diario, &limites, 0);
+        let w_opt = &res_point.pesos;
+        let p_vol = (w_opt.dot(&(&covarianza * w_opt))).sqrt() * dias_anualizacion.sqrt();
+        let p_ret = w_opt.dot(&esperados_diarios) * dias_anualizacion;
+        frontera_puntos.push((p_vol, p_ret));
+    }
+    frontera_puntos.sort_by(|a, b| a.0.partial_cmp(&b.0).unwrap_or(std::cmp::Ordering::Equal));
+
     let payload = ExportCarteraPayload {
         n_velas_opt,
         tickers: tickers.to_vec(),
@@ -548,6 +591,8 @@ fn ejecutar_analisis_y_exportar(
         rf_rate: rf_anual,
         min_bound,
         ccl_ref,
+        frontera_puntos,
+        matriz_correlacion,
         is_oos_mode: false,
         is_return: 0.0,
         is_vol: 0.0,
@@ -713,6 +758,18 @@ fn ejecutar_analisis_is_oos(
 
     let var_95 = (1.645 * (is_vol / dias_anualizacion.sqrt())) - (is_return / dias_anualizacion);
 
+    let mut matriz_correlacion = vec![vec![0.0; n_activos]; n_activos];
+    for r in 0..n_activos {
+        let std_r = is_covarianza[(r, r)].sqrt().max(1e-12);
+        for c in 0..n_activos {
+            let std_c = is_covarianza[(c, c)].sqrt().max(1e-12);
+            let corr = is_covarianza[(r, c)] / (std_r * std_c);
+            matriz_correlacion[r][c] = (corr * 100.0).round() / 100.0;
+        }
+    }
+
+    let frontera_puntos = vec![(is_vol, is_return)];
+
     let payload = ExportCarteraPayload {
         n_velas_opt: 504,
         tickers: tickers.to_vec(),
@@ -737,6 +794,8 @@ fn ejecutar_analisis_is_oos(
         rf_rate: rf_anual,
         min_bound,
         ccl_ref,
+        frontera_puntos,
+        matriz_correlacion,
         is_oos_mode: true,
         is_return,
         is_vol,
@@ -940,6 +999,8 @@ fn ejecutar_seguimiento_cartera(
         rf_rate: rf_anual,
         min_bound: 0.0,
         ccl_ref,
+        frontera_puntos: vec![(vol_anual, ann_ret)],
+        matriz_correlacion: vec![vec![1.0; n_activos]; n_activos],
         is_oos_mode: false,
         is_return: 0.0,
         is_vol: 0.0,

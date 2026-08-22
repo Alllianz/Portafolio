@@ -5,6 +5,7 @@ pub fn inicializar_ratios_cedear() -> HashMap<String, f64> {
     let mut ratios = HashMap::new();
     ratios.insert("PEP".to_string(), 1.0 / 18.0);
     ratios.insert("VIST".to_string(), 1.0 / 3.0);
+    ratios.insert("VST".to_string(), 1.0 / 5.0);
     ratios.insert("IWM".to_string(), 1.0 / 10.0);
     ratios.insert("DIA".to_string(), 1.0 / 20.0);
     ratios.insert("SPY".to_string(), 1.0 / 20.0);
@@ -13,6 +14,8 @@ pub fn inicializar_ratios_cedear() -> HashMap<String, f64> {
     ratios.insert("SO".to_string(), 1.0 / 5.0);
     ratios.insert("YPF".to_string(), 1.0 / 1.0);
     ratios.insert("XOM".to_string(), 1.0 / 5.0);
+    ratios.insert("WMB".to_string(), 1.0 / 3.0);
+    ratios.insert("ETN".to_string(), 1.0 / 15.0);
     ratios.insert("GEV".to_string(), 1.0 / 10.0);
     ratios.insert("AAPL".to_string(), 1.0 / 10.0);
     ratios.insert("MSFT".to_string(), 1.0 / 30.0);

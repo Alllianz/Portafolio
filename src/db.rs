@@ -90,3 +90,15 @@ pub fn obtener_resumen_db(conn: &Connection) -> Result<Vec<(String, usize, Strin
     }
     Ok(res)
 }
+
+/// Obtiene la última fecha (máxima) registrada en la base de datos para un ticker dado.
+pub fn obtener_ultima_fecha_ticker(conn: &Connection, ticker: &str) -> Result<Option<String>> {
+    let mut stmt = conn.prepare("SELECT MAX(fecha) FROM precios_historicos WHERE ticker = ?")?;
+    let mut rows = stmt.query(params![ticker])?;
+    if let Some(row) = rows.next()? {
+        let max_fecha: Option<String> = row.get(0)?;
+        Ok(max_fecha)
+    } else {
+        Ok(None)
+    }
+}

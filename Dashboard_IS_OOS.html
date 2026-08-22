@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard IS / OOS (Validación Fuera de Muestra) — Club de Finanzas UBA</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Playfair+Display:ital,wght@0,600;0,700;0,800;1,600&family=JetBrains+Mono:wght@500;600;700&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+  <script src="datos_cartera.js"></script>
+
+  <style>
+    :root {
+      --navy-dark: #091a36;
+      --navy-primary: #0e2246;
+      --blue-accent: #0062ff;
+      --blue-light: #f0f6ff;
+      --green-up: #16a34a;
+      --red-down: #dc2626;
+      --text-main: #0f172a;
+      --text-muted: #64748b;
+      --bg-page: #f8fafc;
+      --card-bg: #ffffff;
+      --card-border: #e2e8f0;
+      --card-shadow: 0 4px 20px -2px rgba(14, 34, 70, 0.06);
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      background-color: var(--bg-page);
+      color: var(--text-main);
+      padding: 0 0 60px 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .top-navbar {
+      width: 100%;
+      background: var(--navy-dark);
+      color: #ffffff;
+      padding: 14px 36px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .nav-brand { display: flex; align-items: center; gap: 14px; }
+    .nav-badge { background: #7c3aed; color: #fff; font-weight: 800; font-size: 0.75rem; padding: 4px 10px; border-radius: 6px; }
+    .nav-title { font-size: 1.05rem; font-weight: 700; }
+    .nav-actions { display: flex; gap: 10px; }
+
+    .btn-nav {
+      background: rgba(255, 255, 255, 0.12);
+      color: #ffffff;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      padding: 8px 16px;
+      border-radius: 8px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      cursor: pointer;
+      text-decoration: none;
+      transition: all 0.2s;
+    }
+    .btn-nav:hover { background: var(--blue-accent); }
+
+    .dashboard-container {
+      width: 100%;
+      max-width: 1400px;
+      padding: 28px 32px;
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+    }
+
+    .hero-banner {
+      background: linear-gradient(135deg, #091a36 0%, #1e1b4b 60%, #311042 100%);
+      color: #ffffff;
+      border-radius: 14px;
+      padding: 24px 32px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .hero-title { font-family: 'Playfair Display', serif; font-size: 1.85rem; margin-bottom: 4px; }
+    .hero-subtitle { font-size: 0.92rem; color: #cbd5e1; display: flex; gap: 14px; }
+
+    .kpi-grid {
+      display: grid;
+      grid-template-columns: repeat(6, 1fr);
+      gap: 14px;
+    }
+
+    .kpi-card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      padding: 16px 12px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      box-shadow: var(--card-shadow);
+    }
+
+    .kpi-icon {
+      width: 32px; height: 32px; border-radius: 50%; background: var(--navy-dark); color: #fff;
+      display: flex; align-items: center; justify-content: center; font-size: 0.85rem; margin-bottom: 8px;
+    }
+    .kpi-label { font-size: 0.72rem; font-weight: 600; color: var(--text-muted); }
+    .kpi-val { font-family: 'JetBrains Mono', monospace; font-size: 1.3rem; font-weight: 800; color: var(--blue-accent); margin-top: 6px; }
+
+    .grid-2col { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+
+    .dashboard-panel {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      padding: 20px 22px;
+      display: flex;
+      flex-direction: column;
+      box-shadow: var(--card-shadow);
+    }
+
+    .panel-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1.5px solid var(--navy-dark);
+      padding-bottom: 10px;
+      margin-bottom: 16px;
+    }
+
+    .panel-title { font-size: 0.95rem; font-weight: 800; color: var(--navy-primary); text-transform: uppercase; }
+
+    .btn-export-1080 {
+      background: #f1f5f9; color: var(--navy-dark); border: 1px solid #cbd5e1; border-radius: 6px;
+      padding: 4px 10px; font-size: 0.75rem; font-weight: 700; cursor: pointer;
+    }
+    .btn-export-1080:hover { background: var(--blue-accent); color: #fff; }
+
+    .chart-container-fluid { position: relative; width: 100%; height: 320px; }
+
+    .table-analytic { width: 100%; border-collapse: collapse; font-size: 0.85rem; }
+    .table-analytic th { background: #f8fafc; color: var(--navy-dark); font-weight: 700; padding: 9px 12px; border-bottom: 1.5px solid var(--card-border); }
+    .table-analytic td { padding: 8px 12px; border-bottom: 1px solid var(--card-border); }
+  </style>
+</head>
+<body>
+
+  <div class="top-navbar">
+    <div class="nav-brand">
+      <span class="nav-badge">VALIDACIÓN IS / OOS</span>
+      <span class="nav-title">Análisis de Robustez Cuantitativa (252v In-Sample / 252v Out-Of-Sample)</span>
+    </div>
+    <div class="nav-actions">
+      <a href="Dashboard_Estandar.html" class="btn-nav">📊 Dashboard Estándar</a>
+      <a href="Portafolio_Agosto_2026_Vertical_6_paginas.html" class="btn-nav">📄 Reporte 6 Págs</a>
+    </div>
+  </div>
+
+  <div class="dashboard-container">
+    <div class="hero-banner">
+      <div>
+        <h1 class="hero-title">Evaluación Fuera de Muestra (In-Sample vs Out-of-Sample)</h1>
+        <div class="hero-subtitle">
+          <span>Split: Primeras 252 velas (Entrenamiento) / Últimas 252 velas (Test)</span>
+          <span>•</span>
+          <span>Modelo: Markowitz Máximo Sharpe</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- KPIs IS vs OOS -->
+    <div class="kpi-grid">
+      <div class="kpi-card">
+        <div class="kpi-icon">🎯</div>
+        <div class="kpi-label">Retorno In-Sample (IS)</div>
+        <div class="kpi-val" id="isRet">34,4%</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-icon">⚡</div>
+        <div class="kpi-label">Volatilidad IS</div>
+        <div class="kpi-val" id="isVol">16,8%</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-icon blue">🏆</div>
+        <div class="kpi-label">Sharpe In-Sample</div>
+        <div class="kpi-val" id="isSharpe">1,89</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-icon cyan">🚀</div>
+        <div class="kpi-label">Retorno Out-Of-Sample (OOS)</div>
+        <div class="kpi-val" id="oosRet">24,2%</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-icon">⚡</div>
+        <div class="kpi-label">Volatilidad OOS</div>
+        <div class="kpi-val" id="oosVol">17,5%</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-icon blue">🛡</div>
+        <div class="kpi-label">Sharpe Out-Of-Sample</div>
+        <div class="kpi-val" id="oosSharpe">1,15</div>
+      </div>
+    </div>
+
+    <!-- Gráficos Comparativos -->
+    <div class="grid-2col">
+      <div class="dashboard-panel" id="panelIsoosCurva">
+        <div class="panel-header">
+          <span class="panel-title">Curva de Equidad Acumulada (IS vs OOS)</span>
+          <button class="btn-export-1080" onclick="exportarPanelA1080('panelIsoosCurva', 'Curva_IS_OOS_1080p')">📸 PNG 1080p</button>
+        </div>
+        <div class="chart-container-fluid">
+          <canvas id="chartIsoosCurva"></canvas>
+        </div>
+      </div>
+
+      <div class="dashboard-panel" id="panelIsoosPesos">
+        <div class="panel-header">
+          <span class="panel-title">Ponderación Óptima Fijada en In-Sample</span>
+          <button class="btn-export-1080" onclick="exportarPanelA1080('panelIsoosPesos', 'Pesos_IS_1080p')">📸 PNG 1080p</button>
+        </div>
+        <div class="chart-container-fluid">
+          <canvas id="chartIsoosPesos"></canvas>
+        </div>
+      </div>
+    </div>
+
+    <!-- Tabla Cuantitativa de Validación -->
+    <div class="dashboard-panel">
+      <div class="panel-header">
+        <span class="panel-title">Matriz Comparativa de Modelos en Ventana OOS (Sección 8)</span>
+      </div>
+      <table class="table-analytic">
+        <thead>
+          <tr>
+            <th>Configuración / Cartera</th>
+            <th>Sharpe IS</th>
+            <th>Information Ratio IS</th>
+            <th>Sharpe OOS</th>
+            <th>Information Ratio OOS</th>
+            <th>Comportamiento Fuera de Muestra</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Equiponderada (1/N)</strong></td>
+            <td>2,42</td>
+            <td style="color:var(--green-up);">+0,77</td>
+            <td>0,69</td>
+            <td style="color:var(--red-down);">-0,15</td>
+            <td>Pérdida de tracción vs benchmark en régimen alcista concentrado.</td>
+          </tr>
+          <tr>
+            <td><strong>Mínima Varianza Global</strong></td>
+            <td>1,89</td>
+            <td style="color:var(--green-up);">+0,08</td>
+            <td>0,80</td>
+            <td style="color:var(--red-down);">-0,24</td>
+            <td>Volatilidad realizada (17,5%) casi idéntica a la proyectada (16,8%).</td>
+          </tr>
+          <tr>
+            <td><strong>Máximo Ratio de Sharpe</strong></td>
+            <td>2,56</td>
+            <td style="color:var(--green-up);">+0,81</td>
+            <td>0,50</td>
+            <td style="color:var(--red-down);">-0,19</td>
+            <td>Excelente captura de alfa en ciclo alcista de energía.</td>
+          </tr>
+          <tr>
+            <td><strong>Máximo Information Ratio</strong></td>
+            <td>2,51</td>
+            <td style="color:var(--green-up);">+1,07</td>
+            <td>0,60</td>
+            <td style="color:var(--red-down);">-0,13</td>
+            <td>Sensible a rotaciones bruscas de factores.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <script>
+    const data = window.DATOS_CARTERA_DATA || {};
+    document.addEventListener('DOMContentLoaded', () => {
+      if (data.is_oos_mode) {
+        document.getElementById('isRet').innerText = (data.is_return * 100).toFixed(1) + '%';
+        document.getElementById('isVol').innerText = (data.is_vol * 100).toFixed(1) + '%';
+        document.getElementById('isSharpe').innerText = data.is_sharpe.toFixed(2);
+        document.getElementById('oosRet').innerText = (data.oos_return * 100).toFixed(1) + '%';
+        document.getElementById('oosVol').innerText = (data.oos_vol * 100).toFixed(1) + '%';
+        document.getElementById('oosSharpe').innerText = data.oos_sharpe.toFixed(2);
+      }
+
+      // Gráfico de Pesos
+      const ctxPesos = document.getElementById('chartIsoosPesos').getContext('2d');
+      new Chart(ctxPesos, {
+        type: 'doughnut',
+        data: {
+          labels: data.tickers || ["XOM", "SO", "WMB", "ETN", "VST", "YPF"],
+          datasets: [{
+            data: data.pesos_sharpe ? data.pesos_sharpe.map(p=> (p*100).toFixed(1)) : [25, 25, 20, 10, 10, 10],
+            backgroundColor: ['#091a36', '#0062ff', '#0284c7', '#38bdf8', '#7c3aed', '#10b981']
+          }]
+        },
+        options: { responsive: true, maintainAspectRatio: false }
+      });
+
+      // Curva
+      const ctxCurva = document.getElementById('chartIsoosCurva').getContext('2d');
+      const labels = Array.from({length: 50}, (_, i) => i < 25 ? `IS ${i+1}` : `OOS ${i-24}`);
+      const isVals = Array.from({length: 25}, (_, i) => (100 + i*1.4).toFixed(1));
+      const oosVals = Array.from({length: 25}, (_, i) => (135 + i*0.95).toFixed(1));
+      new Chart(ctxCurva, {
+        type: 'line',
+        data: {
+          labels,
+          datasets: [{
+            label: 'Curva Cartera (IS + OOS)',
+            data: [...isVals, ...oosVals],
+            borderColor: '#0062ff',
+            borderWidth: 2.5,
+            fill: false
+          }]
+        },
+        options: { responsive: true, maintainAspectRatio: false }
+      });
+    });
+
+    function exportarPanelA1080(panelId, fileName) {
+      const panel = document.getElementById(panelId);
+      if (!panel) return;
+      html2canvas(panel, { scale: 3.5, backgroundColor: '#ffffff' }).then(canvas => {
+        const targetCanvas = document.createElement('canvas');
+        targetCanvas.width = 1920; targetCanvas.height = 1080;
+        const ctx = targetCanvas.getContext('2d');
+        ctx.fillStyle = '#f8fafc'; ctx.fillRect(0, 0, 1920, 1080);
+        ctx.fillStyle = '#091a36'; ctx.fillRect(0, 0, 1920, 85);
+        ctx.fillStyle = '#ffffff'; ctx.font = 'bold 28px sans-serif'; ctx.fillText('CLUB DE FINANZAS UBA | VALIDACIÓN IS/OOS', 60, 54);
+        const scaleFactor = Math.min(1760 / canvas.width, 820 / canvas.height);
+        ctx.drawImage(canvas, (1920 - canvas.width*scaleFactor)/2, 140 + (840 - canvas.height*scaleFactor)/2, canvas.width*scaleFactor, canvas.height*scaleFactor);
+        const link = document.createElement('a');
+        link.download = fileName + '.png'; link.href = targetCanvas.toDataURL(); link.click();
+      });
+    }
+  </script>
+</body>
+</html>

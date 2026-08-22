@@ -25,7 +25,7 @@ pub async fn descargar_y_guardar_ticker(
 
     for sym in candidates {
         let url = format!(
-            "https://query1.finance.yahoo.com/v8/finance/chart/{}?range=3y&interval=1d",
+            "https://query1.finance.yahoo.com/v8/finance/chart/{}?range=10y&interval=1d",
             sym
         );
 
@@ -34,7 +34,7 @@ pub async fn descargar_y_guardar_ticker(
             Ok(r) => r,
             Err(_) => {
                 let url2 = format!(
-                    "https://query2.finance.yahoo.com/v8/finance/chart/{}?range=3y&interval=1d",
+                    "https://query2.finance.yahoo.com/v8/finance/chart/{}?range=10y&interval=1d",
                     sym
                 );
                 match client.get(&url2).send().await {
@@ -85,6 +85,29 @@ pub async fn descargar_y_guardar_ticker(
             clean_symbol
         )
         .into());
+    }
+
+    // Verificar la última fecha guardada para solo descargar e ingresar las velas faltantes
+    let ultima_fecha = crate::db::obtener_ultima_fecha_ticker(conn, &clean_symbol)?;
+
+    if let Some(ref max_dt) = ultima_fecha {
+        let prev_len = fetched_data.len();
+        fetched_data.retain(|(dt, _)| dt > max_dt);
+        println!(
+            "  -> Ticker '{}' ya tiene datos hasta {}. Filtrando {} velas faltantes nuevas (de {} totales descargadas).",
+            clean_symbol, max_dt, fetched_data.len(), prev_len
+        );
+    } else {
+        // Si no habia datos guardados previamente, limitamos la descarga inicial a las ultimas 2520 velas
+        if fetched_data.len() > 2520 {
+            let start = fetched_data.len() - 2520;
+            fetched_data = fetched_data[start..].to_vec();
+        }
+    }
+
+    if fetched_data.is_empty() {
+        println!("  -> Ticker '{}' ya se encuentra actualizado al día.", clean_symbol);
+        return Ok(0);
     }
 
     let count = crate::db::guardar_precios(conn, &clean_symbol, &fetched_data)?;
