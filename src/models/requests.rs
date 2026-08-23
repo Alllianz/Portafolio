@@ -39,6 +39,8 @@ pub struct TrackingRequest {
     pub tickers: Vec<String>,
     pub pesos: Vec<f64>,
     pub fecha_inicio: String,
+    #[serde(default = "default_rebalance_freq")]
+    pub rebalance_freq: String,
     #[serde(default = "default_ccl_ref")]
     pub ccl_ref: f64,
     #[serde(default = "default_rf_rate")]

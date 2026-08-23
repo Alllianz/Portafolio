@@ -51,21 +51,41 @@ pub fn ejecutar_seguimiento_cartera(
         vec![1.0 / tickers.len() as f64; tickers.len()]
     };
 
-    // Curva de equidad de la cartera ponderada (base 1.0)
+    // Frecuencia de rebalanceo
+    let rebalance_step = match req.rebalance_freq.to_lowercase().as_str() {
+        "diario" | "daily" => 1,
+        "semanal" | "weekly" => 5,
+        "mensual" | "monthly" => 21,
+        "trimestral" | "quarterly" => 63,
+        "semestral" => 126,
+        "anual" | "yearly" => 252,
+        _ => usize::MAX, // sin_rebalanceo (Buy & Hold)
+    };
+
+    // Curva de equity de la cartera ponderada con rebalanceo (base 1.0)
     let mut port_equity = Vec::with_capacity(n_velas);
     port_equity.push(1.0);
+
+    let mut last_rebal_idx = 0;
+    let mut capital_at_rebal = 1.0;
 
     for d in 1..n_velas {
         let mut val_dia = 0.0;
         for (i, t) in tickers.iter().enumerate() {
-            let p_init = series_map[t][0];
+            let p_rebal = series_map[t][last_rebal_idx].max(1e-12);
             let p_curr = series_map[t][d];
-            val_dia += pesos_norm[i] * (p_curr / p_init.max(0.0001));
+            val_dia += pesos_norm[i] * (p_curr / p_rebal);
         }
-        port_equity.push(val_dia);
+        let current_equity = capital_at_rebal * val_dia;
+        port_equity.push(current_equity);
+
+        if rebalance_step != usize::MAX && (d - last_rebal_idx) >= rebalance_step {
+            last_rebal_idx = d;
+            capital_at_rebal = current_equity;
+        }
     }
 
-    // Curva de equidad de SPY (base 1.0)
+    // Curva de equity de SPY (base 1.0)
     let spy_init = series_map["SPY"][0].max(0.0001);
     let spy_equity: Vec<f64> = series_map["SPY"].iter().map(|p| p / spy_init).collect();
 

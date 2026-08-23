@@ -2528,10 +2528,50 @@
     <span>📸 Gráfico exportado con éxito en PNG (1920 x 1080 HD)</span>
   </div>
 
+  <style>
+    /* Estilos del Modo Edición Interactivo */
+    body.modo-edicion-on [contenteditable="true"],
+    body.modo-edicion-on .editable-text {
+      outline: 1.5px dashed #0062ff !important;
+      background: rgba(0, 98, 255, 0.04) !important;
+      border-radius: 4px;
+      cursor: text !important;
+      transition: all 0.15s ease;
+    }
+    body.modo-edicion-on [contenteditable="true"]:hover,
+    body.modo-edicion-on .editable-text:hover {
+      background: rgba(0, 98, 255, 0.1) !important;
+      outline: 2px solid #0062ff !important;
+    }
+    body.modo-edicion-on [contenteditable="true"]:focus,
+    body.modo-edicion-on .editable-text:focus {
+      background: #ffffff !important;
+      outline: 2.5px solid #0062ff !important;
+      box-shadow: 0 0 12px rgba(0, 98, 255, 0.25) !important;
+    }
+    @media print {
+      body.modo-edicion-on [contenteditable="true"],
+      body.modo-edicion-on .editable-text {
+        outline: none !important;
+        background: transparent !important;
+        box-shadow: none !important;
+      }
+      .no-print-toolbar, .edit-toolbar-float {
+        display: none !important;
+      }
+    }
+  </style>
+
   <script>
-    // Mantener la exportación general y la función de rasterizado si se requiere, pero sin ensuciar los paneles del informe
+    let modoEdicionActivo = false;
+
     document.addEventListener('DOMContentLoaded', () => {
-      // Añadir botón general en la barra de impresión flotante
+      // Habilitar atributos de edición en textos relevantes
+      inicializarTextosEditables();
+      cargarCambiosGuardados();
+      cargarMarkowitzGuardado();
+
+      // Botón general en la barra flotante
       const printBtn = document.querySelector('.print-btn');
       if (printBtn) {
         const btnBox = document.createElement('div');
@@ -2540,16 +2580,43 @@
         btnBox.style.right = '24px';
         btnBox.style.zIndex = '9999';
         btnBox.style.display = 'flex';
-        btnBox.style.gap = '10px';
-        btnBox.className = 'no-print-toolbar';
+        btnBox.style.gap = '8px';
+        btnBox.className = 'no-print-toolbar edit-toolbar-float';
+
+        const editBtn = document.createElement('button');
+        editBtn.id = 'btnFloatEdit';
+        editBtn.innerHTML = '✏️ Modo Edición: OFF';
+        editBtn.style.background = '#d97706';
+        editBtn.style.color = '#ffffff';
+        editBtn.style.padding = '12px 18px';
+        editBtn.style.borderRadius = '30px';
+        editBtn.style.fontSize = '13px';
+        editBtn.style.fontWeight = '700';
+        editBtn.style.border = '1px solid rgba(255,255,255,0.25)';
+        editBtn.style.boxShadow = '0 10px 30px rgba(0,0,0,0.4)';
+        editBtn.style.cursor = 'pointer';
+        editBtn.onclick = () => toggleModoEdicion();
+
+        const saveBtn = document.createElement('button');
+        saveBtn.innerHTML = '💾 Guardar';
+        saveBtn.style.background = '#2563eb';
+        saveBtn.style.color = '#ffffff';
+        saveBtn.style.padding = '12px 18px';
+        saveBtn.style.borderRadius = '30px';
+        saveBtn.style.fontSize = '13px';
+        saveBtn.style.fontWeight = '700';
+        saveBtn.style.border = '1px solid rgba(255,255,255,0.25)';
+        saveBtn.style.boxShadow = '0 10px 30px rgba(0,0,0,0.4)';
+        saveBtn.style.cursor = 'pointer';
+        saveBtn.onclick = () => guardarTextosReporte();
 
         const exportAllBtn = document.createElement('button');
-        exportAllBtn.innerHTML = '📸 Descargar Gráficos (1920x1080)';
+        exportAllBtn.innerHTML = '📸 Gráficos 1080p';
         exportAllBtn.style.background = '#0062ff';
         exportAllBtn.style.color = '#ffffff';
-        exportAllBtn.style.padding = '12px 20px';
+        exportAllBtn.style.padding = '12px 18px';
         exportAllBtn.style.borderRadius = '30px';
-        exportAllBtn.style.fontSize = '13.5px';
+        exportAllBtn.style.fontSize = '13px';
         exportAllBtn.style.fontWeight = '700';
         exportAllBtn.style.border = '1px solid rgba(255,255,255,0.25)';
         exportAllBtn.style.boxShadow = '0 10px 30px rgba(0,0,0,0.4)';
@@ -2557,13 +2624,159 @@
         exportAllBtn.onclick = descargarTodosLosGraficos;
 
         printBtn.parentElement.replaceChild(btnBox, printBtn);
+        btnBox.appendChild(editBtn);
+        btnBox.appendChild(saveBtn);
         btnBox.appendChild(exportAllBtn);
         btnBox.appendChild(printBtn);
       }
     });
 
+    // Escuchar mensajes del padre (para importar de Markowitz o alternar edición)
+    window.addEventListener('message', (event) => {
+      if (!event.data) return;
+      if (event.data.type === 'IMPORT_MARKOWITZ') {
+        aplicarDatosMarkowitz(event.data.payload);
+      } else if (event.data.type === 'TOGGLE_EDIT') {
+        toggleModoEdicion(event.data.active);
+      } else if (event.data.type === 'SAVE_EDITS') {
+        guardarTextosReporte();
+      } else if (event.data.type === 'RESET_ORIGINAL') {
+        restaurarTextosOriginales();
+      }
+    });
+
+    function inicializarTextosEditables() {
+      const selectores = [
+        'h1', 'h2', 'h3', 'h4', 'p', 'span.exec-title', 'span.authors-subtitle',
+        '.kpi-val', '.kpi-lbl', '.d-name', '.d-pct', '.sc-title-big', '.sc-company-sub',
+        '.sc-thesis-p', '.sc-risk-p', '.pillar-card-title', '.pillar-card-p',
+        '.conclusion-p', '.bottom-tag-pill', '.footer-text-small'
+      ];
+      document.querySelectorAll(selectores.join(', ')).forEach((el, idx) => {
+        el.classList.add('editable-text');
+        el.setAttribute('data-edit-id', 'elem_' + idx);
+      });
+    }
+
+    function toggleModoEdicion(forzarEstado = null) {
+      modoEdicionActivo = (forzarEstado !== null) ? forzarEstado : !modoEdicionActivo;
+      document.body.classList.toggle('modo-edicion-on', modoEdicionActivo);
+
+      document.querySelectorAll('.editable-text').forEach(el => {
+        el.setAttribute('contenteditable', modoEdicionActivo ? 'true' : 'false');
+      });
+
+      const btn = document.getElementById('btnFloatEdit');
+      if (btn) {
+        btn.innerHTML = modoEdicionActivo ? '✏️ Modo Edición: ON' : '✏️ Modo Edición: OFF';
+        btn.style.background = modoEdicionActivo ? '#16a34a' : '#d97706';
+      }
+
+      mostrarToast(modoEdicionActivo ? '✏️ Modo edición activado: Haz clic en cualquier texto para modificarlo' : '🔒 Modo edición desactivado');
+    }
+
+    function guardarTextosReporte() {
+      const textos = {};
+      document.querySelectorAll('[data-edit-id]').forEach(el => {
+        const id = el.getAttribute('data-edit-id');
+        textos[id] = el.innerHTML;
+      });
+      localStorage.setItem('cfuba_reporte_saved_texts', JSON.stringify(textos));
+      mostrarToast('💾 ¡Textos del reporte guardados con éxito!');
+    }
+
+    function cargarCambiosGuardados() {
+      const saved = localStorage.getItem('cfuba_reporte_saved_texts');
+      if (!saved) return;
+      try {
+        const textos = JSON.parse(saved);
+        Object.keys(textos).forEach(id => {
+          const el = document.querySelector(`[data-edit-id="${id}"]`);
+          if (el) el.innerHTML = textos[id];
+        });
+      } catch(e) { console.error('Error cargando textos guardados:', e); }
+    }
+
+    function restaurarTextosOriginales() {
+      if (confirm('¿Restaurar todos los textos y gráficos del reporte a su versión original?')) {
+        localStorage.removeItem('cfuba_reporte_saved_texts');
+        localStorage.removeItem('cfuba_imported_markowitz');
+        location.reload();
+      }
+    }
+
+    function aplicarDatosMarkowitz(data) {
+      if (!data || !data.tickers) return;
+      localStorage.setItem('cfuba_imported_markowitz', JSON.stringify(data));
+
+      // 1. Subtítulo portada
+      const mainSub = document.querySelector('.main-subtitle');
+      if (mainSub) {
+        mainSub.innerText = `Cartera Cuantitativa Óptima | ${data.tickers.length} activos: ${data.tickers.join(', ')} | ${new Date().toLocaleDateString('es-AR', {month:'long', year:'numeric'})}`;
+      }
+
+      // 2. KPIs de Página 1
+      const kpis = document.querySelectorAll('#page-1 .kpi-val');
+      if (kpis.length >= 6) {
+        if (data.port_return_sharpe) kpis[0].innerText = (data.port_return_sharpe * 100).toFixed(1) + '%';
+        if (data.port_vol_sharpe) kpis[1].innerText = (data.port_vol_sharpe * 100).toFixed(1) + '%';
+        if (data.sharpe_ratio) kpis[2].innerText = data.sharpe_ratio.toFixed(2);
+        if (data.beta_cartera) kpis[3].innerText = data.beta_cartera.toFixed(2);
+        if (data.var_95) kpis[5].innerText = '-' + (data.var_95 * 100).toFixed(1) + '%';
+      }
+
+      // 3. Leyenda y Donut de Asignación
+      const legendList = document.querySelector('#page-1 .donut-legend-list');
+      if (legendList && data.pesos_sharpe) {
+        const colores = ['#091a36', '#1d4ed8', '#0062ff', '#38bdf8', '#00a8a8', '#94a3b8', '#8b5cf6', '#ec4899', '#f59e0b', '#10b981'];
+        legendList.innerHTML = '';
+        data.tickers.forEach((t, i) => {
+          const w = (data.pesos_sharpe[i] * 100).toFixed(1);
+          const color = colores[i % colores.length];
+          const item = document.createElement('div');
+          item.className = 'd-item';
+          item.innerHTML = `<div class="d-item-left"><span class="d-dot" style="background:${color}"></span><span class="d-name">${t}</span></div><span class="d-pct">${w}%</span>`;
+          legendList.appendChild(item);
+        });
+
+        const pill = document.querySelector('#page-1 .bottom-tag-pill');
+        if (pill) pill.innerText = `Ponderación óptima Máximo Sharpe: ${data.tickers.length} activos | 100% invertido`;
+      }
+
+      // 4. Matriz de Correlación en Página 5
+      const heatmapTable = document.querySelector('#page-5 .heatmap-table');
+      if (heatmapTable && data.matriz_correlacion) {
+        let theadHtml = '<thead><tr><th>Activo</th>' + data.tickers.map(t => `<th>${t}</th>`).join('') + '</tr></thead>';
+        let tbodyHtml = '<tbody>';
+        data.matriz_correlacion.forEach((row, i) => {
+          tbodyHtml += `<tr><td style="font-weight:bold; color:#091a36;">${data.tickers[i]}</td>`;
+          row.forEach(val => {
+            const v = val.toFixed(2);
+            const opacity = Math.min(1, Math.max(0.1, val));
+            const bg = val > 0.6 ? `rgba(0, 98, 255, ${opacity})` : `rgba(240, 246, 255, 0.8)`;
+            const textColor = val > 0.6 ? '#ffffff' : '#091a36';
+            tbodyHtml += `<td style="background:${bg}; color:${textColor}; font-weight:700;">${v}</td>`;
+          });
+          tbodyHtml += '</tr>';
+        });
+        tbodyHtml += '</tbody>';
+        heatmapTable.innerHTML = theadHtml + tbodyHtml;
+      }
+
+      // Re-inicializar textos editables en nuevos elementos
+      inicializarTextosEditables();
+      mostrarToast('📥 ¡Datos y gráficos de Markowitz importados al reporte!');
+    }
+
+    function cargarMarkowitzGuardado() {
+      const saved = localStorage.getItem('cfuba_imported_markowitz');
+      if (saved) {
+        try { aplicarDatosMarkowitz(JSON.parse(saved)); } catch(e){}
+      }
+    }
+
     function exportarElementoA1080(element, fileName) {
-      const toolbars = element.querySelectorAll('.no-print-toolbar');
+      const toolbars = element.querySelectorAll('.no-print-toolbar, .edit-toolbar-float');
       toolbars.forEach(t => t.style.visibility = 'hidden');
 
       html2canvas(element, {
@@ -2579,7 +2792,7 @@
         targetCanvas.height = 1080;
         const ctx = targetCanvas.getContext('2d');
 
-        // Fondo institucional de lujo
+        // Fondo institucional
         const grad = ctx.createLinearGradient(0, 0, 1920, 1080);
         grad.addColorStop(0, '#ffffff');
         grad.addColorStop(1, '#f8fafc');
@@ -2596,14 +2809,14 @@
 
         ctx.fillStyle = '#38bdf8';
         ctx.font = 'bold 20px "Plus Jakarta Sans", sans-serif';
-        ctx.fillText('|  PORTFOLIO RENTA VARIABLE — AGOSTO 2026', 420, 52);
+        ctx.fillText('|  PORTFOLIO RENTA VARIABLE', 420, 52);
 
         // Marco
         ctx.strokeStyle = '#e2e8f0';
         ctx.lineWidth = 4;
         ctx.strokeRect(40, 120, 1840, 900);
 
-        // Centrado y escalado de contenido
+        // Centrado y escalado
         const scaleFactor = Math.min(1760 / canvas.width, 820 / canvas.height);
         const drawW = canvas.width * scaleFactor;
         const drawH = canvas.height * scaleFactor;
@@ -2612,43 +2825,16 @@
 
         ctx.drawImage(canvas, drawX, drawY, drawW, drawH);
 
-        // Footer / Watermark
+        // Footer
         ctx.fillStyle = '#64748b';
         ctx.font = '16px "Plus Jakarta Sans", sans-serif';
         ctx.fillText('Reporte Oficial de Inversión — Club de Finanzas UBA | Resolución 1920 x 1080 HD', 60, 1055);
 
-        // Guardar archivo con selector de carpeta local o descarga directa
-        if (window.showSaveFilePicker) {
-          targetCanvas.toBlob(async (blob) => {
-            try {
-              const handle = await window.showSaveFilePicker({
-                suggestedName: fileName + '.png',
-                types: [{
-                  description: 'Imagen PNG HD (1920x1080)',
-                  accept: { 'image/png': ['.png'] },
-                }],
-              });
-              const writable = await handle.createWritable();
-              await writable.write(blob);
-              await writable.close();
-              mostrarToast();
-            } catch (err) {
-              if (err.name !== 'AbortError') {
-                const link = document.createElement('a');
-                link.download = fileName + '.png';
-                link.href = targetCanvas.toDataURL('image/png', 1.0);
-                link.click();
-                mostrarToast();
-              }
-            }
-          });
-        } else {
-          const link = document.createElement('a');
-          link.download = fileName + '.png';
-          link.href = targetCanvas.toDataURL('image/png', 1.0);
-          link.click();
-          mostrarToast();
-        }
+        const link = document.createElement('a');
+        link.download = fileName + '.png';
+        link.href = targetCanvas.toDataURL('image/png', 1.0);
+        link.click();
+        mostrarToast('📸 Gráfico exportado en HD (1920x1080)');
       }).catch(err => {
         toolbars.forEach(t => t.style.visibility = 'visible');
         console.error('Error al exportar gráfico:', err);
@@ -2661,24 +2847,22 @@
         { el: document.querySelector('#page-1 .bars-col')?.closest('.panel-card'), name: '2_Naturaleza_Riesgo_1080p' },
         { el: document.querySelector('#page-1 .scatter-box')?.closest('.panel-card'), name: '3_Perfil_Riesgo_Retorno_1080p' },
         { el: document.querySelector('#page-5 .num-title-row')?.closest('.panel-card'), name: '4_Frontera_Eficiente_1080p' },
-        { el: document.querySelector('#page-5 .heatmap-table')?.closest('.panel-card'), name: '5_Matriz_Correlacion_1080p' },
-        { el: document.querySelector('#page-5 .table-custom:has(tbody tr td strong)')?.closest('.panel-card'), name: '6_Metricas_Riesgo_Cola_1080p' }
+        { el: document.querySelector('#page-5 .heatmap-table')?.closest('.panel-card'), name: '5_Matriz_Correlacion_1080p' }
       ];
 
       let delay = 0;
       items.forEach(item => {
         if (item.el) {
-          setTimeout(() => {
-            exportarElementoA1080(item.el, item.name);
-          }, delay);
+          setTimeout(() => { exportarElementoA1080(item.el, item.name); }, delay);
           delay += 900;
         }
       });
     }
 
-    function mostrarToast() {
-      const toast = document.getElementById('toastExport');
+    function mostrarToast(msg = 'Operación realizada con éxito') {
+      let toast = document.getElementById('toastExport');
       if (toast) {
+        toast.innerHTML = `<span>${msg}</span>`;
         toast.style.display = 'flex';
         setTimeout(() => { toast.style.display = 'none'; }, 3500);
       }

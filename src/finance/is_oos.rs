@@ -43,7 +43,7 @@ pub fn parsear_benchmark(bm_str: &str) -> Vec<(String, f64)> {
     }
 }
 
-/// Calcula retorno anualizado, volatilidad anualizada, Sharpe, Max Drawdown y ganancia total de una curva de equidad
+/// Calcula retorno anualizado, volatilidad anualizada, Sharpe, Max Drawdown y ganancia total de una curva de equity
 fn calcular_metricas_curva(
     equity: &[f64],
     dias_anualizacion: f64,
@@ -172,9 +172,10 @@ pub fn ejecutar_analisis_is_oos(
     let pesos_sharpe = res_sharpe_is.pesos.as_slice().to_vec();
     let pesos_sortino = pesos_sharpe.clone();
 
-    // Curva de Equidad In-Sample (Base 100)
+    // Curva de Equity In-Sample (Base 100)
     let mut is_port_equity = Vec::with_capacity(is_rows);
     is_port_equity.push(100.0);
+
     for d in 1..is_rows {
         let mut val_dia = 0.0;
         for (i, t) in portfolio_tickers.iter().enumerate() {

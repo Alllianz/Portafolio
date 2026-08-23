@@ -766,9 +766,159 @@ const INDEX_HTML: &str = r##"<!DOCTYPE html>
       transform: translateY(0);
     }
 
-    @keyframes spin {
-      to { transform: rotate(360deg); }
+    /* Estilos Guía Metodológica & Documentación */
+    .guide-card-section {
+      background: var(--card-bg);
+      border-radius: var(--border-radius);
+      box-shadow: var(--card-shadow);
+      padding: 24px 28px;
+      margin-bottom: 24px;
+      border: 1px solid var(--slate-200);
+      transition: all 0.2s ease;
     }
+
+    .guide-card-section:hover {
+      border-color: var(--blue-600);
+      box-shadow: 0 6px 20px rgba(0, 98, 255, 0.08);
+    }
+
+    .guide-card-header {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      margin-bottom: 16px;
+      padding-bottom: 12px;
+      border-bottom: 2px solid var(--slate-100);
+    }
+
+    .guide-icon-badge {
+      width: 44px;
+      height: 44px;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.35rem;
+      background: #EBF3FA;
+      color: var(--blue-600);
+      flex-shrink: 0;
+    }
+
+    .guide-title {
+      font-size: 1.2rem;
+      font-weight: 800;
+      color: var(--navy-900);
+      margin: 0;
+    }
+
+    .guide-subtitle {
+      font-size: 0.84rem;
+      color: var(--slate-600);
+      margin: 2px 0 0 0;
+      font-weight: 500;
+    }
+
+    .guide-formula-box {
+      background: #0A192F;
+      color: #38BDF8;
+      border-radius: 8px;
+      padding: 14px 18px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.95rem;
+      font-weight: 700;
+      margin: 14px 0;
+      border-left: 4px solid var(--blue-600);
+      overflow-x: auto;
+      line-height: 1.5;
+    }
+
+    .guide-explanation-p {
+      font-size: 0.92rem;
+      line-height: 1.65;
+      color: var(--slate-700);
+      margin-bottom: 12px;
+    }
+
+    .guide-param-list {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 12px;
+      margin-top: 14px;
+    }
+
+    .guide-param-item {
+      background: #F8FAFC;
+      border: 1px solid var(--slate-200);
+      border-radius: 8px;
+      padding: 12px 14px;
+    }
+
+    .guide-param-name {
+      font-family: 'JetBrains Mono', monospace;
+      font-weight: 800;
+      font-size: 0.85rem;
+      color: var(--blue-600);
+      display: block;
+      margin-bottom: 4px;
+    }
+
+    .guide-param-desc {
+      font-size: 0.82rem;
+      color: var(--slate-600);
+      line-height: 1.45;
+    }
+
+    .guide-highlight-tag {
+      display: inline-block;
+      padding: 2px 8px;
+      border-radius: 4px;
+      font-size: 0.76rem;
+      font-weight: 700;
+      background: #EBF3FA;
+      color: var(--blue-600);
+      margin-right: 6px;
+    }
+
+    .guide-analysis-card {
+      background: #FFFFFF;
+      border: 1px solid var(--slate-200);
+      border-left: 4px solid var(--blue-600);
+      border-radius: 8px;
+      padding: 16px 18px;
+      margin-top: 14px;
+    }
+
+    .guide-analysis-title {
+      font-size: 0.92rem;
+      font-weight: 800;
+      color: var(--navy-900);
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .guide-scale-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin: 10px 0;
+    }
+
+    .scale-pill {
+      font-size: 0.76rem;
+      font-weight: 700;
+      padding: 4px 10px;
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .scale-pill.bad { background: #FEE2E2; color: #991B1B; }
+    .scale-pill.warn { background: #FEF3C7; color: #92400E; }
+    .scale-pill.good { background: #D1FAE5; color: #065F46; }
+    .scale-pill.excel { background: #E0E7FF; color: #3730A3; }
   </style>
 </head>
 <body>
@@ -776,7 +926,7 @@ const INDEX_HTML: &str = r##"<!DOCTYPE html>
   <!-- Barra de Navegación Superior -->
   <header class="top-navbar">
     <div class="brand-section">
-      <div class="brand-logo-badge">UBA</div>
+      <img src="/4.png" alt="Club de Finanzas UBA" style="width: 40px; height: 40px; border-radius: 50%; object-fit: cover; background: #FFFFFF; padding: 2px; box-shadow: 0 2px 8px rgba(0,0,0,0.18); flex-shrink: 0;">
       <div class="brand-titles">
         <span class="brand-title-main">MOTOR ANALÍTICO DE PORTAFOLIO</span>
         <span class="brand-title-sub">Club de Finanzas UBA — Cuantitativo & Markowitz</span>
@@ -814,6 +964,11 @@ const INDEX_HTML: &str = r##"<!DOCTYPE html>
       </button>
       <button class="menu-item-btn" onclick="switchView('view-db')">
         <span class="menu-icon">🗄️</span> Base de Datos SQLite
+      </button>
+
+      <div class="menu-category-title">Documentación</div>
+      <button class="menu-item-btn" onclick="switchView('view-guia')">
+        <span class="menu-icon">📚</span> Guía Metodológica & Fórmulas
       </button>
     </nav>
 
@@ -1101,7 +1256,7 @@ const INDEX_HTML: &str = r##"<!DOCTYPE html>
           <div class="chart-panel-card" id="cardIsOosEvolucion" style="grid-column: span 2;">
             <div class="chart-panel-header">
               <span class="chart-panel-title">Curva de Rendimiento Acumulado Continua: In-Sample (Entrenamiento) vs Out-Of-Sample (Prueba con Rebalanceo) vs Benchmark</span>
-              <button class="btn-export-1080p" onclick="exportarGraficoPNG('cardIsOosEvolucion', 'Is_Oos_Curva_Equidad')">📸 PNG 1080p</button>
+              <button class="btn-export-1080p" onclick="exportarGraficoPNG('cardIsOosEvolucion', 'Is_Oos_Curva_Equity')">📸 PNG 1080p</button>
             </div>
             <div class="chart-canvas-box" style="height: 380px;"><canvas id="chartIsOosEvolucion"></canvas></div>
           </div>
@@ -1139,6 +1294,16 @@ const INDEX_HTML: &str = r##"<!DOCTYPE html>
             <div class="input-group">
               <label>Ponderaciones % (ej: 40, 30, 30)</label>
               <input type="text" id="trackPesos" class="input-control" value="40, 30, 30" placeholder="Ponderaciones separadas por coma">
+            </div>
+            <div class="input-group">
+              <label>Frecuencia de Rebalanceo</label>
+              <select id="trackRebalance" class="input-control">
+                <option value="mensual" selected>Mensual (Cada 21 velas)</option>
+                <option value="semanal">Semanal (Cada 5 velas)</option>
+                <option value="diario">Diario (Cada 1 vela)</option>
+                <option value="trimestral">Trimestral (Cada 63 velas)</option>
+                <option value="sin_rebalanceo">Sin Rebalanceo (Buy & Hold)</option>
+              </select>
             </div>
             <div class="input-group">
               <label>Fecha de Inicio (YYYY-MM-DD)</label>
@@ -1180,12 +1345,13 @@ const INDEX_HTML: &str = r##"<!DOCTYPE html>
         <div class="charts-grid-2x2">
           <div class="chart-panel-card" id="cardTrackEquity" style="grid-column: span 2;">
             <div class="chart-panel-header">
-              <span class="chart-panel-title">Curva de Equidad de la Cartera vs SPY (Base 1.0)</span>
-              <button class="btn-export-1080p" onclick="exportarGraficoPNG('cardTrackEquity', 'Curva_Equidad_Seguimiento')">📸 PNG 1080p</button>
+              <span class="chart-panel-title">Curva de Equity de la Cartera vs SPY (Base 1.0)</span>
+              <button class="btn-export-1080p" onclick="exportarGraficoPNG('cardTrackEquity', 'Curva_Equity_Seguimiento')">📸 PNG 1080p</button>
             </div>
             <div class="chart-canvas-box" style="height: 380px;"><canvas id="chartTrackEquity"></canvas></div>
           </div>
         </div>
+
       </section>
 
       <!-- VISTA 4: REPORTE INSTITUCIONAL -->
@@ -1193,11 +1359,23 @@ const INDEX_HTML: &str = r##"<!DOCTYPE html>
         <div class="view-header">
           <div class="view-title-group">
             <h2>Reporte Institucional Completo (Club de Finanzas UBA)</h2>
-            <p>Maquetación oficial de 6 páginas con fichas de tesis de inversión y gráficos en alta definición.</p>
+            <p>Maquetación oficial de 6 páginas editable en vivo: haz clic en cualquier texto para modificarlo e importa datos y gráficos reales de Markowitz.</p>
           </div>
-          <div style="display: flex; gap: 10px;">
+          <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+            <button id="btnParentEditReport" class="btn-action-primary" style="background: #D97706;" onclick="toggleModoEdicionReporte()">
+              <span id="iconParentEdit">✏️</span> <span id="textParentEdit">Modo Edición: OFF</span>
+            </button>
+            <button class="btn-action-primary" style="background: #0D9488;" onclick="importarDatosMarkowitzAReporte()">
+              <span>📥</span> Importar de Markowitz
+            </button>
+            <button class="btn-action-primary" style="background: #2563EB;" onclick="guardarTextosReporte()">
+              <span>💾</span> Guardar Textos
+            </button>
+            <button class="btn-action-primary" style="background: #64748B;" onclick="restaurarReporteOriginal()">
+              <span>🔄</span> Restaurar Original
+            </button>
             <button class="btn-action-primary" onclick="abrirReporteEnNuevaVentana()">
-              <span>↗️</span> Abrir en Pestaña Completa
+              <span>↗️</span> Pestaña Completa
             </button>
             <button class="btn-action-primary" style="background: var(--navy-900);" onclick="imprimirIframeReporte()">
               <span>🖨️</span> Imprimir / PDF
@@ -1257,20 +1435,6 @@ const INDEX_HTML: &str = r##"<!DOCTYPE html>
           </div>
         </div>
 
-        <div class="card-panel">
-          <div class="input-group">
-            <label>Descargar / Actualizar Símbolo Personalizado (Separados por coma)</label>
-            <input type="text" id="dbDescargaInput" class="input-control" placeholder="Ej: GOOGL, NVDA, TSLA, GEV, BMA">
-          </div>
-          <div style="display: flex; gap: 12px;">
-            <button id="btnDescargarDb" class="btn-action-primary" onclick="descargarTickers()">
-              <span>📥</span> Descargar de Yahoo Finance
-            </button>
-            <button class="btn-action-primary" style="background: var(--navy-900);" onclick="cargarResumenDb()">
-              <span>🔄</span> Refrescar Tabla SQLite
-            </button>
-          </div>
-        </div>
 
         <div class="table-card">
           <table class="custom-table">
@@ -1288,6 +1452,418 @@ const INDEX_HTML: &str = r##"<!DOCTYPE html>
           </table>
         </div>
       </section>
+
+      <!-- VISTA 6: GUÍA METODOLÓGICA & FÓRMULAS -->
+      <section id="view-guia" class="view-container">
+        <div class="view-header">
+          <div class="view-title-group">
+            <h2>📚 Guía y Manual del Motor de Portafolio (Explicado en Humano)</h2>
+            <p>Guía paso a paso en lenguaje claro, sin tecnicismos innecesarios: qué significa cada métrica, para qué te sirve, cómo se calcula, qué representa cada variable y cómo interpretar cada resultado.</p>
+          </div>
+        </div>
+
+        <!-- 1. CÓMO SE MIDE LA GANANCIA -->
+        <div class="guide-card-section">
+          <div class="guide-card-header">
+            <div class="guide-icon-badge">💵</div>
+            <div>
+              <h3 class="guide-title">1. ¿Cómo Medimos la Ganancia de una Acción?</h3>
+              <p class="guide-subtitle">Retorno Diario, Ganancia Aritmética vs Ganancia Real Compuesta (CAGR) y Dividendos</p>
+            </div>
+          </div>
+          <p class="guide-explanation-p">
+            Cuando compras una acción, tu dinero cambia todos los días. Para analizarla profesionalmente necesitamos entender no solo cuánto subió en un día puntual, sino <strong>cuánto rindió en promedio por año compuesto</strong> y cuánto dinero te pagó en dividendos líquidos.
+          </p>
+          
+          <div class="guide-formula-box">
+            • Ganancia de 1 Día:       Rendimiento = (Precio de Hoy - Precio de Ayer) / Precio de Ayer<br>
+            • Ganancia Anualizada:     Retorno_Aritmético = (1 + Promedio_Diario)²⁵² - 1<br>
+            • Ganancia Compuesta Real: CAGR = (Precio_Final / Precio_Inicial)^(252 / Total_Días) - 1<br>
+            • Ganancia Total con Plata en Mano: Total_Return = (1 + CAGR_Precio) · (1 + Rendimiento_Dividendos) - 1
+          </div>
+
+          <div class="guide-param-list">
+            <div class="guide-param-item">
+              <span class="guide-param-name">Precio de Hoy vs Precio de Ayer (P_t y P_{t-1})</span>
+              <span class="guide-param-desc">El valor exacto al que cerró la acción en el mercado al final de cada rueda bursátil.</span>
+            </div>
+            <div class="guide-param-item">
+              <span class="guide-param-name">Días Hábiles del Año (252)</span>
+              <span class="guide-param-desc">En Wall Street y Buenos Aires no se opera feriados ni fines de semana. Un año financiero completo tiene exactamente 252 ruedas de negociación.</span>
+            </div>
+            <div class="guide-param-item">
+              <span class="guide-param-name">CAGR (Tu Ganancia Compuesta Real)</span>
+              <span class="guide-param-desc"><strong>Muy importante:</strong> Si una acción baja 50% un año y sube 50% al siguiente, el promedio simple parece 0%, pero tu dinero pasó de $100 a $50 y luego a $75 (perdiste 25%). El CAGR mide tu plata real año tras año teniendo en cuenta ese efecto.</span>
+            </div>
+            <div class="guide-param-item">
+              <span class="guide-param-name">Dividend Yield (Rendimiento por Dividendos)</span>
+              <span class="guide-param-desc">El porcentaje de dinero en efectivo que la empresa reparte anualmente a sus accionistas respecto al precio de la acción (vital en empresas como Coca-Cola, Chevron o Southern Company).</span>
+            </div>
+            <div class="guide-param-item">
+              <span class="guide-param-name">Peor Día Registrado (Worst Day)</span>
+              <span class="guide-param-desc">El día histórico más catastrófico de la acción. Te avisa de antemano el peor golpe que sufrió en el pasado.</span>
+            </div>
+          </div>
+
+          <!-- Análisis y Desarrollo -->
+          <div class="guide-analysis-card">
+            <div class="guide-analysis-title">📊 Análisis & Cómo Interpretar el Rendimiento</div>
+            <p class="guide-param-desc">
+              <strong>¿Para qué sirve el Retorno Aritmético?</strong> Es el insumo de entrada que necesita el algoritmo matemático de Markowitz para calcular las combinaciones óptimas de la cartera.<br>
+              <strong>¿Para qué sirve el CAGR?</strong> Es el número que verdaderamente entra a tu bolsillo y el que debes mostrar en cualquier reporte institucional. La diferencia entre el retorno aritmético y el CAGR se llama <em>"fricción por volatilidad" (volatility drag)</em>: cuanta más volatilidad tenga un activo, más distancia habrá entre ambos.
+            </p>
+            <div class="guide-scale-row">
+              <span class="scale-pill bad">🔴 CAGR < 5%: Rendimiento pobre (pierde contra bonos)</span>
+              <span class="scale-pill warn">🟡 CAGR 5% - 10%: Rendimiento conservador aceptable</span>
+              <span class="scale-pill good">🟢 CAGR 10% - 20%: Muy buen rendimiento bursátil</span>
+              <span class="scale-pill excel">🔵 CAGR > 20%: Rendimiento extraordinario (Supera ampliamente al S&P 500)</span>
+            </div>
+            <p class="guide-param-desc" style="margin-top: 8px;">
+              💡 <strong>Regla de Decisión:</strong> Si una acción tiene un Retorno Aritmético alto (ej. 35%) pero un CAGR mediocre (ej. 10%), significa que es extremadamente volátil e ineficiente. Busca activos donde el CAGR esté lo más cerca posible del retorno medio.
+            </p>
+          </div>
+        </div>
+
+        <!-- 2. MARKOWITZ Y DIVERSIFICACIÓN -->
+        <div class="guide-card-section">
+          <div class="guide-card-header">
+            <div class="guide-icon-badge">🧺</div>
+            <div>
+              <h3 class="guide-title">2. La Teoría de Markowitz: No Poner Todos los Huevos en la Misma Canasta</h3>
+              <p class="guide-subtitle">Ponderaciones (Pesos %), Volatilidad (Riesgo), y los Ratios de Sharpe y Sortino</p>
+            </div>
+          </div>
+          <p class="guide-explanation-p">
+            Harry Markowitz ganó el Premio Nobel demostrando algo fundamental: <strong>si combinas acciones que no se mueven igual, el riesgo de tu cartera cae en picada sin que tengas que renunciar a ganar dinero</strong>. Cuando una acción pasa por un mal trimestre, otra compensa con subidas, logrando que el valor de tu cuenta suba de forma suave y sin sobresaltos.
+          </p>
+
+          <div class="guide-formula-box">
+            • Plata Invertida:        Suma de Pesos = Peso_Accion1 + Peso_Accion2 + ... = 100% de tu capital<br>
+            • Retorno de la Cartera:  Ganancia_Cartera = (Peso1 · Retorno1) + (Peso2 · Retorno2) + ...<br>
+            • Riesgo de la Cartera:   Volatilidad_Total = RaízCuadrada( Grilla de Pesos × Varianzas y Covarianzas )<br>
+            • Ratio de Sharpe:        Sharpe = (Ganancia_Cartera - Tasa_Libre_Riesgo) / Volatilidad_Total<br>
+            • Ratio de Sortino:       Sortino = (Ganancia_Cartera - Tasa_Libre_Riesgo) / Volatilidad_Solo_Caídas
+          </div>
+
+          <div class="guide-param-list">
+            <div class="guide-param-item">
+              <span class="guide-param-name">Ponderación / Peso (w_i)</span>
+              <span class="guide-param-desc">Qué porcentaje de tu capital total ponés en cada acción. Ej: si tenés $100.000 y el peso de Apple es 30%, invertís $30.000 en Apple. La suma de todos los pesos siempre da 100%.</span>
+            </div>
+            <div class="guide-param-item">
+              <span class="guide-param-name">Volatilidad (El electrocardiograma del precio)</span>
+              <span class="guide-param-desc">Mide qué tan violentas son las subidas y bajadas de precio. Una acción con volatilidad del 15% es tranquila (como una Utility eléctrica); una del 60% es una montaña rusa (como una tecnológica o petrolera volátil).</span>
+            </div>
+            <div class="guide-param-item">
+              <span class="guide-param-name">Tasa Libre de Riesgo (R_f)</span>
+              <span class="guide-param-desc">Lo que te pagan los Bonos del Tesoro de EE.UU. a corto plazo por no hacer nada (ej: 4% o 4.65% anual). Es el piso mínimo: si vas a arriesgar en acciones, tienes que exigir ganar más que esto.</span>
+            </div>
+            <div class="guide-param-item">
+              <span class="guide-param-name">Ratio de Sharpe (Premio por Susto Aguantado)</span>
+              <span class="guide-param-desc">Indica cuánto rendimiento extra ganas por cada punto de volatilidad que soportas. Un Sharpe mayor a 1.0 es bueno; mayor a 1.5 es excelente.</span>
+            </div>
+            <div class="guide-param-item">
+              <span class="guide-param-name">Ratio de Sortino (Premio Castigando Solo Caídas)</span>
+              <span class="guide-param-desc">A diferencia de Sharpe (que castiga las subidas rápidas porque las cuenta como "volatilidad"), Sortino solo penaliza los días en que el precio cae. Es la métrica favorita de los inversores agresivos.</span>
+            </div>
+            <div class="guide-param-item">
+              <span class="guide-param-name">Matriz de Correlación (El Heatmap Azul)</span>
+              <span class="guide-param-desc">Mide si dos acciones van de la mano. Un valor de +1.0 (azul oscuro) significa que hacen lo mismo. Un valor cercano a 0.0 (blanco) significa que son independientes, lo que te da la máxima protección por diversificación.</span>
+            </div>
+          </div>
+
+          <!-- Análisis y Desarrollo -->
+          <div class="guide-analysis-card">
+            <div class="guide-analysis-title">📊 Análisis & Escalas del Ratio de Sharpe y Sortino</div>
+            <p class="guide-param-desc">
+              El <strong>Ratio de Sharpe</strong> es la regla de oro institucional: te dice si la rentabilidad que obtuviste fue por habilidad del armado de cartera o simplemente por asumir un riesgo demencial.
+            </p>
+            <div class="guide-scale-row">
+              <span class="scale-pill bad">🔴 Sharpe < 0.5: Pobre (Asumes mucho riesgo para lo poco que ganas)</span>
+              <span class="scale-pill warn">🟡 Sharpe 0.5 - 1.0: Aceptable (En línea con el mercado)</span>
+              <span class="scale-pill good">🟢 Sharpe 1.0 - 1.5: Muy Bueno (Cartera eficiente y balanceada)</span>
+              <span class="scale-pill excel">🔵 Sharpe > 1.5: Sobresaliente (Rendimiento estelar con bajo estrés)</span>
+            </div>
+            <div class="guide-scale-row" style="margin-top: 4px;">
+              <span class="scale-pill bad">🔴 Sortino < 1.0: Protección débil ante caídas</span>
+              <span class="scale-pill good">🟢 Sortino 1.0 - 2.0: Buena asimetría positiva</span>
+              <span class="scale-pill excel">🔵 Sortino > 2.0: Excelente (La cartera sube fuerte y apenas cae en bajas)</span>
+            </div>
+            <p class="guide-param-desc" style="margin-top: 8px;">
+              💡 <strong>Regla de Decisión:</strong> Si comparas dos carteras con igual retorno (ej. 25% anual), quédate siempre con la que tenga mayor Sharpe o Sortino: obtendrás el mismo dinero pero con muchas menos noches sin dormir.
+            </p>
+          </div>
+        </div>
+
+        <!-- 3. LA FRONTERA EFICIENTE -->
+        <div class="guide-card-section">
+          <div class="guide-card-header">
+            <div class="guide-icon-badge">📈</div>
+            <div>
+              <h3 class="guide-title">3. La Frontera Eficiente: El Menú de las Mejores Carteras Posibles</h3>
+              <p class="guide-subtitle">Cartera de Mínima Varianza (Dormir Tranquilo) vs Cartera Óptima (Máximo Sharpe)</p>
+            </div>
+          </div>
+          <p class="guide-explanation-p">
+            La <strong>Frontera Eficiente</strong> es la curva que dibuja el gráfico de dispersión. Te dice: <em>"Para cualquier nivel de riesgo que estés dispuesto a tolerar, esta es la combinación matemática de acciones que más plata te va a hacer ganar"</em>. Cualquier cartera que quede por debajo de la curva está mal armada porque asume riesgo innecesario.
+          </p>
+
+          <div class="guide-formula-box">
+            • Menú de Opciones para el Inversor:<br>
+            &nbsp;&nbsp;1. Cartera de Mínima Varianza: Busca los pesos con el menor movimiento posible de capital.<br>
+            &nbsp;&nbsp;2. Cartera Óptima de Máximo Sharpe: El punto dulce exacto donde cada gota de riesgo rinde el máximo beneficio.<br>
+            &nbsp;&nbsp;3. Cartera Equal Weight (1/N): Reparte la plata en partes iguales (ej: 6 acciones = 16.6% cada una).
+          </div>
+
+          <div class="guide-param-list">
+            <div class="guide-param-item">
+              <span class="guide-param-name">Cartera de Mínima Varianza Global (GMV)</span>
+              <span class="guide-param-desc">Ideal para perfiles conservadores. Su único objetivo es que tu cartera sufra lo menos posible ante cualquier crisis económica.</span>
+            </div>
+            <div class="guide-param-item">
+              <span class="guide-param-name">Cartera Tangente (El Punto Azul Destacado)</span>
+              <span class="guide-param-desc">Es la cartera recomendada por excelencia. Es la que logra la pendiente más empinada de rentabilidad por cada unidad de volatilidad.</span>
+            </div>
+            <div class="guide-param-item">
+              <span class="guide-param-name">Límite Mínimo por Activo (min_bound)</span>
+              <span class="guide-param-desc">Le prohíbe al optimizador dejar acciones en 0%. Si pones 5%, obliga a que cada activo seleccionado tenga al menos un 5% de presencia en tu cartera para asegurar diversificación real.</span>
+            </div>
+          </div>
+
+          <!-- Análisis y Desarrollo -->
+          <div class="guide-analysis-card">
+            <div class="guide-analysis-title">📊 Análisis de la Frontera & Cómo Elegir tu Cartera</div>
+            <p class="guide-param-desc">
+              <strong>1. Si eres un inversor institucional o conservador:</strong> Elige la <strong>Cartera GMV (Mínima Varianza)</strong>. Prioriza la estabilidad de capital por encima de todo.<br>
+              <strong>2. Si buscas maximizar patrimonio:</strong> Elige la <strong>Cartera Tangente (Máximo Sharpe)</strong>. Es el punto más eficiente de toda la curva.<br>
+              <strong>3. ¿Por qué comparamos contra Equal Weight (1/N)?</strong> Porque si un algoritmo sofisticado de optimización no logra superar a repartir la plata en partes iguales ($1/N$), significa que los datos están sobreajustados o no hay ventaja estadística.
+            </p>
+            <p class="guide-param-desc" style="margin-top: 8px;">
+              💡 <strong>Regla de Decisión:</strong> Nunca inviertas en una cartera que se ubique en el interior o por debajo de la curva: existe otra combinación con igual volatilidad y mucho mayor retorno sobre la línea de la frontera.
+            </p>
+          </div>
+        </div>
+
+        <!-- 4. CAPM Y EL FAMOSO BETA -->
+        <div class="guide-card-section">
+          <div class="guide-card-header">
+            <div class="guide-icon-badge">🎯</div>
+            <div>
+              <h3 class="guide-title">4. El Modelo CAPM y el Famoso "Beta" (β) de Mercado</h3>
+              <p class="guide-subtitle">¿Tu acción es un cohete agresivo o un escudo defensivo? ¿Qué es el Alpha?</p>
+            </div>
+          </div>
+          <p class="guide-explanation-p">
+            El modelo CAPM te ayuda a saber cuánto del rendimiento de una acción se debe a que el mercado en general (el S&P 500 o SPY) subió, y cuánto se debe a los méritos propios de la empresa.
+          </p>
+
+          <div class="guide-formula-box">
+            • Coeficiente Beta:         Beta = Covarianza(Acción, Mercado) / Varianza(Mercado)<br>
+            • Retorno Justo por CAPM:   Retorno_Esperado = Tasa_Libre_Riesgo + Beta · (Retorno_Mercado - Tasa_Libre_Riesgo)<br>
+            • Alpha de Jensen (α):      Alpha = Retorno_Real_Obtenido - Retorno_Justo_Por_CAPM
+          </div>
+
+          <div class="guide-param-list">
+            <div class="guide-param-item">
+              <span class="guide-param-name">Beta = 1.0 (Espejo del Mercado)</span>
+              <span class="guide-param-desc">La acción se mueve exactamente al mismo ritmo que el mercado general (SPY).</span>
+            </div>
+            <div class="guide-param-item">
+              <span class="guide-param-name">Beta > 1.0 (Activo Agresivo / Turbo)</span>
+              <span class="guide-param-desc">Si el mercado sube 10%, una acción con Beta 1.5 tiende a subir 15%. Pero cuidado: si el mercado cae 10%, caerá 15% (ej: Nvidia, Tesla, tecnológicas).</span>
+            </div>
+            <div class="guide-param-item">
+              <span class="guide-param-name">Beta < 1.0 (Activo Defensivo / Amortiguador)</span>
+              <span class="guide-param-desc">Si el mercado se desploma un 10%, una acción con Beta 0.4 solo cae 4% (ej: eléctricas, gasoductos, alimentos). Protege tu dinero en tormentas.</span>
+            </div>
+            <div class="guide-param-item">
+              <span class="guide-param-name">Alpha de Jensen (El Valor Agregado Real)</span>
+              <span class="guide-param-desc">Si una acción tiene Alpha positivo (+3%), significa que le ganó al mercado por mérito propio de su negocio y no simplemente por estar colgada de la marea general.</span>
+            </div>
+          </div>
+
+          <!-- Análisis y Desarrollo -->
+          <div class="guide-analysis-card">
+            <div class="guide-analysis-title">📊 Análisis de Sensibilidad (Beta) y Alpha de Jensen</div>
+            <p class="guide-param-desc">
+              El <strong>Beta</strong> te indica cómo va a reaccionar tu cartera cuando el mercado sufra un shock.
+            </p>
+            <div class="guide-scale-row">
+              <span class="scale-pill good">🟢 Beta < 0.8: Perfil Defensivo (Amortigua caídas de mercado)</span>
+              <span class="scale-pill warn">🟡 Beta 0.8 - 1.2: Perfil Neutro (Se mueve casi idéntico al SPY)</span>
+              <span class="scale-pill bad">🔴 Beta > 1.3: Perfil Agresivo (Alta volatilidad, amplifica subidas y desplomes)</span>
+            </div>
+            <div class="guide-scale-row" style="margin-top: 4px;">
+              <span class="scale-pill bad">🔴 Alpha < 0%: Destruye valor (Rinde menos de lo que exige su riesgo)</span>
+              <span class="scale-pill warn">🟡 Alpha 0% - 2%: Neutral (Gana lo justo por su exposición al mercado)</span>
+              <span class="scale-pill excel">🔵 Alpha > 3%: Generación genuina de valor (Supera consistentemente al benchmark)</span>
+            </div>
+            <p class="guide-param-desc" style="margin-top: 8px;">
+              💡 <strong>Regla de Decisión:</strong> En fases alcistas de mercado, una cartera con Beta de 1.2 a 1.4 captura retornos extraordinarios. Si se anticipa recesión o volatilidad alta, rota la cartera hacia activos con Beta menor a 0.8 y Alpha positivo.
+            </p>
+          </div>
+        </div>
+
+        <!-- 5. GESTIÓN DE RIESGO: VAR Y DRAWDOWN -->
+        <div class="guide-card-section">
+          <div class="guide-card-header">
+            <div class="guide-icon-badge">🛡️</div>
+            <div>
+              <h3 class="guide-title">5. Gestión de Riesgo: Value at Risk (VaR 95%) y Máxima Caída (Drawdown)</h3>
+              <p class="guide-subtitle">¿Cuánto puedo perder en un mal día? ¿Cuál fue el pozo más profundo de la historia?</p>
+            </div>
+          </div>
+          <p class="guide-explanation-p">
+            Nadie invierte para perder plata, pero el riesgo existe. Estas dos métricas te dicen exactamente a qué te estás exponiendo antes de poner un solo dólar.
+          </p>
+
+          <div class="guide-formula-box">
+            • VaR 95% Diario:      Pérdida_Máxima_Esperada_En_1_Día = 1.645 · Volatilidad_Diaria - Retorno_Diario<br>
+            • VaR en Dólares ($):   Pérdida_En_Plata = Capital_Invertido × VaR_95%<br>
+            • Max Drawdown (MDD):  Pozo_Máximo = (Valor_Más_Alto - Fondo_Del_Pozo) / Valor_Más_Alto × 100%<br>
+            • Días de Estancamiento: Tiempo total que estuviste bajo el agua esperando recuperar tu dinero tras una caída
+          </div>
+
+          <div class="guide-param-list">
+            <div class="guide-param-item">
+              <span class="guide-param-name">Ejemplo Real de VaR al 95%</span>
+              <span class="guide-param-desc">Si invertís $100.000 USD y tu VaR 95% da <strong>1.8% ($1.800 USD)</strong>, significa que en 19 de cada 20 días de bolsa tus pérdidas no van a superar los $1.800 USD en esa jornada.</span>
+            </div>
+            <div class="guide-param-item">
+              <span class="guide-param-name">Max Drawdown (El Pozo Histórico)</span>
+              <span class="guide-param-desc">Si tu cuenta llegó a $150.000 USD y durante una crisis cayó hasta $100.000 USD antes de volver a subir, tu Max Drawdown fue del 33.3%. Te entrena psicológicamente para aguantar caídas.</span>
+            </div>
+            <div class="guide-param-item">
+              <span class="guide-param-name">Ratio de Calmar (Ganancia vs Pozo)</span>
+              <span class="guide-param-desc">Divide tu ganancia anual (CAGR) por el Max Drawdown. Si ganas 30% al año y tu peor pozo fue 15%, tu Calmar es 2.0 (excelente resiliencia).</span>
+            </div>
+          </div>
+
+          <!-- Análisis y Desarrollo -->
+          <div class="guide-analysis-card">
+            <div class="guide-analysis-title">📊 Análisis de Riesgo Máximo y Tolerancia al Estrés</div>
+            <p class="guide-param-desc">
+              El <strong>Max Drawdown</strong> es la prueba psicológica más dura para un inversor. Mucha gente abandona sus inversiones en el fondo del pozo porque no conocían este número de antemano.
+            </p>
+            <div class="guide-scale-row">
+              <span class="scale-pill excel">🔵 Max Drawdown < 15%: Control de riesgo impecable</span>
+              <span class="scale-pill good">🟢 Max Drawdown 15% - 25%: Comportamiento normal en renta variable</span>
+              <span class="scale-pill warn">🟡 Max Drawdown 25% - 40%: Volatilidad severa (requiere estómago)</span>
+              <span class="scale-pill bad">🔴 Max Drawdown > 45%: Riesgo crítico de ruina o liquidación</span>
+            </div>
+            <p class="guide-param-desc" style="margin-top: 8px;">
+              💡 <strong>Regla de Decisión:</strong> Si tu capital es de $100.000 USD y no estás dispuesto a ver tu cuenta temporalmente en $80.000 USD (-20%), tu cartera no debe tener un Max Drawdown histórico superior al 15%.
+            </p>
+          </div>
+        </div>
+
+        <!-- 6. VALIDACIÓN IS / OOS Y REBALANCEO -->
+        <div class="guide-card-section">
+          <div class="guide-card-header">
+            <div class="guide-icon-badge">🔬</div>
+            <div>
+              <h3 class="guide-title">6. Validación IS / OOS y Rebalanceo: El Examen Final</h3>
+              <p class="guide-subtitle">In-Sample (Entrenamiento), Out-Of-Sample (Prueba Ciega) y por qué hay que rebalancear</p>
+            </div>
+          </div>
+          <p class="guide-explanation-p">
+            Cualquier computadora puede encontrar una cartera perfecta mirando el pasado con el diario del lunes (eso se llama <em>sobreajuste o trampa de optimización</em>). La <strong>Validación IS / OOS</strong> divide la historia en dos para comprobar si la estrategia es verdaderamente sólida:
+          </p>
+
+          <div class="guide-formula-box">
+            • Período In-Sample (IS):    Ventana de tiempo pasada (ej: 252 ruedas) donde la máquina aprende y elige los pesos óptimos.<br>
+            • Período Out-Of-Sample (OOS): Ventana siguiente de datos nuevos que la máquina NO vio para probar cómo le va en la vida real.<br>
+            • Dinámica de Rebalanceo:      Cada X días (mes, semana o día), se vuelve a acomodar la plata para que los pesos coincidan con el plan.<br>
+            • Alpha OOS vs Benchmark:      Ganancia de tu Cartera en OOS menos la Ganancia del Benchmark (SPY) en el mismo lapso
+          </div>
+
+          <div class="guide-param-list">
+            <div class="guide-param-item">
+              <span class="guide-param-name">¿Por qué es Obligatorio Rebalancear? (Weight Drift)</span>
+              <span class="guide-param-desc">Si armas una cartera 50% Apple y 50% YPF, y con los meses Apple se duplica mientras YPF no se mueve, ahora Apple representa el 67% de tu plata. Quedaste sobreexpuesto a Apple sin darte cuenta. Rebalancear significa vender automáticamente un pedacito de lo que subió mucho para comprar de lo que quedó barato y mantener el equilibrio.</span>
+            </div>
+            <div class="guide-param-item">
+              <span class="guide-param-name">Frecuencias de Rebalanceo</span>
+              <span class="guide-param-desc"><strong>Mensual (Cada 21 ruedas)</strong> suele ser el estándar institucional óptimo para balancear control de riesgo y menores costos de transacción.</span>
+            </div>
+            <div class="guide-param-item">
+              <span class="guide-param-name">Benchmark (El Rival a Vencer)</span>
+              <span class="guide-param-desc">El índice de referencia contra el que te mides (ej: SPY para mercado general, XLE para energía o QQQ para tecnología).</span>
+            </div>
+          </div>
+
+          <!-- Análisis y Desarrollo -->
+          <div class="guide-analysis-card">
+            <div class="guide-analysis-title">📊 Análisis de Robustez Fuera de Muestra (OOS)</div>
+            <p class="guide-param-desc">
+              <strong>¿Cómo saber si tu modelo es un éxito o una trampa?</strong><br>
+              • <strong>Caso Exitoso:</strong> La cartera rinde un Sharpe de 1.4 en IS y mantiene un Sharpe de 1.1 o superior en OOS con Alpha positivo frente al SPY.<br>
+              • <strong>Caso Sobreajustado (Overfitting):</strong> La cartera rendía 40% anual en IS con Sharpe 2.0, pero en OOS rinde negativo o pierde por goleada contra el SPY.
+            </p>
+            <div class="guide-scale-row">
+              <span class="scale-pill bad">🔴 Alpha OOS < -3%: Estrategia fallida en datos reales (Descartar pesos)</span>
+              <span class="scale-pill warn">🟡 Alpha OOS -3% a +2%: Rendimiento neutro en línea con el mercado</span>
+              <span class="scale-pill excel">🔵 Alpha OOS > +3%: Estrategia robusta validada (Lista para operar en real)</span>
+            </div>
+            <p class="guide-param-desc" style="margin-top: 8px;">
+              💡 <strong>Regla de Decisión:</strong> Nunca pongas dinero real en una cartera basada únicamente en su desempeño In-Sample. Exige siempre ver la prueba Out-Of-Sample con rebalanceo periódico activo.
+            </p>
+          </div>
+        </div>
+
+        <!-- 7. ARBITRAJE Y DÓLAR CCL -->
+        <div class="guide-card-section">
+          <div class="guide-card-header">
+            <div class="guide-icon-badge">🇦🇷</div>
+            <div>
+              <h3 class="guide-title">7. CEDEARs y el Dólar Contado con Liquidación (CCL) Implícito</h3>
+              <p class="guide-subtitle">Ratios de Conversión, Precio en Pesos vs Dólares y Detección de Oportunidades de Compra</p>
+            </div>
+          </div>
+          <p class="guide-explanation-p">
+            Cuando compras un CEDEAR en Buenos Aires (BYMA), estás comprando en pesos argentinos (ARS) una fracción de una acción que cotiza en dólares en Wall Street (USD). La relación entre lo que pagas en pesos y lo que vale en dólares te define el tipo de cambio implícito (Dólar CCL).
+          </p>
+
+          <div class="guide-formula-box">
+            • Dólar CCL del Activo:        Dólar_Implícito = Precio_en_Pesos_ARS / ( Precio_en_Dólares_USD · Ratio_Conversión )<br>
+            • Dólar Promedio de Cartera:    Dólar_Cartera = Suma( Peso_i · Dólar_Implícito_i )<br>
+            • Oportunidad de Arbitraje (%): Spread = (Dólar_Cartera - Dólar_Referencia) / Dólar_Referencia × 100%
+          </div>
+
+          <div class="guide-param-list">
+            <div class="guide-param-item">
+              <span class="guide-param-name">Ratio de Conversión (La Equivalencia)</span>
+              <span class="guide-param-desc">Cuántos certificados argentinos equivalen a 1 acción entera en Nueva York. Ej: Apple tiene ratio 10:1 (necesitas 10 CEDEARs para 1 acción de Apple). MercadoLibre tiene ratio 60:1.</span>
+            </div>
+            <div class="guide-param-item">
+              <span class="guide-param-name">Spread Negativo (Oportunidad / Descuento)</span>
+              <span class="guide-param-desc">Si el dólar oficial de referencia está a $1.250 y comprando el CEDEAR te queda un dólar de $1.220 (Spread -2.4%), estás comprando dólares más baratos a través de esa acción.</span>
+            </div>
+            <div class="guide-param-item">
+              <span class="guide-param-name">Spread Positivo (Sobreprecio)</span>
+              <span class="guide-param-desc">Si el dólar implícito del CEDEAR te queda en $1.280 contra $1.250 de referencia (+2.4%), estás pagando una prima cambiaria por encima del mercado.</span>
+            </div>
+          </div>
+
+          <!-- Análisis y Desarrollo -->
+          <div class="guide-analysis-card">
+            <div class="guide-analysis-title">📊 Análisis de Arbitraje Cambiario & Ejecución</div>
+            <p class="guide-param-desc">
+              En el mercado argentino (BYMA), debido a la iliquidez puntual de algunos CEDEARs, los tipos de cambio implícitos divergen del dólar CCL promedio del mercado, generando oportunidades de compra con descuento.
+            </p>
+            <div class="guide-scale-row">
+              <span class="scale-pill good">🟢 Spread < -1.5%: Oportunidad de Compra (Dólar barato en pesos)</span>
+              <span class="scale-pill warn">🟡 Spread -1.5% a +1.5%: Precio justo de arbitraje (En paridad)</span>
+              <span class="scale-pill bad">🔴 Spread > +1.5%: Sobreprecio cambiario (Conviene esperar o comprar otro CEDEAR)</span>
+            </div>
+            <p class="guide-param-desc" style="margin-top: 8px;">
+              💡 <strong>Regla de Decisión:</strong> Al momento de constituir la cartera en pesos argentinos, ejecuta primero las órdenes de aquellos CEDEARs con spread negativo más pronunciado para maximizar tu poder adquisitivo en dólares.
+            </p>
+          </div>
+        </div>
+      </section>
+
+
 
     </main>
   </div>
@@ -1392,6 +1968,9 @@ const INDEX_HTML: &str = r##"<!DOCTYPE html>
     }
 
     function renderOptimizacionResultados(data) {
+      window.lastOptResult = data;
+      try { localStorage.setItem('cfuba_last_opt_result', JSON.stringify(data)); } catch(e){}
+
       // 1. KPIs
       document.getElementById('kpiOptReturn').innerText = (data.port_return_sharpe * 100).toFixed(1) + '%';
       document.getElementById('kpiOptVol').innerText = (data.port_vol_sharpe * 100).toFixed(1) + '%';
@@ -1485,26 +2064,75 @@ const INDEX_HTML: &str = r##"<!DOCTYPE html>
         }
       });
 
-      // 4. Evolución Acumulada
+      // 4. Evolución Acumulada (Base 100 con Cartera Óptima, SPY Benchmark y Activos)
       if (charts.evolucion) charts.evolucion.destroy();
       const ctxEvolucion = document.getElementById('chartEvolucion').getContext('2d');
       const timeLabels = data.time_labels.slice(-60);
+      const nDays = timeLabels.length;
       const datasetsEvol = [];
-      const colores = ['#0062FF', '#0A192F', '#00D2D3', '#F59E0B', '#10B981', '#EC4899', '#8B5CF6'];
-      
+      const colores = ['#00D2D3', '#F59E0B', '#10B981', '#EC4899', '#8B5CF6', '#F97316', '#64748B'];
+
+      // 4.1 Cartera Óptima Ponderada (Base 100)
+      if (data.tickers && data.tickers.length > 0) {
+        const portPrices = [];
+        for (let d = 0; d < nDays; d++) {
+          let val = 0;
+          data.tickers.forEach((t, i) => {
+            const series = data.series_map[t];
+            if (series && series.length >= nDays) {
+              const sliceP = series.slice(-nDays);
+              const pBase = sliceP[0] || 1;
+              val += (data.pesos_sharpe[i] || 0) * (sliceP[d] / pBase);
+            }
+          });
+          portPrices.push((val * 100).toFixed(2));
+        }
+        datasetsEvol.push({
+          label: '★ Cartera Óptima (Máx Sharpe)',
+          data: portPrices,
+          borderColor: '#0062FF',
+          backgroundColor: 'rgba(0, 98, 255, 0.08)',
+          borderWidth: 3.2,
+          fill: true,
+          tension: 0.15,
+          pointRadius: 0,
+          order: 1
+        });
+      }
+
+      // 4.2 SPY Benchmark (Base 100)
+      const spySeries = data.series_map['SPY'];
+      if (spySeries && spySeries.length >= nDays) {
+        const sliceSpy = spySeries.slice(-nDays);
+        const baseSpy = sliceSpy[0] || 1;
+        datasetsEvol.push({
+          label: '📊 SPY (Benchmark S&P 500)',
+          data: sliceSpy.map(p => ((p / baseSpy) * 100).toFixed(2)),
+          borderColor: '#0A192F',
+          borderWidth: 2.5,
+          borderDash: [5, 3],
+          fill: false,
+          tension: 0.15,
+          pointRadius: 0,
+          order: 2
+        });
+      }
+
+      // 4.3 Activos Individuales (Base 100)
       data.tickers.forEach((t, i) => {
         const series = data.series_map[t];
         if (series && series.length > 0) {
-          const sliceP = series.slice(-60);
+          const sliceP = series.slice(-nDays);
           const base = sliceP[0] || 100;
           datasetsEvol.push({
             label: t,
             data: sliceP.map(p => ((p / base) * 100).toFixed(1)),
             borderColor: colores[i % colores.length],
-            borderWidth: 1.8,
+            borderWidth: 1.5,
             fill: false,
             tension: 0.1,
-            pointRadius: 0
+            pointRadius: 0,
+            order: 3 + i
           });
         }
       });
@@ -1515,8 +2143,20 @@ const INDEX_HTML: &str = r##"<!DOCTYPE html>
         options: {
           responsive: true,
           maintainAspectRatio: false,
-          plugins: { legend: { position: 'top' } },
-          scales: { x: { display: false } }
+          plugins: {
+            legend: { position: 'top' },
+            tooltip: {
+              callbacks: {
+                label: function(context) {
+                  return `${context.dataset.label}: ${context.parsed.y}%`;
+                }
+              }
+            }
+          },
+          scales: {
+            x: { ticks: { maxTicksLimit: 10 } },
+            y: { title: { display: true, text: 'Rendimiento Acumulado (Base 100)' } }
+          }
         }
       });
 
@@ -1561,16 +2201,23 @@ const INDEX_HTML: &str = r##"<!DOCTYPE html>
         }
       });
 
-      // 6. Matriz de Correlación
+      // 6. Matriz de Correlación (Mapa de Calor continuo Azul a Blanco)
       const thead = document.getElementById('theadCorr');
-      thead.innerHTML = '<th></th>' + data.tickers.map(t => `<th>${t}</th>`).join('');
+      thead.innerHTML = '<th style="text-align:center;">Activo</th>' + data.tickers.map(t => `<th style="text-align:center;">${t}</th>`).join('');
       const tbody = document.getElementById('tbodyCorr');
       tbody.innerHTML = '';
       data.matriz_correlacion.forEach((fila, r) => {
-        let rowHtml = `<td><strong>${data.tickers[r]}</strong></td>`;
+        let rowHtml = `<td style="font-weight:800; background:var(--slate-50); color:var(--navy-900); text-align:center;">${data.tickers[r]}</td>`;
         fila.forEach((val, c) => {
-          const bg = r === c ? '#EBF3FA' : (val > 0.6 ? '#FEE2E2' : '#F8FAFC');
-          rowHtml += `<td style="background:${bg}; font-family:'JetBrains Mono'; font-weight:700;">${val.toFixed(2)}</td>`;
+          // Escala continua: val de 0 a 1 -> opacidad de 0.03 (blanco suave) a 0.92 (azul intenso)
+          const norm = Math.max(0, Math.min(1, val));
+          const opacity = (norm * 0.89 + 0.03).toFixed(3);
+          const bg = `rgba(0, 98, 255, ${opacity})`;
+          const textColor = norm > 0.55 ? '#FFFFFF' : '#0A192F';
+          rowHtml += `
+            <td style="background:${bg}; color:${textColor}; font-family:'JetBrains Mono', monospace; font-weight:800; text-align:center; transition:all 0.15s ease;" title="Correlación ${data.tickers[r]} vs ${data.tickers[c]}: ${val.toFixed(2)}">
+              ${val.toFixed(2)}
+            </td>`;
         });
         tbody.innerHTML += `<tr>${rowHtml}</tr>`;
       });
@@ -1644,7 +2291,7 @@ const INDEX_HTML: &str = r##"<!DOCTYPE html>
         const alpha = (d.oos_return - d.bm_oos_return) * 100;
         document.getElementById('kpiAlphaOos').innerText = (alpha >= 0 ? '+' : '') + alpha.toFixed(1) + '%';
 
-        // 1. Gráfico Curva de Equidad Continua (IS vs OOS vs Benchmark)
+        // 1. Gráfico Curva de Equity Continua (IS vs OOS vs Benchmark)
         if (charts.isOosEvolucion) charts.isOosEvolucion.destroy();
         const ctxEvol = document.getElementById('chartIsOosEvolucion').getContext('2d');
 
@@ -1739,6 +2386,7 @@ const INDEX_HTML: &str = r##"<!DOCTYPE html>
       const payload = {
         tickers,
         pesos,
+        rebalance_freq: document.getElementById('trackRebalance')?.value || 'mensual',
         fecha_inicio: document.getElementById('trackFecha').value || '2024-01-01',
         ccl_ref: parseFloat(document.getElementById('trackCcl').value) || 1250.0,
         rf_rate: 0.04
@@ -1773,7 +2421,7 @@ const INDEX_HTML: &str = r##"<!DOCTYPE html>
             labels: d.time_labels,
             datasets: [
               {
-                label: 'Portafolio Personalizado (Equidad)',
+                label: 'Portafolio Personalizado (Equity)',
                 data: d.port_equity_curve.map(v => v.toFixed(3)),
                 borderColor: '#0062FF',
                 backgroundColor: 'rgba(0, 98, 255, 0.08)',
@@ -2003,12 +2651,24 @@ const INDEX_HTML: &str = r##"<!DOCTYPE html>
       });
 
       if (filtrados.length === 0) {
-        grid.innerHTML = `
-          <div style="grid-column: 1 / -1; text-align: center; padding: 28px; color: var(--slate-600);">
-            <p style="font-size: 1.1rem; font-weight: 700; margin-bottom: 6px;">No se encontraron activos para "${query}".</p>
-            <p style="font-size: 0.85rem;">Puede descargar cualquier símbolo personalizado escribiéndolo en el campo inferior.</p>
-          </div>
-        `;
+        const customSym = query.toUpperCase();
+        if (customSym.length > 0) {
+          grid.innerHTML = `
+            <div style="grid-column: 1 / -1; display:flex; flex-direction:column; align-items:center; gap:12px; padding: 32px 16px; color: var(--navy-900); background:#F8FAFC; border-radius:10px; border:1.5px dashed var(--slate-300);">
+              <p style="font-size: 1.05rem; font-weight: 800;">Símbolo personalizado: "${customSym}"</p>
+              <p style="font-size: 0.85rem; color:var(--slate-600);">No está en la lista rápida, pero puede descargarse directamente de Yahoo Finance.</p>
+              <button class="btn-action-primary" onclick="descargarSimboloDirecto('${customSym}')">
+                <span>📥</span> Descargar "${customSym}" desde Yahoo Finance
+              </button>
+            </div>
+          `;
+        } else {
+          grid.innerHTML = `
+            <div style="grid-column: 1 / -1; text-align: center; padding: 28px; color: var(--slate-600);">
+              <p style="font-size: 1rem; font-weight: 700;">No hay activos guardados con este filtro.</p>
+            </div>
+          `;
+        }
         return;
       }
 
@@ -2212,6 +2872,56 @@ const INDEX_HTML: &str = r##"<!DOCTYPE html>
       const iframe = document.getElementById('iframeReporte');
       if (iframe && iframe.contentWindow) {
         iframe.contentWindow.print();
+      }
+    }
+
+    let modoEdicionReporteActivo = false;
+
+    function toggleModoEdicionReporte() {
+      modoEdicionReporteActivo = !modoEdicionReporteActivo;
+      const iframe = document.getElementById('iframeReporte');
+      if (iframe && iframe.contentWindow) {
+        iframe.contentWindow.postMessage({ type: 'TOGGLE_EDIT', active: modoEdicionReporteActivo }, '*');
+      }
+      const btn = document.getElementById('btnParentEditReport');
+      const txt = document.getElementById('textParentEdit');
+      if (btn && txt) {
+        txt.innerText = modoEdicionReporteActivo ? 'Modo Edición: ON' : 'Modo Edición: OFF';
+        btn.style.background = modoEdicionReporteActivo ? '#16A34A' : '#D97706';
+      }
+      showToast(modoEdicionReporteActivo ? "✏️ Modo edición activado: haz clic en cualquier texto del informe para editarlo." : "🔒 Modo edición desactivado.");
+    }
+
+    function importarDatosMarkowitzAReporte() {
+      if (!window.lastOptResult) {
+        const saved = localStorage.getItem('cfuba_last_opt_result');
+        if (saved) {
+          try { window.lastOptResult = JSON.parse(saved); } catch(e){}
+        }
+      }
+      if (!window.lastOptResult) {
+        showToast("⚠️ Primero ejecute una optimización en 'Optimización Markowitz'.");
+        return;
+      }
+      const iframe = document.getElementById('iframeReporte');
+      if (iframe && iframe.contentWindow) {
+        iframe.contentWindow.postMessage({ type: 'IMPORT_MARKOWITZ', payload: window.lastOptResult }, '*');
+        showToast("📥 ¡Datos y gráficos de Markowitz importados al reporte!");
+      }
+    }
+
+    function guardarTextosReporte() {
+      const iframe = document.getElementById('iframeReporte');
+      if (iframe && iframe.contentWindow) {
+        iframe.contentWindow.postMessage({ type: 'SAVE_EDITS' }, '*');
+        showToast("💾 Solicitud de guardado enviada al reporte.");
+      }
+    }
+
+    function restaurarReporteOriginal() {
+      const iframe = document.getElementById('iframeReporte');
+      if (iframe && iframe.contentWindow) {
+        iframe.contentWindow.postMessage({ type: 'RESET_ORIGINAL' }, '*');
       }
     }
 

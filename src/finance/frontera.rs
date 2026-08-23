@@ -9,6 +9,7 @@ pub fn calcular_frontera_eficiente(
     covarianza: &DMatrix<f64>,
     limites: &[f64],
     dias_anualizacion: f64,
+    rf_rate: f64,
     puntos_totales: usize,
 ) -> Vec<(f64, f64)> {
     let n = esperados_diarios.len();
@@ -56,7 +57,7 @@ pub fn calcular_frontera_eficiente(
     frontera_puntos.push((max_vol_anual, max_ret_anual));
 
     // 3. Cartera de Máximo Sharpe (Punto de Tangencia de la Frontera)
-    let rf_diaria = 0.04 / dias_anualizacion;
+    let rf_diaria = rf_rate / dias_anualizacion;
     let res_sharpe = optimizar_maximo_sharpe(esperados_diarios, covarianza, rf_diaria, limites, 0);
     let sharpe_vol_anual = res_sharpe.volatilidad * dias_anualizacion.sqrt();
     let sharpe_ret_anual = res_sharpe.pesos.dot(esperados_diarios) * dias_anualizacion;

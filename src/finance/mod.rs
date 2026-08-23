@@ -169,7 +169,7 @@ pub fn ejecutar_optimizacion_cartera(
         }
     }
 
-    let frontera_puntos = frontera::calcular_frontera_eficiente(&esperados_diarios, &covarianza, &limites, dias_anualizacion, 15);
+    let frontera_puntos = frontera::calcular_frontera_eficiente(&esperados_diarios, &covarianza, &limites, dias_anualizacion, rf_anual, 30);
 
     Ok(OptimizarResponse {
         success: true,
