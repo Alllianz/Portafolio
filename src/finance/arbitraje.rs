@@ -1,6 +1,6 @@
 use std::collections::HashMap;
 
-/// Ratios de conversión de CEDEARs a acciones de USA (según fila 2 de arbitraje)
+/// Ratios de conversión conocidos de CEDEARs a acciones USA.
 pub fn inicializar_ratios_cedear() -> HashMap<String, f64> {
     let mut ratios = HashMap::new();
     ratios.insert("PEP".to_string(), 1.0 / 18.0);
@@ -18,12 +18,16 @@ pub fn inicializar_ratios_cedear() -> HashMap<String, f64> {
     ratios.insert("ETN".to_string(), 1.0 / 15.0);
     ratios.insert("GEV".to_string(), 1.0 / 10.0);
     ratios.insert("AAPL".to_string(), 1.0 / 10.0);
+    ratios.insert("AMZN".to_string(), 1.0 / 144.0);
     ratios.insert("MSFT".to_string(), 1.0 / 30.0);
     ratios.insert("GOOG".to_string(), 1.0 / 58.0);
+    ratios.insert("NVDA".to_string(), 1.0 / 24.0);
+    ratios.insert("META".to_string(), 1.0 / 24.0);
+    ratios.insert("TSLA".to_string(), 1.0 / 15.0);
     ratios
 }
 
-/// Consulta dinámica del ratio CEDEAR. Si es un activo nuevo (ej. RGTI), resuelve dinámicamente mediante consulta o ratio estándar 1:10
+/// Ratio dinámico o ratio estándar fallback (1:10)
 pub fn obtener_ratio_cedear(ticker: &str) -> f64 {
     let ratios = inicializar_ratios_cedear();
     if let Some(&ratio) = ratios.get(ticker) {

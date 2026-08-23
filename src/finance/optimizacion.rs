@@ -1,5 +1,7 @@
 use nalgebra::{DMatrix, DVector};
 
+#[derive(Debug, Clone)]
+#[allow(dead_code)]
 pub struct ResultadoOptimizacion {
     pub pesos: DVector<f64>,
     pub retorno_esperado: f64,
@@ -7,8 +9,7 @@ pub struct ResultadoOptimizacion {
     pub sharpe_ratio: f64,
 }
 
-/// Optimiza los pesos del portafolio mediante Gradiente Proyectado Determinista (SLSQP determinista).
-/// Minimiza una función de costo $f(w)$ sujeta a $\sum w_i = 1.0$ y $w_i \in [limite_i, 1.0]$.
+/// Optimiza los pesos del portafolio mediante Gradiente Proyectado Determinista sujeta a sum(w_i) = 1 y w_i in [limite_i, 1.0].
 fn optimizar_determinista<F, G>(
     n: usize,
     limites: &[f64],
@@ -19,7 +20,6 @@ where
     F: Fn(&DVector<f64>) -> f64,
     G: Fn(&DVector<f64>) -> DVector<f64>,
 {
-    // Punto inicial: Proyección igual dentro de los límites
     let mut pesos = DVector::from_element(n, 1.0 / (n as f64));
     pesos = proyectar_simplex_con_limites(&pesos, limites);
 
@@ -42,12 +42,11 @@ where
     proyectar_simplex_con_limites(&pesos, limites)
 }
 
-/// Proyecta un vector de pesos al simplex $\sum w_i = 1.0$ respetando los límites inferiores $w_i \ge limite_i$ e superiores $w_i \le 1.0$.
-fn proyectar_simplex_con_limites(v: &DVector<f64>, limites: &[f64]) -> DVector<f64> {
+/// Proyecta un vector de pesos al simplex sum(w_i) = 1.0 respetando los límites individuales.
+pub fn proyectar_simplex_con_limites(v: &DVector<f64>, limites: &[f64]) -> DVector<f64> {
     let n = v.len();
     let mut w = v.clone();
     
-    // Aplicar cotas individuales
     for i in 0..n {
         let min_w = limites[i].clamp(0.0, 1.0);
         if w[i] < min_w {
@@ -57,7 +56,6 @@ fn proyectar_simplex_con_limites(v: &DVector<f64>, limites: &[f64]) -> DVector<f
         }
     }
 
-    // Ajustar por bisección/búsqueda de Lagrange lambda para $\sum w_i = 1.0$
     let mut low = -10.0;
     let mut high = 10.0;
 
@@ -83,7 +81,7 @@ fn proyectar_simplex_con_limites(v: &DVector<f64>, limites: &[f64]) -> DVector<f
     res
 }
 
-/// Optimiza el Sharpe Ratio determinísticamente usando álgebra lineal y gradientes.
+/// Optimiza el ratio de Sharpe determinísticamente.
 pub fn optimizar_maximo_sharpe(
     retornos_esperados: &DVector<f64>,
     matriz_covarianza: &DMatrix<f64>,
@@ -93,7 +91,6 @@ pub fn optimizar_maximo_sharpe(
 ) -> ResultadoOptimizacion {
     let n = retornos_esperados.len();
 
-    // Maximizar Sharpe es equivalente a minimizar - (w^T mu - rf) / sqrt(w^T Sigma w)
     let cost_fn = |w: &DVector<f64>| {
         let ret = w.dot(retornos_esperados);
         let var = w.dot(&(matriz_covarianza * w));
@@ -115,16 +112,14 @@ pub fn optimizar_maximo_sharpe(
         }
 
         let num = ret - rf_diaria;
-        // Grad ( - num / vol ) = - ( vol * mu - num * (Sigma w / vol) ) / var
-        let grad = - (&(retornos_esperados * vol) - &(&sigma_w * (num / vol))) / var;
-        grad
+        - (&(retornos_esperados * vol) - &(&sigma_w * (num / vol))) / var
     };
 
     let pesos = optimizar_determinista(n, limites, cost_fn, grad_fn);
     let retorno = pesos.dot(retornos_esperados);
     let varianza = pesos.dot(&(matriz_covarianza * &pesos));
     let volatilidad = varianza.sqrt();
-    let sharpe = (retorno - rf_diaria) / volatilidad;
+    let sharpe = (retorno - rf_diaria) / volatilidad.max(1e-12);
 
     ResultadoOptimizacion {
         pesos,
@@ -134,7 +129,8 @@ pub fn optimizar_maximo_sharpe(
     }
 }
 
-/// Optimiza determinísticamente para obtener la mínima varianza bajo restricciones de límites.
+/// Optimiza la varianza mínima bajo restricciones de límites.
+#[allow(dead_code)]
 pub fn optimizar_minima_varianza(
     matriz_covarianza: &DMatrix<f64>,
     retornos_esperados: &DVector<f64>,
@@ -144,7 +140,6 @@ pub fn optimizar_minima_varianza(
 ) -> ResultadoOptimizacion {
     let n = limites.len();
 
-    // Minimizar 1/2 w^T Sigma w
     let cost_fn = |w: &DVector<f64>| {
         0.5 * w.dot(&(matriz_covarianza * w))
     };
@@ -157,7 +152,7 @@ pub fn optimizar_minima_varianza(
     let retorno = pesos.dot(retornos_esperados);
     let varianza = pesos.dot(&(matriz_covarianza * &pesos));
     let volatilidad = varianza.sqrt();
-    let sharpe = (retorno - rf_diaria) / volatilidad;
+    let sharpe = (retorno - rf_diaria) / volatilidad.max(1e-12);
 
     ResultadoOptimizacion {
         pesos,
@@ -165,25 +160,4 @@ pub fn optimizar_minima_varianza(
         volatilidad,
         sharpe_ratio: sharpe,
     }
-}
-
-/// Calcula el Value at Risk (VaR) paramétrico.
-/// nivel_confianza: ej 0.95 (para 95%)
-pub fn calcular_value_at_risk(rendimiento_port: f64, volatilidad_port: f64, nivel_confianza: f64) -> f64 {
-    // Usamos una aproximación de la distribución normal inversa (z-score)
-    // Para 95%, z ~ 1.645. Para 99%, z ~ 2.33
-    // Como no podemos usar scipy.stats.norm.ppf, implementamos una simple búsqueda binaria
-    // o hardcodeamos los niveles más comunes
-    let z = if (nivel_confianza - 0.99).abs() < 1e-4 {
-        2.326
-    } else if (nivel_confianza - 0.95).abs() < 1e-4 {
-        1.645
-    } else if (nivel_confianza - 0.90).abs() < 1e-4 {
-        1.282
-    } else {
-        1.645 // Default 95%
-    };
-    
-    // VaR = Z * sigma - mu (Asumiendo 1 periodo de tiempo)
-    (z * volatilidad_port) - rendimiento_port
 }
