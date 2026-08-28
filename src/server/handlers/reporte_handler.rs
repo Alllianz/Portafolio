@@ -11,6 +11,13 @@ pub async fn handler_get_reporte_html() -> Html<String> {
     Html(html)
 }
 
+pub async fn handler_get_reporte_seguimiento_html() -> Html<String> {
+    let html = crate::reportes::obtener_html_reporte_seguimiento()
+        .unwrap_or_else(|_| "<h1>Error al cargar el informe de seguimiento</h1>".to_string());
+    Html(html)
+}
+
+
 pub async fn handler_get_logo() -> Response {
     let candidatos = ["4.png", "../4.png", "src/ui/4.png"];
     for c in candidatos {

@@ -962,6 +962,9 @@ const INDEX_HTML: &str = r##"<!DOCTYPE html>
       <button class="menu-item-btn" onclick="switchView('view-reporte')">
         <span class="menu-icon">📑</span> Reporte Institucional (6 Págs)
       </button>
+      <button class="menu-item-btn" onclick="switchView('view-reporte-seguimiento')">
+        <span class="menu-icon">📈</span> Informe de Seguimiento
+      </button>
       <button class="menu-item-btn" onclick="switchView('view-db')">
         <span class="menu-icon">🗄️</span> Base de Datos SQLite
       </button>
@@ -1388,6 +1391,40 @@ const INDEX_HTML: &str = r##"<!DOCTYPE html>
         </div>
       </section>
 
+      <!-- VISTA 4B: INFORME OFICIAL DE SEGUIMIENTO -->
+      <section id="view-reporte-seguimiento" class="view-container">
+        <div class="view-header">
+          <div class="view-title-group">
+            <h2>Informe de Seguimiento de Portafolio vs SPY</h2>
+            <p>Maquetación ejecutiva editable: monitoreo de capital, curvas de drawdown, tabla comparativa y espacio para notas del comité de inversiones.</p>
+          </div>
+          <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+            <button id="btnParentEditTrackReport" class="btn-action-primary" style="background: #D97706;" onclick="toggleModoEdicionReporteSeguimiento()">
+              <span id="iconParentEditTrack">✏️</span> <span id="textParentEditTrack">Modo Edición: OFF</span>
+            </button>
+            <button class="btn-action-primary" style="background: #0D9488;" onclick="importarDatosSeguimientoAReporte()">
+              <span>📥</span> Sincronizar Seguimiento
+            </button>
+            <button class="btn-action-primary" style="background: #2563EB;" onclick="guardarTextosReporteSeguimiento()">
+              <span>💾</span> Guardar Textos
+            </button>
+            <button class="btn-action-primary" style="background: #64748B;" onclick="restaurarReporteSeguimientoOriginal()">
+              <span>🔄</span> Restaurar Original
+            </button>
+            <button class="btn-action-primary" onclick="abrirReporteSeguimientoEnNuevaVentana()">
+              <span>↗️</span> Pestaña Completa
+            </button>
+            <button class="btn-action-primary" style="background: var(--navy-900);" onclick="imprimirIframeReporteSeguimiento()">
+              <span>🖨️</span> Imprimir / PDF
+            </button>
+          </div>
+        </div>
+
+        <div class="card-panel" style="padding: 0; overflow: hidden; height: 880px;">
+          <iframe id="iframeReporteSeguimiento" src="/api/reporte-seguimiento/html" style="width: 100%; height: 100%; border: none;"></iframe>
+        </div>
+      </section>
+
       <!-- VISTA 5: BASE DE DATOS SQLITE -->
       <section id="view-db" class="view-container">
         <div class="view-header">
@@ -1453,145 +1490,194 @@ const INDEX_HTML: &str = r##"<!DOCTYPE html>
         </div>
       </section>
 
-      <!-- VISTA 6: GUÍA METODOLÓGICA & FÓRMULAS -->
+      <!-- VISTA 6: GUÍA METODOLÓGICA, TRATADO TEÓRICO & FÓRMULAS -->
       <section id="view-guia" class="view-container">
         <div class="view-header">
           <div class="view-title-group">
-            <h2>📚 Guía y Manual del Motor de Portafolio (Explicado en Humano)</h2>
-            <p>Guía paso a paso en lenguaje claro, sin tecnicismos innecesarios: qué significa cada métrica, para qué te sirve, cómo se calcula, qué representa cada variable y cómo interpretar cada resultado.</p>
+            <h2>📚 Tratado Teórico, Metodología Cuantitativa & Manual de Portafolios</h2>
+            <p>Fundamentos matemáticos rigurosos, demostraciones conceptuales y manual paso a paso: por qué funciona cada modelo, cómo se calcula y cómo trasladar la teoría a reportes institucionales.</p>
           </div>
         </div>
 
-        <!-- 1. CÓMO SE MIDE LA GANANCIA -->
+        <!-- MÓDULO 0: PASO A PASO MAESTRO PARA CREAR UN PORTAFOLIO -->
+        <div class="guide-card-section" style="border: 2px solid var(--blue-600); background: linear-gradient(180deg, #F8FAFC 0%, #FFFFFF 100%);">
+          <div class="guide-card-header">
+            <div class="guide-icon-badge" style="background: var(--blue-600);">🗺️</div>
+            <div>
+              <h3 class="guide-title" style="color: var(--navy-950);">Módulo Maestro: Flujo Metodológico de Construcción de Portafolios (Paso a Paso)</h3>
+              <p class="guide-subtitle">El ciclo completo de 5 fases: desde la concepción macro hasta la publicación del informe de 6 páginas</p>
+            </div>
+          </div>
+          
+          <p class="guide-explanation-p">
+            Construir una cartera de inversión profesional no es adivinar qué acción va a subir mañana, sino <strong>aplicar un proceso cuantitativo riguroso, repetible y blindado contra el riesgo</strong>. A continuación se detalla la metodología exacta que utiliza el <strong>Club de Finanzas UBA</strong> en esta plataforma.
+          </p>
+
+          <!-- FASE 1 -->
+          <div style="background: #FFFFFF; border: 1px solid var(--slate-200); border-left: 4px solid var(--blue-600); border-radius: 8px; padding: 14px 18px; margin-bottom: 14px;">
+            <h4 style="font-size: 15px; font-weight: 800; color: var(--navy-900); margin-bottom: 6px;">
+              📍 FASE 1: Concepción de la Tesis Macro & Selección de Activos
+            </h4>
+            <p style="font-size: 13.5px; line-height: 1.5; color: var(--slate-700); margin-bottom: 8px;">
+              <strong>1. Definir la Tesis de Inversión:</strong> Identifica un fenómeno macroeconómico o estructural de mediano/largo plazo (ej: <em>"La expansión de centros de datos de IA generará un déficit de 19 GW de energía eléctrica en EE.UU."</em>).
+            </p>
+            <p style="font-size: 13.5px; line-height: 1.5; color: var(--slate-700); margin-bottom: 8px;">
+              <strong>2. Seleccionar el Universo (5 a 10 activos):</strong> Elige compañías que capturen ese fenómeno desde distintos eslabones de la cadena de valor para no concentrarte en una sola empresa.
+            </p>
+            <p style="font-size: 13.5px; line-height: 1.5; color: var(--slate-700);">
+              <strong>3. Descarga y Verificación en SQLite:</strong> Dirígete a la pestaña <strong>🗄️ Base de Datos SQLite</strong>, busca los tickers (filtrando por <em>🇦🇷 CEDEARs & Argentina</em> si operas desde Argentina) y descárgalos con al menos 1.000 a 2.520 ruedas de historial (4 a 10 años).
+            </p>
+          </div>
+
+          <!-- FASE 2 -->
+          <div style="background: #FFFFFF; border: 1px solid var(--slate-200); border-left: 4px solid var(--teal-600); border-radius: 8px; padding: 14px 18px; margin-bottom: 14px;">
+            <h4 style="font-size: 15px; font-weight: 800; color: var(--navy-900); margin-bottom: 6px;">
+              ⚙️ FASE 2: Diagnóstico Estadístico & Arbitraje de Dólar CCL
+            </h4>
+            <p style="font-size: 13.5px; line-height: 1.5; color: var(--slate-700); margin-bottom: 8px;">
+              <strong>1. Matriz de Correlación:</strong> Revisa el mapa de calor de correlaciones. Si dos activos tienen correlación cercana a +1.0 (se mueven idéntico), estás duplicando riesgo sin ganar diversificación. El objetivo es combinar activos con correlaciones medias bajas (ej: menores a 0,40).
+            </p>
+            <p style="font-size: 13.5px; line-height: 1.5; color: var(--slate-700); margin-bottom: 8px;">
+              <strong>2. Tasa Libre de Riesgo (R_f = 4,0%):</strong> Se fija la tasa de los Bonos del Tesoro de EE.UU. a 10 años como referencia mínima que cualquier inversión en dólares debe superar.
+            </p>
+            <p style="font-size: 13.5px; line-height: 1.5; color: var(--slate-700);">
+              <strong>3. Control de Arbitraje CCL:</strong> Verifica el tipo de cambio implícito de cada CEDEAR frente al CCL de referencia ($1.250). Si la cartera tiene un spread negativo (-2,5%), significa que estás comprando los activos subyacentes con descuento cambiario en BYMA.
+            </p>
+          </div>
+
+          <!-- FASE 3 -->
+          <div style="background: #FFFFFF; border: 1px solid var(--slate-200); border-left: 4px solid var(--blue-700); border-radius: 8px; padding: 14px 18px; margin-bottom: 14px;">
+            <h4 style="font-size: 15px; font-weight: 800; color: var(--navy-900); margin-bottom: 6px;">
+              📊 FASE 3: Optimización Matricial de Markowitz & Frontera Eficiente
+            </h4>
+            <p style="font-size: 13.5px; line-height: 1.5; color: var(--slate-700); margin-bottom: 8px;">
+              En la pestaña <strong>📊 Optimización Markowitz</strong>:
+            </p>
+            <ul style="font-size: 13px; color: var(--slate-600); margin-left: 20px; line-height: 1.6; margin-bottom: 8px;">
+              <li>Ingresa los tickers separados por coma.</li>
+              <li>Fija la <strong>Ponderación Mínima (Bound)</strong> en 5% para asegurar diversificación mínima.</li>
+              <li>Haz clic en <strong>⚡ Optimizar Cartera</strong>.</li>
+            </ul>
+            <p style="font-size: 13.5px; line-height: 1.5; color: var(--slate-700);">
+              <strong>Interpretación de Soluciones:</strong> Selecciona entre <strong>Cartera Máximo Sharpe</strong> (punto tangente), <strong>Máximo Sortino</strong> (protección bajista) o <strong>Mínima Varianza Global (GMV)</strong> (menor riesgo total).
+            </p>
+          </div>
+
+          <!-- FASE 4 -->
+          <div style="background: #FFFFFF; border: 1px solid var(--slate-200); border-left: 4px solid #D97706; border-radius: 8px; padding: 14px 18px; margin-bottom: 14px;">
+            <h4 style="font-size: 15px; font-weight: 800; color: var(--navy-900); margin-bottom: 6px;">
+              🔬 FASE 4: Validación Fuera de Muestra & Seguimiento con Rebalanceo
+            </h4>
+            <p style="font-size: 13.5px; line-height: 1.5; color: var(--slate-700); margin-bottom: 8px;">
+              <strong>1. Validación In-Sample / Out-of-Sample (IS/OOS):</strong> Evalúa si la cartera calculada en el pasado (IS) sigue batiendo al SPY en el período de prueba (OOS). Si el Sharpe OOS es sólido (> 1,20), la cartera no está sobreajustada.
+            </p>
+            <p style="font-size: 13.5px; line-height: 1.5; color: var(--slate-700);">
+              <strong>2. Seguimiento vs SPY:</strong> En la pestaña <em>📈 Seguimiento vs SPY</em>, selecciona la frecuencia de rebalanceo (<strong>Mensual</strong> es la estándar). Verifica que el <strong>Máximo Drawdown</strong> sea menor al del mercado.
+            </p>
+          </div>
+
+          <!-- FASE 5 -->
+          <div style="background: #FFFFFF; border: 1px solid var(--slate-200); border-left: 4px solid #16A34A; border-radius: 8px; padding: 14px 18px;">
+            <h4 style="font-size: 15px; font-weight: 800; color: var(--navy-900); margin-bottom: 6px;">
+              📑 FASE 5: Edición, Redacción y Publicación del Informe Institucional
+            </h4>
+            <p style="font-size: 13.5px; line-height: 1.5; color: var(--slate-700); margin-bottom: 8px;">
+              <strong>1. Volcado Automático de Métricas:</strong> Dirígete a <strong>📑 Reporte Institucional (6 Págs)</strong> y haz clic en <strong>`📥 Importar de Markowitz`</strong>. Las tablas de ponderación, KPIs y gráficos se actualizarán con los datos de tu optimización.
+            </p>
+            <p style="font-size: 13.5px; line-height: 1.5; color: var(--slate-700); margin-bottom: 8px;">
+              <strong>2. Personalización Editorial con Modo Edición:</strong> Haz clic en <strong>`✏️ Modo Edición: ON`</strong> para redactar el análisis cualitativo.
+            </p>
+            <p style="font-size: 13.5px; line-height: 1.5; color: var(--slate-700); margin-bottom: 8px;">
+              <strong>3. Guardar y Exportar:</strong> Presiona <strong>`💾 Guardar Textos`</strong> para conservar tu redacción en <em>localStorage</em>, y luego haz clic en <strong>`🖨️ Imprimir / PDF`</strong> para generar el documento ejecutivo oficial en formato A4 listo para presentar.
+            </p>
+          </div>
+        </div>
+
+        <!-- 1. FUNDAMENTOS MATEMÁTICOS DEL RENDIMIENTO -->
         <div class="guide-card-section">
           <div class="guide-card-header">
             <div class="guide-icon-badge">💵</div>
             <div>
-              <h3 class="guide-title">1. ¿Cómo Medimos la Ganancia de una Acción?</h3>
-              <p class="guide-subtitle">Retorno Diario, Ganancia Aritmética vs Ganancia Real Compuesta (CAGR) y Dividendos</p>
+              <h3 class="guide-title">1. Fundamentos Matemáticos del Rendimiento y Volatility Drag</h3>
+              <p class="guide-subtitle">Rendimientos Simples vs Logarítmicos, Lema de Itô y la Erosión Geométrica de la Varianza</p>
             </div>
           </div>
           <p class="guide-explanation-p">
-            Cuando compras una acción, tu dinero cambia todos los días. Para analizarla profesionalmente necesitamos entender no solo cuánto subió en un día puntual, sino <strong>cuánto rindió en promedio por año compuesto</strong> y cuánto dinero te pagó en dividendos líquidos.
+            En finanzas cuantitativas, la forma en que calculas el rendimiento determina si tu modelo matemático es válido o defectuoso. Existen dos tipos de rendimientos con propiedades radicalmente distintas:
           </p>
           
           <div class="guide-formula-box">
-            • Ganancia de 1 Día:       Rendimiento = (Precio de Hoy - Precio de Ayer) / Precio de Ayer<br>
-            • Ganancia Anualizada:     Retorno_Aritmético = (1 + Promedio_Diario)²⁵² - 1<br>
-            • Ganancia Compuesta Real: CAGR = (Precio_Final / Precio_Inicial)^(252 / Total_Días) - 1<br>
-            • Ganancia Total con Plata en Mano: Total_Return = (1 + CAGR_Precio) · (1 + Rendimiento_Dividendos) - 1
+            • Rendimiento Simple (Discreto):   R_t = (P_t - P_{t-1}) / P_{t-1} = P_t / P_{t-1} - 1<br>
+            • Rendimiento Continuo (Log):      r_t = ln( P_t / P_{t-1} ) = ln(P_t) - ln(P_{t-1})<br>
+            • Tasa Compuesta Anual (CAGR):     CAGR = ( P_T / P_0 )^(252 / T) - 1<br>
+            • Fricción por Volatilidad (Itô):  CAGR ≈ μ_aritmético - 0.5 · σ²
           </div>
 
           <div class="guide-param-list">
             <div class="guide-param-item">
-              <span class="guide-param-name">Precio de Hoy vs Precio de Ayer (P_t y P_{t-1})</span>
-              <span class="guide-param-desc">El valor exacto al que cerró la acción en el mercado al final de cada rueda bursátil.</span>
+              <span class="guide-param-name">¿Por qué el motor usa Rendimientos Logarítmicos (r_t)?</span>
+              <span class="guide-param-desc"><strong>Aditividad Temporal:</strong> La suma de los rendimientos logarítmicos diarios a lo largo de un año es exactamente igual al rendimiento logarítmico anual total: ∑ r_t = ln(P_T / P_0). Con rendimientos simples esto es matemáticamente imposible. Además, bajo el modelo de Movimiento Browniano Geométrico, los rendimientos logarítmicos siguen una distribución Normal, habilitando el álgebra matricial.</span>
             </div>
             <div class="guide-param-item">
-              <span class="guide-param-name">Días Hábiles del Año (252)</span>
-              <span class="guide-param-desc">En Wall Street y Buenos Aires no se opera feriados ni fines de semana. Un año financiero completo tiene exactamente 252 ruedas de negociación.</span>
+              <span class="guide-param-name">¿Por qué el Promedio Aritmético Engaña al Inversor?</span>
+              <span class="guide-param-desc">Si una acción sube +50% el año 1 y cae -50% el año 2, el promedio simple parece (50 - 50)/2 = 0%. Sin embargo, tu dinero pasó de $100 a $150 y luego a $75. <strong>Perdiste el 25% real de tu patrimonio</strong>. El CAGR mide exactamente tu crecimiento patrimonial real.</span>
             </div>
             <div class="guide-param-item">
-              <span class="guide-param-name">CAGR (Tu Ganancia Compuesta Real)</span>
-              <span class="guide-param-desc"><strong>Muy importante:</strong> Si una acción baja 50% un año y sube 50% al siguiente, el promedio simple parece 0%, pero tu dinero pasó de $100 a $50 y luego a $75 (perdiste 25%). El CAGR mide tu plata real año tras año teniendo en cuenta ese efecto.</span>
-            </div>
-            <div class="guide-param-item">
-              <span class="guide-param-name">Dividend Yield (Rendimiento por Dividendos)</span>
-              <span class="guide-param-desc">El porcentaje de dinero en efectivo que la empresa reparte anualmente a sus accionistas respecto al precio de la acción (vital en empresas como Coca-Cola, Chevron o Southern Company).</span>
-            </div>
-            <div class="guide-param-item">
-              <span class="guide-param-name">Peor Día Registrado (Worst Day)</span>
-              <span class="guide-param-desc">El día histórico más catastrófico de la acción. Te avisa de antemano el peor golpe que sufrió en el pasado.</span>
+              <span class="guide-param-name">Volatility Drag (Erosión por Volatilidad)</span>
+              <span class="guide-param-desc">La fórmula de aproximación derivada del Lema de Itô demuestra que <strong>a mayor volatilidad (σ), mayor es la destrucción del capital compuesto (-0.5·σ²)</strong>. Por eso una cartera con la mitad de volatilidad que otra puede generar mucho más dinero a largo plazo aunque ambas tengan la misma rentabilidad media aritmética.</span>
             </div>
           </div>
 
-          <!-- Análisis y Desarrollo -->
           <div class="guide-analysis-card">
-            <div class="guide-analysis-title">📊 Análisis & Cómo Interpretar el Rendimiento</div>
-            <p class="guide-param-desc">
-              <strong>¿Para qué sirve el Retorno Aritmético?</strong> Es el insumo de entrada que necesita el algoritmo matemático de Markowitz para calcular las combinaciones óptimas de la cartera.<br>
-              <strong>¿Para qué sirve el CAGR?</strong> Es el número que verdaderamente entra a tu bolsillo y el que debes mostrar en cualquier reporte institucional. La diferencia entre el retorno aritmético y el CAGR se llama <em>"fricción por volatilidad" (volatility drag)</em>: cuanta más volatilidad tenga un activo, más distancia habrá entre ambos.
-            </p>
+            <div class="guide-analysis-title">📊 Escala Institucional de Evaluación de CAGR</div>
             <div class="guide-scale-row">
-              <span class="scale-pill bad">🔴 CAGR < 5%: Rendimiento pobre (pierde contra bonos)</span>
-              <span class="scale-pill warn">🟡 CAGR 5% - 10%: Rendimiento conservador aceptable</span>
-              <span class="scale-pill good">🟢 CAGR 10% - 20%: Muy buen rendimiento bursátil</span>
-              <span class="scale-pill excel">🔵 CAGR > 20%: Rendimiento extraordinario (Supera ampliamente al S&P 500)</span>
+              <span class="scale-pill bad">🔴 CAGR < 5%: Pobre (Pierde contra bonos del tesoro)</span>
+              <span class="scale-pill warn">🟡 CAGR 5% - 10%: Aceptable conservador</span>
+              <span class="scale-pill good">🟢 CAGR 10% - 20%: Excelente desempeño de renta variable</span>
+              <span class="scale-pill excel">🔵 CAGR > 20%: Sobresaliente (Supera ampliamente al S&P 500)</span>
             </div>
-            <p class="guide-param-desc" style="margin-top: 8px;">
-              💡 <strong>Regla de Decisión:</strong> Si una acción tiene un Retorno Aritmético alto (ej. 35%) pero un CAGR mediocre (ej. 10%), significa que es extremadamente volátil e ineficiente. Busca activos donde el CAGR esté lo más cerca posible del retorno medio.
-            </p>
           </div>
         </div>
 
-        <!-- 2. MARKOWITZ Y DIVERSIFICACIÓN -->
+        <!-- 2. TEORÍA MODERNA DE PORTAFOLIO (MARKOWITZ, 1952) -->
         <div class="guide-card-section">
           <div class="guide-card-header">
             <div class="guide-icon-badge">🧺</div>
             <div>
-              <h3 class="guide-title">2. La Teoría de Markowitz: No Poner Todos los Huevos en la Misma Canasta</h3>
-              <p class="guide-subtitle">Ponderaciones (Pesos %), Volatilidad (Riesgo), y los Ratios de Sharpe y Sortino</p>
+              <h3 class="guide-title">2. Teoría Moderna de Portafolio: Por qué la Covarianza Domina al Riesgo</h3>
+              <p class="guide-subtitle">Álgebra Matricial, Términos Cruzados N(N-1) y Formulación de Optimización Cuadrática</p>
             </div>
           </div>
           <p class="guide-explanation-p">
-            Harry Markowitz ganó el Premio Nobel demostrando algo fundamental: <strong>si combinas acciones que no se mueven igual, el riesgo de tu cartera cae en picada sin que tengas que renunciar a ganar dinero</strong>. Cuando una acción pasa por un mal trimestre, otra compensa con subidas, logrando que el valor de tu cuenta suba de forma suave y sin sobresaltos.
+            Harry Markowitz (Premio Nobel 1990) demostró matemáticamente que el riesgo de una cartera <strong>no es el promedio ponderado de los riesgos individuales</strong>, sino que depende casi exclusivamente de cómo covarían los activos entre sí.
           </p>
 
           <div class="guide-formula-box">
-            • Plata Invertida:        Suma de Pesos = Peso_Accion1 + Peso_Accion2 + ... = 100% de tu capital<br>
-            • Retorno de la Cartera:  Ganancia_Cartera = (Peso1 · Retorno1) + (Peso2 · Retorno2) + ...<br>
-            • Riesgo de la Cartera:   Volatilidad_Total = RaízCuadrada( Grilla de Pesos × Varianzas y Covarianzas )<br>
-            • Ratio de Sharpe:        Sharpe = (Ganancia_Cartera - Tasa_Libre_Riesgo) / Volatilidad_Total<br>
-            • Ratio de Sortino:       Sortino = (Ganancia_Cartera - Tasa_Libre_Riesgo) / Volatilidad_Solo_Caídas
+            • Retorno Esperado Matricial:   E(R_p) = w^T · μ = ∑ w_i · E(R_i)<br>
+            • Varianza de la Cartera:       σ_p² = w^T · Σ · w = ∑ w_i² σ_i² + ∑∑_{i ≠ j} w_i w_j Cov(R_i, R_j)<br>
+            • Covarianza y Correlación:     Cov(R_i, R_j) = ρ_{ij} · σ_i · σ_j<br>
+            • Problema de Optimización:     min_{w} 0.5 · w^T Σ w  sujeto a  w^T 1 = 1,  w_i ≥ w_min
           </div>
 
           <div class="guide-param-list">
             <div class="guide-param-item">
-              <span class="guide-param-name">Ponderación / Peso (w_i)</span>
-              <span class="guide-param-desc">Qué porcentaje de tu capital total ponés en cada acción. Ej: si tenés $100.000 y el peso de Apple es 30%, invertís $30.000 en Apple. La suma de todos los pesos siempre da 100%.</span>
+              <span class="guide-param-name">¿Por qué la Covarianza importa más que la Varianza individual?</span>
+              <span class="guide-param-desc">En una cartera de N activos, hay <strong>N términos de varianza propia</strong> y <strong>N(N-1) términos de covarianza cruzada</strong>. Para una cartera de 10 acciones, hay 10 varianzas y 90 covarianzas (el 90% del riesgo lo define la interacción). Si los activos están descorrelacionados (ρ < 0.40), el riesgo se extingue matemáticamente.</span>
             </div>
             <div class="guide-param-item">
-              <span class="guide-param-name">Volatilidad (El electrocardiograma del precio)</span>
-              <span class="guide-param-desc">Mide qué tan violentas son las subidas y bajadas de precio. Una acción con volatilidad del 15% es tranquila (como una Utility eléctrica); una del 60% es una montaña rusa (como una tecnológica o petrolera volátil).</span>
-            </div>
-            <div class="guide-param-item">
-              <span class="guide-param-name">Tasa Libre de Riesgo (R_f)</span>
-              <span class="guide-param-desc">Lo que te pagan los Bonos del Tesoro de EE.UU. a corto plazo por no hacer nada (ej: 4% o 4.65% anual). Es el piso mínimo: si vas a arriesgar en acciones, tienes que exigir ganar más que esto.</span>
-            </div>
-            <div class="guide-param-item">
-              <span class="guide-param-name">Ratio de Sharpe (Premio por Susto Aguantado)</span>
-              <span class="guide-param-desc">Indica cuánto rendimiento extra ganas por cada punto de volatilidad que soportas. Un Sharpe mayor a 1.0 es bueno; mayor a 1.5 es excelente.</span>
-            </div>
-            <div class="guide-param-item">
-              <span class="guide-param-name">Ratio de Sortino (Premio Castigando Solo Caídas)</span>
-              <span class="guide-param-desc">A diferencia de Sharpe (que castiga las subidas rápidas porque las cuenta como "volatilidad"), Sortino solo penaliza los días en que el precio cae. Es la métrica favorita de los inversores agresivos.</span>
-            </div>
-            <div class="guide-param-item">
-              <span class="guide-param-name">Matriz de Correlación (El Heatmap Azul)</span>
-              <span class="guide-param-desc">Mide si dos acciones van de la mano. Un valor de +1.0 (azul oscuro) significa que hacen lo mismo. Un valor cercano a 0.0 (blanco) significa que son independientes, lo que te da la máxima protección por diversificación.</span>
+              <span class="guide-param-name">Ratio de Sharpe vs Ratio de Sortino</span>
+              <span class="guide-param-desc"><strong>Sharpe</strong> penaliza toda oscilación (incluso subidas bruscas). <strong>Sortino</strong> utiliza la <em>Semi-Desviación Bajista (Downside Deviation)</em>, ignorando las subidas y castigando únicamente los días en que el precio cae por debajo del objetivo.</span>
             </div>
           </div>
 
-          <!-- Análisis y Desarrollo -->
           <div class="guide-analysis-card">
-            <div class="guide-analysis-title">📊 Análisis & Escalas del Ratio de Sharpe y Sortino</div>
-            <p class="guide-param-desc">
-              El <strong>Ratio de Sharpe</strong> es la regla de oro institucional: te dice si la rentabilidad que obtuviste fue por habilidad del armado de cartera o simplemente por asumir un riesgo demencial.
-            </p>
+            <div class="guide-analysis-title">📊 Escala del Ratio de Sharpe & Sortino</div>
             <div class="guide-scale-row">
-              <span class="scale-pill bad">🔴 Sharpe < 0.5: Pobre (Asumes mucho riesgo para lo poco que ganas)</span>
-              <span class="scale-pill warn">🟡 Sharpe 0.5 - 1.0: Aceptable (En línea con el mercado)</span>
-              <span class="scale-pill good">🟢 Sharpe 1.0 - 1.5: Muy Bueno (Cartera eficiente y balanceada)</span>
-              <span class="scale-pill excel">🔵 Sharpe > 1.5: Sobresaliente (Rendimiento estelar con bajo estrés)</span>
+              <span class="scale-pill bad">🔴 Sharpe < 0.5: Pobre</span>
+              <span class="scale-pill warn">🟡 Sharpe 0.5 - 1.0: En línea con el mercado</span>
+              <span class="scale-pill good">🟢 Sharpe 1.0 - 1.5: Cartera muy eficiente</span>
+              <span class="scale-pill excel">🔵 Sharpe > 1.5: Desempeño institucional sobresaliente</span>
             </div>
-            <div class="guide-scale-row" style="margin-top: 4px;">
-              <span class="scale-pill bad">🔴 Sortino < 1.0: Protección débil ante caídas</span>
-              <span class="scale-pill good">🟢 Sortino 1.0 - 2.0: Buena asimetría positiva</span>
-              <span class="scale-pill excel">🔵 Sortino > 2.0: Excelente (La cartera sube fuerte y apenas cae en bajas)</span>
-            </div>
-            <p class="guide-param-desc" style="margin-top: 8px;">
-              💡 <strong>Regla de Decisión:</strong> Si comparas dos carteras con igual retorno (ej. 25% anual), quédate siempre con la que tenga mayor Sharpe o Sortino: obtendrás el mismo dinero pero con muchas menos noches sin dormir.
-            </p>
           </div>
         </div>
 
@@ -1600,160 +1686,93 @@ const INDEX_HTML: &str = r##"<!DOCTYPE html>
           <div class="guide-card-header">
             <div class="guide-icon-badge">📈</div>
             <div>
-              <h3 class="guide-title">3. La Frontera Eficiente: El Menú de las Mejores Carteras Posibles</h3>
-              <p class="guide-subtitle">Cartera de Mínima Varianza (Dormir Tranquilo) vs Cartera Óptima (Máximo Sharpe)</p>
+              <h3 class="guide-title">3. La Frontera Eficiente y el Teorema de Separación de Tobin</h3>
+              <p class="guide-subtitle">Cartera Tangente (Máximo Sharpe), Cartera GMV (Mínima Varianza) y el Error de Merton</p>
             </div>
           </div>
           <p class="guide-explanation-p">
-            La <strong>Frontera Eficiente</strong> es la curva que dibuja el gráfico de dispersión. Te dice: <em>"Para cualquier nivel de riesgo que estés dispuesto a tolerar, esta es la combinación matemática de acciones que más plata te va a hacer ganar"</em>. Cualquier cartera que quede por debajo de la curva está mal armada porque asume riesgo innecesario.
+            La Frontera Eficiente es el conjunto geométrico de carteras que ofrecen el máximo retorno posible para cada nivel de volatilidad.
           </p>
 
           <div class="guide-formula-box">
-            • Menú de Opciones para el Inversor:<br>
-            &nbsp;&nbsp;1. Cartera de Mínima Varianza: Busca los pesos con el menor movimiento posible de capital.<br>
-            &nbsp;&nbsp;2. Cartera Óptima de Máximo Sharpe: El punto dulce exacto donde cada gota de riesgo rinde el máximo beneficio.<br>
-            &nbsp;&nbsp;3. Cartera Equal Weight (1/N): Reparte la plata en partes iguales (ej: 6 acciones = 16.6% cada una).
+            • Línea de Asignación (CAL):    E(R_CAL) = R_f + [ ( E(R_p) - R_f ) / σ_p ] · σ<br>
+            • Cartera Tangente (Max Sharpe): max_{w} ( w^T μ - R_f ) / √( w^T Σ w )<br>
+            • Cartera GMV:                   min_{w} w^T Σ w  sujeto a  w^T 1 = 1  (¡Sin usar μ!)
           </div>
 
           <div class="guide-param-list">
             <div class="guide-param-item">
-              <span class="guide-param-name">Cartera de Mínima Varianza Global (GMV)</span>
-              <span class="guide-param-desc">Ideal para perfiles conservadores. Su único objetivo es que tu cartera sufra lo menos posible ante cualquier crisis económica.</span>
+              <span class="guide-param-name">El Teorema de Separación de Dos Fondos (James Tobin, 1958)</span>
+              <span class="guide-param-desc">Demuestra que la decisión de inversión se divide en dos pasos totalmente independientes: 1) Encontrar la Cartera Tangente única en el punto de tangencia con la CAL; 2) Ajustar el nivel de riesgo deseado combinando esa misma cartera con el activo libre de riesgo (R_f), sin necesidad de cambiar las ponderaciones de las acciones.</span>
             </div>
             <div class="guide-param-item">
-              <span class="guide-param-name">Cartera Tangente (El Punto Azul Destacado)</span>
-              <span class="guide-param-desc">Es la cartera recomendada por excelencia. Es la que logra la pendiente más empinada de rentabilidad por cada unidad de volatilidad.</span>
+              <span class="guide-param-name">¿Por qué la Cartera GMV es tan crucial? (El Error de Estimación de Merton)</span>
+              <span class="guide-param-desc">Estudios empíricos (Merton 1980, Chopra & Ziemba 1993) demostraron que el error al estimar retornos futuros esperados (μ) es 10 veces mayor que el error al estimar la matriz de covarianza (Σ). La Cartera GMV es la única que <strong>no utiliza retornos esperados</strong>, minimizando el riesgo de error de pronóstico en producción.</span>
             </div>
-            <div class="guide-param-item">
-              <span class="guide-param-name">Límite Mínimo por Activo (min_bound)</span>
-              <span class="guide-param-desc">Le prohíbe al optimizador dejar acciones en 0%. Si pones 5%, obliga a que cada activo seleccionado tenga al menos un 5% de presencia en tu cartera para asegurar diversificación real.</span>
-            </div>
-          </div>
-
-          <!-- Análisis y Desarrollo -->
-          <div class="guide-analysis-card">
-            <div class="guide-analysis-title">📊 Análisis de la Frontera & Cómo Elegir tu Cartera</div>
-            <p class="guide-param-desc">
-              <strong>1. Si eres un inversor institucional o conservador:</strong> Elige la <strong>Cartera GMV (Mínima Varianza)</strong>. Prioriza la estabilidad de capital por encima de todo.<br>
-              <strong>2. Si buscas maximizar patrimonio:</strong> Elige la <strong>Cartera Tangente (Máximo Sharpe)</strong>. Es el punto más eficiente de toda la curva.<br>
-              <strong>3. ¿Por qué comparamos contra Equal Weight (1/N)?</strong> Porque si un algoritmo sofisticado de optimización no logra superar a repartir la plata en partes iguales ($1/N$), significa que los datos están sobreajustados o no hay ventaja estadística.
-            </p>
-            <p class="guide-param-desc" style="margin-top: 8px;">
-              💡 <strong>Regla de Decisión:</strong> Nunca inviertas en una cartera que se ubique en el interior o por debajo de la curva: existe otra combinación con igual volatilidad y mucho mayor retorno sobre la línea de la frontera.
-            </p>
           </div>
         </div>
 
-        <!-- 4. CAPM Y EL FAMOSO BETA -->
+        <!-- 4. MODELO CAPM Y DESCOMPOSICIÓN DE RIESGO -->
         <div class="guide-card-section">
           <div class="guide-card-header">
             <div class="guide-icon-badge">🎯</div>
             <div>
-              <h3 class="guide-title">4. El Modelo CAPM y el Famoso "Beta" (β) de Mercado</h3>
-              <p class="guide-subtitle">¿Tu acción es un cohete agresivo o un escudo defensivo? ¿Qué es el Alpha?</p>
+              <h3 class="guide-title">4. Modelo CAPM: Riesgo Sistemático (Beta) vs Alpha de Jensen</h3>
+              <p class="guide-subtitle">Por qué el Mercado no Paga Prima por Riesgo Diversificable y la Ecuación SML</p>
             </div>
           </div>
           <p class="guide-explanation-p">
-            El modelo CAPM te ayuda a saber cuánto del rendimiento de una acción se debe a que el mercado en general (el S&P 500 o SPY) subió, y cuánto se debe a los méritos propios de la empresa.
+            El Capital Asset Pricing Model (Sharpe, Lintner, Mossin) descompone el riesgo de cualquier activo en dos componentes mutuamente excluyentes:
           </p>
 
           <div class="guide-formula-box">
-            • Coeficiente Beta:         Beta = Covarianza(Acción, Mercado) / Varianza(Mercado)<br>
-            • Retorno Justo por CAPM:   Retorno_Esperado = Tasa_Libre_Riesgo + Beta · (Retorno_Mercado - Tasa_Libre_Riesgo)<br>
-            • Alpha de Jensen (α):      Alpha = Retorno_Real_Obtenido - Retorno_Justo_Por_CAPM
+            • Descomposición del Retorno:   R_i - R_f = α_i + β_i · ( R_m - R_f ) + ε_i<br>
+            • Coeficiente Beta:             β_i = Cov(R_i, R_m) / σ_m² = ρ_{i,m} · ( σ_i / σ_m )<br>
+            • Retorno Exigido CAPM (SML):   E(R_i) = R_f + β_i · [ E(R_m) - R_f ]<br>
+            • Alpha de Jensen:              α_i = R̄_i - ( R_f + β_i · [ R̄_m - R_f ] )
           </div>
 
           <div class="guide-param-list">
             <div class="guide-param-item">
-              <span class="guide-param-name">Beta = 1.0 (Espejo del Mercado)</span>
-              <span class="guide-param-desc">La acción se mueve exactamente al mismo ritmo que el mercado general (SPY).</span>
+              <span class="guide-param-name">El Teorema de No Recompensa al Riesgo Idiosincrático</span>
+              <span class="guide-param-desc">El mercado bursátil no te paga ningún premio por asumir riesgo propio de una empresa (ε_i), porque cualquier inversor puede anularlo gratis diversificando. Por ende, el único riesgo remunerado con prima de retorno es el <strong>Riesgo Sistemático (Beta)</strong>.</span>
             </div>
             <div class="guide-param-item">
-              <span class="guide-param-name">Beta > 1.0 (Activo Agresivo / Turbo)</span>
-              <span class="guide-param-desc">Si el mercado sube 10%, una acción con Beta 1.5 tiende a subir 15%. Pero cuidado: si el mercado cae 10%, caerá 15% (ej: Nvidia, Tesla, tecnológicas).</span>
+              <span class="guide-param-name">Beta de Cartera (β_p)</span>
+              <span class="guide-param-desc">β < 1.0 (Defensiva, amortigua caídas); β = 1.0 (En línea con el S&P 500); β > 1.0 (Agresiva y altamente cíclica).</span>
             </div>
-            <div class="guide-param-item">
-              <span class="guide-param-name">Beta < 1.0 (Activo Defensivo / Amortiguador)</span>
-              <span class="guide-param-desc">Si el mercado se desploma un 10%, una acción con Beta 0.4 solo cae 4% (ej: eléctricas, gasoductos, alimentos). Protege tu dinero en tormentas.</span>
-            </div>
-            <div class="guide-param-item">
-              <span class="guide-param-name">Alpha de Jensen (El Valor Agregado Real)</span>
-              <span class="guide-param-desc">Si una acción tiene Alpha positivo (+3%), significa que le ganó al mercado por mérito propio de su negocio y no simplemente por estar colgada de la marea general.</span>
-            </div>
-          </div>
-
-          <!-- Análisis y Desarrollo -->
-          <div class="guide-analysis-card">
-            <div class="guide-analysis-title">📊 Análisis de Sensibilidad (Beta) y Alpha de Jensen</div>
-            <p class="guide-param-desc">
-              El <strong>Beta</strong> te indica cómo va a reaccionar tu cartera cuando el mercado sufra un shock.
-            </p>
-            <div class="guide-scale-row">
-              <span class="scale-pill good">🟢 Beta < 0.8: Perfil Defensivo (Amortigua caídas de mercado)</span>
-              <span class="scale-pill warn">🟡 Beta 0.8 - 1.2: Perfil Neutro (Se mueve casi idéntico al SPY)</span>
-              <span class="scale-pill bad">🔴 Beta > 1.3: Perfil Agresivo (Alta volatilidad, amplifica subidas y desplomes)</span>
-            </div>
-            <div class="guide-scale-row" style="margin-top: 4px;">
-              <span class="scale-pill bad">🔴 Alpha < 0%: Destruye valor (Rinde menos de lo que exige su riesgo)</span>
-              <span class="scale-pill warn">🟡 Alpha 0% - 2%: Neutral (Gana lo justo por su exposición al mercado)</span>
-              <span class="scale-pill excel">🔵 Alpha > 3%: Generación genuina de valor (Supera consistentemente al benchmark)</span>
-            </div>
-            <p class="guide-param-desc" style="margin-top: 8px;">
-              💡 <strong>Regla de Decisión:</strong> En fases alcistas de mercado, una cartera con Beta de 1.2 a 1.4 captura retornos extraordinarios. Si se anticipa recesión o volatilidad alta, rota la cartera hacia activos con Beta menor a 0.8 y Alpha positivo.
-            </p>
           </div>
         </div>
 
-        <!-- 5. GESTIÓN DE RIESGO: VAR Y DRAWDOWN -->
+        <!-- 5. GESTIÓN DE RIESGO DE COLA -->
         <div class="guide-card-section">
           <div class="guide-card-header">
             <div class="guide-icon-badge">🛡️</div>
             <div>
-              <h3 class="guide-title">5. Gestión de Riesgo: Value at Risk (VaR 95%) y Máxima Caída (Drawdown)</h3>
-              <p class="guide-subtitle">¿Cuánto puedo perder en un mal día? ¿Cuál fue el pozo más profundo de la historia?</p>
+              <h3 class="guide-title">5. Gestión de Riesgo de Cola: Value at Risk (VaR 95%) y Ratio de Calmar</h3>
+              <p class="guide-subtitle">Probabilidad Estadística de Pérdida Máxima, Drawdown Continuo y Recuperación de Capital</p>
             </div>
           </div>
           <p class="guide-explanation-p">
-            Nadie invierte para perder plata, pero el riesgo existe. Estas dos métricas te dicen exactamente a qué te estás exponiendo antes de poner un solo dólar.
+            La gestión institucional de riesgo exige saber de antemano cuánto capital puede perderse en escenarios adversos y cuánto tiempo tarda la cartera en recuperarse de sus caídas.
           </p>
 
           <div class="guide-formula-box">
-            • VaR 95% Diario:      Pérdida_Máxima_Esperada_En_1_Día = 1.645 · Volatilidad_Diaria - Retorno_Diario<br>
-            • VaR en Dólares ($):   Pérdida_En_Plata = Capital_Invertido × VaR_95%<br>
-            • Max Drawdown (MDD):  Pozo_Máximo = (Valor_Más_Alto - Fondo_Del_Pozo) / Valor_Más_Alto × 100%<br>
-            • Días de Estancamiento: Tiempo total que estuviste bajo el agua esperando recuperar tu dinero tras una caída
+            • VaR 95% Paramétrico (1 Día):  VaR_{95%} = - ( μ_diario - 1.645 · σ_diaria ) ≈ 1.645 · σ_diaria<br>
+            • Drawdown en el Instante t:    DD_t = ( P_t - max_{τ ≤ t} P_τ ) / max_{τ ≤ t} P_τ<br>
+            • Máximo Drawdown Histórico:    MDD = min_{t} DD_t<br>
+            • Ratio de Calmar:              Calmar = CAGR / |MDD|
           </div>
 
           <div class="guide-param-list">
             <div class="guide-param-item">
-              <span class="guide-param-name">Ejemplo Real de VaR al 95%</span>
-              <span class="guide-param-desc">Si invertís $100.000 USD y tu VaR 95% da <strong>1.8% ($1.800 USD)</strong>, significa que en 19 de cada 20 días de bolsa tus pérdidas no van a superar los $1.800 USD en esa jornada.</span>
+              <span class="guide-param-name">¿Para qué sirve el VaR 95%?</span>
+              <span class="guide-param-desc">Fija el límite de pérdida máxima esperada con un 95% de probabilidad en condiciones normales de mercado. Es el requerimiento estándar de Basilea III para reservas de capital de bancos y fondos de inversión.</span>
             </div>
             <div class="guide-param-item">
-              <span class="guide-param-name">Max Drawdown (El Pozo Histórico)</span>
-              <span class="guide-param-desc">Si tu cuenta llegó a $150.000 USD y durante una crisis cayó hasta $100.000 USD antes de volver a subir, tu Max Drawdown fue del 33.3%. Te entrena psicológicamente para aguantar caídas.</span>
+              <span class="guide-param-name">Ratio de Calmar (Rentabilidad vs Caída Máxima)</span>
+              <span class="guide-param-desc">Mide cuántas unidades de ganancia compuesta anual generas por cada unidad de caída histórica máxima soportada. Un Calmar > 1.5 indica una gestión de caídas sobresaliente.</span>
             </div>
-            <div class="guide-param-item">
-              <span class="guide-param-name">Ratio de Calmar (Ganancia vs Pozo)</span>
-              <span class="guide-param-desc">Divide tu ganancia anual (CAGR) por el Max Drawdown. Si ganas 30% al año y tu peor pozo fue 15%, tu Calmar es 2.0 (excelente resiliencia).</span>
-            </div>
-          </div>
-
-          <!-- Análisis y Desarrollo -->
-          <div class="guide-analysis-card">
-            <div class="guide-analysis-title">📊 Análisis de Riesgo Máximo y Tolerancia al Estrés</div>
-            <p class="guide-param-desc">
-              El <strong>Max Drawdown</strong> es la prueba psicológica más dura para un inversor. Mucha gente abandona sus inversiones en el fondo del pozo porque no conocían este número de antemano.
-            </p>
-            <div class="guide-scale-row">
-              <span class="scale-pill excel">🔵 Max Drawdown < 15%: Control de riesgo impecable</span>
-              <span class="scale-pill good">🟢 Max Drawdown 15% - 25%: Comportamiento normal en renta variable</span>
-              <span class="scale-pill warn">🟡 Max Drawdown 25% - 40%: Volatilidad severa (requiere estómago)</span>
-              <span class="scale-pill bad">🔴 Max Drawdown > 45%: Riesgo crítico de ruina o liquidación</span>
-            </div>
-            <p class="guide-param-desc" style="margin-top: 8px;">
-              💡 <strong>Regla de Decisión:</strong> Si tu capital es de $100.000 USD y no estás dispuesto a ver tu cuenta temporalmente en $80.000 USD (-20%), tu cartera no debe tener un Max Drawdown histórico superior al 15%.
-            </p>
           </div>
         </div>
 
@@ -1762,52 +1781,26 @@ const INDEX_HTML: &str = r##"<!DOCTYPE html>
           <div class="guide-card-header">
             <div class="guide-icon-badge">🔬</div>
             <div>
-              <h3 class="guide-title">6. Validación IS / OOS y Rebalanceo: El Examen Final</h3>
-              <p class="guide-subtitle">In-Sample (Entrenamiento), Out-Of-Sample (Prueba Ciega) y por qué hay que rebalancear</p>
+              <h3 class="guide-title">6. Validación Fuera de Muestra (IS / OOS) y Cosecha de Volatilidad</h3>
+              <p class="guide-subtitle">Control de Overfitting / Data Snooping y el Demonio de Shannon en Rebalanceo Periódico</p>
             </div>
           </div>
           <p class="guide-explanation-p">
-            Cualquier computadora puede encontrar una cartera perfecta mirando el pasado con el diario del lunes (eso se llama <em>sobreajuste o trampa de optimización</em>). La <strong>Validación IS / OOS</strong> divide la historia en dos para comprobar si la estrategia es verdaderamente sólida:
+            La <strong>Validación In-Sample / Out-of-Sample</strong> divide la historia para calibrar pesos en el pasado (IS) y probarlos a ciegas en el período siguiente (OOS), evitando el autoengaño del sobreajuste estadístico.
           </p>
 
           <div class="guide-formula-box">
-            • Período In-Sample (IS):    Ventana de tiempo pasada (ej: 252 ruedas) donde la máquina aprende y elige los pesos óptimos.<br>
-            • Período Out-Of-Sample (OOS): Ventana siguiente de datos nuevos que la máquina NO vio para probar cómo le va en la vida real.<br>
-            • Dinámica de Rebalanceo:      Cada X días (mes, semana o día), se vuelve a acomodar la plata para que los pesos coincidan con el plan.<br>
-            • Alpha OOS vs Benchmark:      Ganancia de tu Cartera en OOS menos la Ganancia del Benchmark (SPY) en el mismo lapso
+            • Período In-Sample (IS 70%):    Ventana donde el algoritmo calibra los pesos w_i.<br>
+            • Período Out-of-Sample (OOS 30%): Ventana ciega donde se evalúa el Sharpe y Alpha real sin optimizar.<br>
+            • Rebalanceo Periódico:           Cada 21 ruedas (mensual), los pesos se reajustan mecánicamente a w_i.<br>
+            • Cosecha de Volatilidad:         El rebalanceo compra en caídas y toma ganancias en subidas, generando Alpha geométrico.
           </div>
 
           <div class="guide-param-list">
             <div class="guide-param-item">
-              <span class="guide-param-name">¿Por qué es Obligatorio Rebalancear? (Weight Drift)</span>
-              <span class="guide-param-desc">Si armas una cartera 50% Apple y 50% YPF, y con los meses Apple se duplica mientras YPF no se mueve, ahora Apple representa el 67% de tu plata. Quedaste sobreexpuesto a Apple sin darte cuenta. Rebalancear significa vender automáticamente un pedacito de lo que subió mucho para comprar de lo que quedó barato y mantener el equilibrio.</span>
+              <span class="guide-param-name">El Demonio de Shannon (Volatility Harvesting)</span>
+              <span class="guide-param-desc">Claude Shannon demostró que al rebalancear periódicamente entre activos oscilantes descorrelacionados, la cartera obtiene un rendimiento compuesto superior al promedio de los activos individuales, convirtiendo la volatilidad en retorno geométrico.</span>
             </div>
-            <div class="guide-param-item">
-              <span class="guide-param-name">Frecuencias de Rebalanceo</span>
-              <span class="guide-param-desc"><strong>Mensual (Cada 21 ruedas)</strong> suele ser el estándar institucional óptimo para balancear control de riesgo y menores costos de transacción.</span>
-            </div>
-            <div class="guide-param-item">
-              <span class="guide-param-name">Benchmark (El Rival a Vencer)</span>
-              <span class="guide-param-desc">El índice de referencia contra el que te mides (ej: SPY para mercado general, XLE para energía o QQQ para tecnología).</span>
-            </div>
-          </div>
-
-          <!-- Análisis y Desarrollo -->
-          <div class="guide-analysis-card">
-            <div class="guide-analysis-title">📊 Análisis de Robustez Fuera de Muestra (OOS)</div>
-            <p class="guide-param-desc">
-              <strong>¿Cómo saber si tu modelo es un éxito o una trampa?</strong><br>
-              • <strong>Caso Exitoso:</strong> La cartera rinde un Sharpe de 1.4 en IS y mantiene un Sharpe de 1.1 o superior en OOS con Alpha positivo frente al SPY.<br>
-              • <strong>Caso Sobreajustado (Overfitting):</strong> La cartera rendía 40% anual en IS con Sharpe 2.0, pero en OOS rinde negativo o pierde por goleada contra el SPY.
-            </p>
-            <div class="guide-scale-row">
-              <span class="scale-pill bad">🔴 Alpha OOS < -3%: Estrategia fallida en datos reales (Descartar pesos)</span>
-              <span class="scale-pill warn">🟡 Alpha OOS -3% a +2%: Rendimiento neutro en línea con el mercado</span>
-              <span class="scale-pill excel">🔵 Alpha OOS > +3%: Estrategia robusta validada (Lista para operar en real)</span>
-            </div>
-            <p class="guide-param-desc" style="margin-top: 8px;">
-              💡 <strong>Regla de Decisión:</strong> Nunca pongas dinero real en una cartera basada únicamente en su desempeño In-Sample. Exige siempre ver la prueba Out-Of-Sample con rebalanceo periódico activo.
-            </p>
           </div>
         </div>
 
@@ -1816,37 +1809,6 @@ const INDEX_HTML: &str = r##"<!DOCTYPE html>
           <div class="guide-card-header">
             <div class="guide-icon-badge">🇦🇷</div>
             <div>
-              <h3 class="guide-title">7. CEDEARs y el Dólar Contado con Liquidación (CCL) Implícito</h3>
-              <p class="guide-subtitle">Ratios de Conversión, Precio en Pesos vs Dólares y Detección de Oportunidades de Compra</p>
-            </div>
-          </div>
-          <p class="guide-explanation-p">
-            Cuando compras un CEDEAR en Buenos Aires (BYMA), estás comprando en pesos argentinos (ARS) una fracción de una acción que cotiza en dólares en Wall Street (USD). La relación entre lo que pagas en pesos y lo que vale en dólares te define el tipo de cambio implícito (Dólar CCL).
-          </p>
-
-          <div class="guide-formula-box">
-            • Dólar CCL del Activo:        Dólar_Implícito = Precio_en_Pesos_ARS / ( Precio_en_Dólares_USD · Ratio_Conversión )<br>
-            • Dólar Promedio de Cartera:    Dólar_Cartera = Suma( Peso_i · Dólar_Implícito_i )<br>
-            • Oportunidad de Arbitraje (%): Spread = (Dólar_Cartera - Dólar_Referencia) / Dólar_Referencia × 100%
-          </div>
-
-          <div class="guide-param-list">
-            <div class="guide-param-item">
-              <span class="guide-param-name">Ratio de Conversión (La Equivalencia)</span>
-              <span class="guide-param-desc">Cuántos certificados argentinos equivalen a 1 acción entera en Nueva York. Ej: Apple tiene ratio 10:1 (necesitas 10 CEDEARs para 1 acción de Apple). MercadoLibre tiene ratio 60:1.</span>
-            </div>
-            <div class="guide-param-item">
-              <span class="guide-param-name">Spread Negativo (Oportunidad / Descuento)</span>
-              <span class="guide-param-desc">Si el dólar oficial de referencia está a $1.250 y comprando el CEDEAR te queda un dólar de $1.220 (Spread -2.4%), estás comprando dólares más baratos a través de esa acción.</span>
-            </div>
-            <div class="guide-param-item">
-              <span class="guide-param-name">Spread Positivo (Sobreprecio)</span>
-              <span class="guide-param-desc">Si el dólar implícito del CEDEAR te queda en $1.280 contra $1.250 de referencia (+2.4%), estás pagando una prima cambiaria por encima del mercado.</span>
-            </div>
-          </div>
-
-          <!-- Análisis y Desarrollo -->
-          <div class="guide-analysis-card">
             <div class="guide-analysis-title">📊 Análisis de Arbitraje Cambiario & Ejecución</div>
             <p class="guide-param-desc">
               En el mercado argentino (BYMA), debido a la iliquidez puntual de algunos CEDEARs, los tipos de cambio implícitos divergen del dólar CCL promedio del mercado, generando oportunidades de compra con descuento.
@@ -2408,6 +2370,13 @@ const INDEX_HTML: &str = r##"<!DOCTYPE html>
         }
 
         const d = data.data;
+        window.lastTrackResult = d;
+        try { localStorage.setItem('cfuba_last_tracking_data', JSON.stringify(d)); } catch(e){}
+        const iframeSeg = document.getElementById('iframeReporteSeguimiento');
+        if (iframeSeg && iframeSeg.contentWindow) {
+          iframeSeg.contentWindow.postMessage({ type: 'IMPORT_TRACKING', payload: d }, '*');
+        }
+
         document.getElementById('kpiTrackGain').innerText = d.tracking_gain_pct.toFixed(1) + '%';
         document.getElementById('kpiTrackMaxDd').innerText = d.tracking_max_dd_pct.toFixed(1) + '%';
         document.getElementById('kpiTrackSharpe').innerText = d.tracking_sharpe.toFixed(2);
@@ -2922,6 +2891,67 @@ const INDEX_HTML: &str = r##"<!DOCTYPE html>
       const iframe = document.getElementById('iframeReporte');
       if (iframe && iframe.contentWindow) {
         iframe.contentWindow.postMessage({ type: 'RESET_ORIGINAL' }, '*');
+      }
+    }
+
+    let modoEdicionSeguimientoActivo = false;
+
+    function toggleModoEdicionReporteSeguimiento() {
+      modoEdicionSeguimientoActivo = !modoEdicionSeguimientoActivo;
+      const iframe = document.getElementById('iframeReporteSeguimiento');
+      if (iframe && iframe.contentWindow) {
+        iframe.contentWindow.postMessage({ type: 'TOGGLE_EDIT', active: modoEdicionSeguimientoActivo }, '*');
+      }
+      const btn = document.getElementById('btnParentEditTrackReport');
+      const txt = document.getElementById('textParentEditTrack');
+      if (btn && txt) {
+        txt.innerText = modoEdicionSeguimientoActivo ? 'Modo Edición: ON' : 'Modo Edición: OFF';
+        btn.style.background = modoEdicionSeguimientoActivo ? '#16A34A' : '#D97706';
+      }
+      showToast(modoEdicionSeguimientoActivo ? "✏️ Modo edición activado: haz clic en cualquier texto del informe de seguimiento para modificarlo." : "🔒 Modo edición desactivado.");
+    }
+
+    function importarDatosSeguimientoAReporte() {
+      if (!window.lastTrackResult) {
+        const saved = localStorage.getItem('cfuba_last_tracking_data');
+        if (saved) {
+          try { window.lastTrackResult = JSON.parse(saved); } catch(e){}
+        }
+      }
+      if (!window.lastTrackResult) {
+        showToast("⚠️ Primero ejecute una simulación en la pestaña 'Seguimiento vs SPY'.");
+        return;
+      }
+      const iframe = document.getElementById('iframeReporteSeguimiento');
+      if (iframe && iframe.contentWindow) {
+        iframe.contentWindow.postMessage({ type: 'IMPORT_TRACKING', payload: window.lastTrackResult }, '*');
+        showToast("📥 ¡Datos y gráficos de seguimiento sincronizados con éxito!");
+      }
+    }
+
+    function guardarTextosReporteSeguimiento() {
+      const iframe = document.getElementById('iframeReporteSeguimiento');
+      if (iframe && iframe.contentWindow) {
+        iframe.contentWindow.postMessage({ type: 'SAVE_EDITS' }, '*');
+        showToast("💾 Solicitud de guardado enviada al informe de seguimiento.");
+      }
+    }
+
+    function restaurarReporteSeguimientoOriginal() {
+      const iframe = document.getElementById('iframeReporteSeguimiento');
+      if (iframe && iframe.contentWindow) {
+        iframe.contentWindow.postMessage({ type: 'RESET_ORIGINAL' }, '*');
+      }
+    }
+
+    function abrirReporteSeguimientoEnNuevaVentana() {
+      window.open('/api/reporte-seguimiento/html', '_blank');
+    }
+
+    function imprimirIframeReporteSeguimiento() {
+      const iframe = document.getElementById('iframeReporteSeguimiento');
+      if (iframe && iframe.contentWindow) {
+        iframe.contentWindow.print();
       }
     }
 

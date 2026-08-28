@@ -23,4 +23,6 @@ zip = "2.1"
 axum = { version = "0.7", features = ["macros"] }
 tower-http = { version = "0.5", features = ["cors", "trace"] }
 open = "5.3"
+base64 = "0.22"
+
 

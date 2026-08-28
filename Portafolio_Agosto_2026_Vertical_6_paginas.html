@@ -1091,10 +1091,6 @@
 </head>
 <body>
 
-  <button class="print-btn" onclick="window.print()">
-    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9V2h12v7M6 18H4a2 2 0 01-2-2v-5a2 2 0 012-2h16a2 2 0 012 2v5a2 2 0 01-2 2h-2M6 14h12v8H6z"/></svg>
-    Guardar / Imprimir en PDF (6 Páginas)
-  </button>
 
   <!-- ==========================================
        PÁGINA 1: PORTADA Y RESUMEN EJECUTIVO
@@ -2533,21 +2529,30 @@
     body.modo-edicion-on [contenteditable="true"],
     body.modo-edicion-on .editable-text {
       outline: 1.5px dashed #0062ff !important;
-      background: rgba(0, 98, 255, 0.04) !important;
-      border-radius: 4px;
+      background: rgba(0, 98, 255, 0.05) !important;
+      border-radius: 3px;
       cursor: text !important;
       transition: all 0.15s ease;
+      min-height: 12px;
+    }
+    body.modo-edicion-on table td.editable-text,
+    body.modo-edicion-on table th.editable-text,
+    body.modo-edicion-on table td[contenteditable="true"],
+    body.modo-edicion-on table th[contenteditable="true"] {
+      outline: 1.5px dashed #0062ff !important;
+      background: rgba(0, 98, 255, 0.08) !important;
+      cursor: text !important;
     }
     body.modo-edicion-on [contenteditable="true"]:hover,
     body.modo-edicion-on .editable-text:hover {
-      background: rgba(0, 98, 255, 0.1) !important;
+      background: rgba(0, 98, 255, 0.14) !important;
       outline: 2px solid #0062ff !important;
     }
     body.modo-edicion-on [contenteditable="true"]:focus,
     body.modo-edicion-on .editable-text:focus {
       background: #ffffff !important;
       outline: 2.5px solid #0062ff !important;
-      box-shadow: 0 0 12px rgba(0, 98, 255, 0.25) !important;
+      box-shadow: 0 0 12px rgba(0, 98, 255, 0.3) !important;
     }
     @media print {
       body.modo-edicion-on [contenteditable="true"],
@@ -2570,65 +2575,6 @@
       inicializarTextosEditables();
       cargarCambiosGuardados();
       cargarMarkowitzGuardado();
-
-      // Botón general en la barra flotante
-      const printBtn = document.querySelector('.print-btn');
-      if (printBtn) {
-        const btnBox = document.createElement('div');
-        btnBox.style.position = 'fixed';
-        btnBox.style.bottom = '24px';
-        btnBox.style.right = '24px';
-        btnBox.style.zIndex = '9999';
-        btnBox.style.display = 'flex';
-        btnBox.style.gap = '8px';
-        btnBox.className = 'no-print-toolbar edit-toolbar-float';
-
-        const editBtn = document.createElement('button');
-        editBtn.id = 'btnFloatEdit';
-        editBtn.innerHTML = '✏️ Modo Edición: OFF';
-        editBtn.style.background = '#d97706';
-        editBtn.style.color = '#ffffff';
-        editBtn.style.padding = '12px 18px';
-        editBtn.style.borderRadius = '30px';
-        editBtn.style.fontSize = '13px';
-        editBtn.style.fontWeight = '700';
-        editBtn.style.border = '1px solid rgba(255,255,255,0.25)';
-        editBtn.style.boxShadow = '0 10px 30px rgba(0,0,0,0.4)';
-        editBtn.style.cursor = 'pointer';
-        editBtn.onclick = () => toggleModoEdicion();
-
-        const saveBtn = document.createElement('button');
-        saveBtn.innerHTML = '💾 Guardar';
-        saveBtn.style.background = '#2563eb';
-        saveBtn.style.color = '#ffffff';
-        saveBtn.style.padding = '12px 18px';
-        saveBtn.style.borderRadius = '30px';
-        saveBtn.style.fontSize = '13px';
-        saveBtn.style.fontWeight = '700';
-        saveBtn.style.border = '1px solid rgba(255,255,255,0.25)';
-        saveBtn.style.boxShadow = '0 10px 30px rgba(0,0,0,0.4)';
-        saveBtn.style.cursor = 'pointer';
-        saveBtn.onclick = () => guardarTextosReporte();
-
-        const exportAllBtn = document.createElement('button');
-        exportAllBtn.innerHTML = '📸 Gráficos 1080p';
-        exportAllBtn.style.background = '#0062ff';
-        exportAllBtn.style.color = '#ffffff';
-        exportAllBtn.style.padding = '12px 18px';
-        exportAllBtn.style.borderRadius = '30px';
-        exportAllBtn.style.fontSize = '13px';
-        exportAllBtn.style.fontWeight = '700';
-        exportAllBtn.style.border = '1px solid rgba(255,255,255,0.25)';
-        exportAllBtn.style.boxShadow = '0 10px 30px rgba(0,0,0,0.4)';
-        exportAllBtn.style.cursor = 'pointer';
-        exportAllBtn.onclick = descargarTodosLosGraficos;
-
-        printBtn.parentElement.replaceChild(btnBox, printBtn);
-        btnBox.appendChild(editBtn);
-        btnBox.appendChild(saveBtn);
-        btnBox.appendChild(exportAllBtn);
-        btnBox.appendChild(printBtn);
-      }
     });
 
     // Escuchar mensajes del padre (para importar de Markowitz o alternar edición)
@@ -2646,15 +2592,24 @@
     });
 
     function inicializarTextosEditables() {
-      const selectores = [
-        'h1', 'h2', 'h3', 'h4', 'p', 'span.exec-title', 'span.authors-subtitle',
-        '.kpi-val', '.kpi-lbl', '.d-name', '.d-pct', '.sc-title-big', '.sc-company-sub',
-        '.sc-thesis-p', '.sc-risk-p', '.pillar-card-title', '.pillar-card-p',
-        '.conclusion-p', '.bottom-tag-pill', '.footer-text-small'
-      ];
-      document.querySelectorAll(selectores.join(', ')).forEach((el, idx) => {
-        el.classList.add('editable-text');
-        el.setAttribute('data-edit-id', 'elem_' + idx);
+      let idx = 0;
+      document.querySelectorAll('.page *').forEach((el) => {
+        const tag = el.tagName.toLowerCase();
+        if (['svg', 'canvas', 'img', 'script', 'style', 'path', 'circle', 'polygon', 'polyline', 'g', 'rect', 'line'].includes(tag)) {
+          return;
+        }
+
+        // Si tiene texto directo o es un elemento de texto
+        const hasDirectText = Array.from(el.childNodes).some(n => n.nodeType === Node.TEXT_NODE && n.textContent.trim().length > 0);
+        if (hasDirectText || ['h1','h2','h3','h4','p','span','div','td','th','li','strong','em'].includes(tag)) {
+          // No aplicar a contenedores estructurales gigantes
+          if (!el.classList.contains('page') && !el.classList.contains('page-body') && !el.classList.contains('grid-2col')) {
+            el.classList.add('editable-text');
+            if (!el.getAttribute('data-edit-id')) {
+              el.setAttribute('data-edit-id', 'elem_' + idx++);
+            }
+          }
+        }
       });
     }
 
