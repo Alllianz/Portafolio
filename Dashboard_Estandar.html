@@ -805,13 +805,15 @@
         }
       });
 
-      // 6. Matriz de Correlación Empírica Real
+      // 6. Matriz de Correlación Empírica Real (Incluye SPY Obligatoriamente)
       const tablaM = document.getElementById('tablaMatriz');
-      let mHtml = '<thead><tr><th></th>' + data.tickers.map(t => `<th>${t}</th>`).join('') + '</tr></thead><tbody>';
+      const corrList = data.corr_tickers || (data.matriz_correlacion && data.matriz_correlacion.length > data.tickers.length ? [...data.tickers, 'SPY'] : data.tickers);
+      let mHtml = '<thead><tr><th></th>' + corrList.map(t => `<th style="${t==='SPY'?'background:#0062ff; color:#fff;':''}">${t}</th>`).join('') + '</tr></thead><tbody>';
 
-      for (let r = 0; r < data.tickers.length; r++) {
-        mHtml += `<tr><th>${data.tickers[r]}</th>`;
-        for (let c = 0; c < data.tickers.length; c++) {
+      for (let r = 0; r < corrList.length; r++) {
+        const rowTicker = corrList[r] || '';
+        mHtml += `<tr><th style="${rowTicker==='SPY'?'background:#0062ff; color:#fff;':''}">${rowTicker}</th>`;
+        for (let c = 0; c < corrList.length; c++) {
           const val = (data.matriz_correlacion && data.matriz_correlacion[r]) ? data.matriz_correlacion[r][c] : (r === c ? 1.0 : 0.25);
           const cls = r === c ? 'hm-diag' : (val > 0.4 ? 'hm-high' : (val > 0.2 ? 'hm-med' : 'hm-low'));
           mHtml += `<td class="${cls}">${val.toFixed(2)}</td>`;

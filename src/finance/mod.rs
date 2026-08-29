@@ -159,12 +159,28 @@ pub fn ejecutar_optimizacion_cartera(
         Err(_) => (req.ccl_ref, 0.0),
     };
 
-    let mut matriz_correlacion = vec![vec![0.0; n_activos]; n_activos];
-    for r in 0..n_activos {
-        let std_r = covarianza[(r, r)].sqrt().max(1e-12);
-        for c in 0..n_activos {
-            let std_c = covarianza[(c, c)].sqrt().max(1e-12);
-            let corr = covarianza[(r, c)] / (std_r * std_c);
+    let mut corr_tickers = portfolio_tickers.clone();
+    if !corr_tickers.contains(&"SPY".to_string()) {
+        corr_tickers.push("SPY".to_string());
+    }
+
+    let n_corr = corr_tickers.len();
+    let mut retornos_corr = DMatrix::zeros(n_retornos, n_corr);
+    for (col_idx, t) in corr_tickers.iter().enumerate() {
+        if let Some(col_rets) = retornos_map.get(t) {
+            for row_idx in 0..n_retornos {
+                retornos_corr[(row_idx, col_idx)] = col_rets[row_idx];
+            }
+        }
+    }
+
+    let cov_corr = stats::calcular_matriz_covarianza(&retornos_corr, req.poblacional);
+    let mut matriz_correlacion = vec![vec![0.0; n_corr]; n_corr];
+    for r in 0..n_corr {
+        let std_r = cov_corr[(r, r)].sqrt().max(1e-12);
+        for c in 0..n_corr {
+            let std_c = cov_corr[(c, c)].sqrt().max(1e-12);
+            let corr = cov_corr[(r, c)] / (std_r * std_c);
             matriz_correlacion[r][c] = (corr * 100.0).round() / 100.0;
         }
     }
@@ -197,6 +213,7 @@ pub fn ejecutar_optimizacion_cartera(
         series_map,
         time_labels,
         frontera_puntos,
+        corr_tickers,
         matriz_correlacion,
     })
 }

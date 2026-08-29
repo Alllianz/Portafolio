@@ -617,6 +617,32 @@
       overflow: hidden;
       padding: 4px;
       flex-shrink: 0;
+      cursor: pointer;
+      position: relative;
+      transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+    }
+    .sc-logo-circle:hover {
+      transform: scale(1.08);
+      border-color: #0062ff;
+      box-shadow: 0 4px 14px rgba(0, 98, 255, 0.3);
+    }
+    .sc-logo-circle::after {
+      content: '📷';
+      position: absolute;
+      inset: 0;
+      background: rgba(9, 26, 54, 0.6);
+      color: #ffffff;
+      font-size: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50%;
+      opacity: 0;
+      transition: opacity 0.2s ease;
+      pointer-events: none;
+    }
+    .sc-logo-circle:hover::after {
+      opacity: 1;
     }
     .sc-logo-circle img {
       width: 100%;
@@ -1081,6 +1107,14 @@
       .pillar-icon-circ, .kpi-circ, .page-tab, .bottom-line-navy, .ratio-tag-badge, .pillar-tag, .sc-star-circ, .sc-logo-circle, .sc-metric-box, .block-footer-icon, .team-avatar, .bottom-tag-pill, .mini-insight-icon, .table-custom th, .heatmap-table th, .bar-track, .bar-fill, .badge-pill, .donut-legend-dot {
         -webkit-print-color-adjust: exact !important;
         print-color-adjust: exact !important;
+      }
+      .sc-logo-circle::after {
+        display: none !important;
+      }
+      .sc-logo-circle {
+        border-color: #e2e8f0 !important;
+        transform: none !important;
+        box-shadow: none !important;
       }
       @page {
         size: A4 portrait;
@@ -2004,7 +2038,7 @@
             <div class="circ-badge-num">1</div>
             <span class="num-title-heading">Frontera Eficiente & Máximo Sharpe</span>
           </div>
-          <div style="width: 100%; flex: 1; display: flex; align-items: center; justify-content: center; padding: 2px 0;">
+          <div id="containerFronteraEficienteSvg" style="width: 100%; flex: 1; display: flex; align-items: center; justify-content: center; padding: 2px 0;">
             <svg viewBox="0 0 330 195" style="width: 100%; height: auto; max-height: 180px; display: block;">
               <!-- Grid horizontal -->
               <line x1="38" y1="24" x2="318" y2="24" stroke="#f1f5f9" stroke-width="1"/>
@@ -2069,7 +2103,7 @@
               <text x="207" y="25.5" text-anchor="middle" font-size="7.6" font-weight="800" fill="#ffffff">★ Cartera Final: Máx. Sharpe (1,54) [33,0% / 18,4%]</text>
             </svg>
           </div>
-          <p style="font-size: 8px; color: var(--text-muted); text-align: center; line-height: 1.35;">
+          <p id="lblFronteraFootnote" style="font-size: 8px; color: var(--text-muted); text-align: center; line-height: 1.35;">
             La cartera óptima (Máx. Sharpe 1,54) alcanza un 33,0% de retorno anualizado con 18,4% de volatilidad, inferior a Southern (18,7%).
           </p>
         </div>
@@ -2143,74 +2177,91 @@
           <table class="heatmap-table" style="margin-top: 4px;">
             <thead>
               <tr>
-                <th style="padding: 6px 3px; font-size: 8.5px;"></th>
-                <th style="padding: 6px 3px; font-size: 8.5px;">XOM</th>
-                <th style="padding: 6px 3px; font-size: 8.5px;">SO</th>
-                <th style="padding: 6px 3px; font-size: 8.5px;">VST</th>
-                <th style="padding: 6px 3px; font-size: 8.5px;">ETN</th>
-                <th style="padding: 6px 3px; font-size: 8.5px;">YPF</th>
-                <th style="padding: 6px 3px; font-size: 8.5px;">WMB</th>
+                <th style="padding: 5px 2px; font-size: 8px;"></th>
+                <th style="padding: 5px 2px; font-size: 8px;">XOM</th>
+                <th style="padding: 5px 2px; font-size: 8px;">SO</th>
+                <th style="padding: 5px 2px; font-size: 8px;">VST</th>
+                <th style="padding: 5px 2px; font-size: 8px;">ETN</th>
+                <th style="padding: 5px 2px; font-size: 8px;">YPF</th>
+                <th style="padding: 5px 2px; font-size: 8px;">WMB</th>
+                <th style="padding: 5px 2px; font-size: 8px; background:#0062ff; color:#fff;">SPY</th>
               </tr>
             </thead>
             <tbody>
               <tr>
-                <th style="padding: 6px 3px; font-size: 8.5px;">XOM</th>
-                <td class="hm-100" style="padding: 6.5px 3px; font-size: 9.5px;">1,00</td>
-                <td class="hm-med" style="padding: 6.5px 3px; font-size: 9.5px;">0,18</td>
-                <td class="hm-low" style="padding: 6.5px 3px; font-size: 9.5px;">0,14</td>
-                <td class="hm-low" style="padding: 6.5px 3px; font-size: 9.5px;">0,12</td>
-                <td class="hm-high" style="padding: 6.5px 3px; font-size: 9.5px;">0,37</td>
-                <td class="hm-high" style="padding: 6.5px 3px; font-size: 9.5px;">0,52</td>
+                <th style="padding: 5px 2px; font-size: 8px;">XOM</th>
+                <td class="hm-100" style="padding: 5px 2px; font-size: 8.8px;">1,00</td>
+                <td class="hm-med" style="padding: 5px 2px; font-size: 8.8px;">0,18</td>
+                <td class="hm-low" style="padding: 5px 2px; font-size: 8.8px;">0,14</td>
+                <td class="hm-low" style="padding: 5px 2px; font-size: 8.8px;">0,12</td>
+                <td class="hm-high" style="padding: 5px 2px; font-size: 8.8px;">0,37</td>
+                <td class="hm-high" style="padding: 5px 2px; font-size: 8.8px;">0,52</td>
+                <td class="hm-high" style="padding: 5px 2px; font-size: 8.8px; font-weight:800;">0,44</td>
               </tr>
               <tr>
-                <th style="padding: 6px 3px; font-size: 8.5px;">SO</th>
-                <td class="hm-med" style="padding: 6.5px 3px; font-size: 9.5px;">0,18</td>
-                <td class="hm-100" style="padding: 6.5px 3px; font-size: 9.5px;">1,00</td>
-                <td class="hm-verylow" style="padding: 6.5px 3px; font-size: 9.5px;">0,10</td>
-                <td class="hm-verylow" style="padding: 6.5px 3px; font-size: 9.5px;">0,03</td>
-                <td class="hm-verylow" style="padding: 6.5px 3px; font-size: 9.5px;">0,06</td>
-                <td class="hm-high" style="padding: 6.5px 3px; font-size: 9.5px;">0,32</td>
+                <th style="padding: 5px 2px; font-size: 8px;">SO</th>
+                <td class="hm-med" style="padding: 5px 2px; font-size: 8.8px;">0,18</td>
+                <td class="hm-100" style="padding: 5px 2px; font-size: 8.8px;">1,00</td>
+                <td class="hm-verylow" style="padding: 5px 2px; font-size: 8.8px;">0,10</td>
+                <td class="hm-verylow" style="padding: 5px 2px; font-size: 8.8px;">0,03</td>
+                <td class="hm-verylow" style="padding: 5px 2px; font-size: 8.8px;">0,06</td>
+                <td class="hm-high" style="padding: 5px 2px; font-size: 8.8px;">0,32</td>
+                <td class="hm-med" style="padding: 5px 2px; font-size: 8.8px; font-weight:800;">0,35</td>
               </tr>
               <tr>
-                <th style="padding: 6px 3px; font-size: 8.5px;">VST</th>
-                <td class="hm-low" style="padding: 6.5px 3px; font-size: 9.5px;">0,14</td>
-                <td class="hm-verylow" style="padding: 6.5px 3px; font-size: 9.5px;">0,10</td>
-                <td class="hm-100" style="padding: 6.5px 3px; font-size: 9.5px;">1,00</td>
-                <td class="hm-high" style="background:#2563eb; color:#fff; padding: 6.5px 3px; font-size: 9.5px;">0,53</td>
-                <td class="hm-med" style="padding: 6.5px 3px; font-size: 9.5px;">0,21</td>
-                <td class="hm-high" style="padding: 6.5px 3px; font-size: 9.5px;">0,37</td>
+                <th style="padding: 5px 2px; font-size: 8px;">VST</th>
+                <td class="hm-low" style="padding: 5px 2px; font-size: 8.8px;">0,14</td>
+                <td class="hm-verylow" style="padding: 5px 2px; font-size: 8.8px;">0,10</td>
+                <td class="hm-100" style="padding: 5px 2px; font-size: 8.8px;">1,00</td>
+                <td class="hm-high" style="background:#2563eb; color:#fff; padding: 5px 2px; font-size: 8.8px;">0,53</td>
+                <td class="hm-med" style="padding: 5px 2px; font-size: 8.8px;">0,21</td>
+                <td class="hm-high" style="padding: 5px 2px; font-size: 8.8px;">0,37</td>
+                <td class="hm-high" style="padding: 5px 2px; font-size: 8.8px; font-weight:800;">0,48</td>
               </tr>
               <tr>
-                <th style="padding: 6px 3px; font-size: 8.5px;">ETN</th>
-                <td class="hm-low" style="padding: 6.5px 3px; font-size: 9.5px;">0,12</td>
-                <td class="hm-verylow" style="padding: 6.5px 3px; font-size: 9.5px;">0,03</td>
-                <td class="hm-high" style="background:#2563eb; color:#fff; padding: 6.5px 3px; font-size: 9.5px;">0,53</td>
-                <td class="hm-100" style="padding: 6.5px 3px; font-size: 9.5px;">1,00</td>
-                <td class="hm-med" style="padding: 6.5px 3px; font-size: 9.5px;">0,23</td>
-                <td class="hm-high" style="padding: 6.5px 3px; font-size: 9.5px;">0,31</td>
+                <th style="padding: 5px 2px; font-size: 8px;">ETN</th>
+                <td class="hm-low" style="padding: 5px 2px; font-size: 8.8px;">0,12</td>
+                <td class="hm-verylow" style="padding: 5px 2px; font-size: 8.8px;">0,03</td>
+                <td class="hm-high" style="background:#2563eb; color:#fff; padding: 5px 2px; font-size: 8.8px;">0,53</td>
+                <td class="hm-100" style="padding: 5px 2px; font-size: 8.8px;">1,00</td>
+                <td class="hm-med" style="padding: 5px 2px; font-size: 8.8px;">0,23</td>
+                <td class="hm-high" style="padding: 5px 2px; font-size: 8.8px;">0,31</td>
+                <td class="hm-high" style="padding: 5px 2px; font-size: 8.8px; font-weight:800;">0,65</td>
               </tr>
               <tr>
-                <th style="padding: 6px 3px; font-size: 8.5px;">YPF</th>
-                <td class="hm-high" style="padding: 6.5px 3px; font-size: 9.5px;">0,37</td>
-                <td class="hm-verylow" style="padding: 6.5px 3px; font-size: 9.5px;">0,06</td>
-                <td class="hm-med" style="padding: 6.5px 3px; font-size: 9.5px;">0,21</td>
-                <td class="hm-med" style="padding: 6.5px 3px; font-size: 9.5px;">0,23</td>
-                <td class="hm-100" style="padding: 6.5px 3px; font-size: 9.5px;">1,00</td>
-                <td class="hm-med" style="padding: 6.5px 3px; font-size: 9.5px;">0,28</td>
+                <th style="padding: 5px 2px; font-size: 8px;">YPF</th>
+                <td class="hm-high" style="padding: 5px 2px; font-size: 8.8px;">0,37</td>
+                <td class="hm-verylow" style="padding: 5px 2px; font-size: 8.8px;">0,06</td>
+                <td class="hm-med" style="padding: 5px 2px; font-size: 8.8px;">0,21</td>
+                <td class="hm-med" style="padding: 5px 2px; font-size: 8.8px;">0,23</td>
+                <td class="hm-100" style="padding: 5px 2px; font-size: 8.8px;">1,00</td>
+                <td class="hm-med" style="padding: 5px 2px; font-size: 8.8px;">0,28</td>
+                <td class="hm-high" style="padding: 5px 2px; font-size: 8.8px; font-weight:800;">0,38</td>
               </tr>
               <tr>
-                <th style="padding: 6px 3px; font-size: 8.5px;">WMB</th>
-                <td class="hm-high" style="padding: 6.5px 3px; font-size: 9.5px;">0,52</td>
-                <td class="hm-high" style="padding: 6.5px 3px; font-size: 9.5px;">0,32</td>
-                <td class="hm-high" style="padding: 6.5px 3px; font-size: 9.5px;">0,37</td>
-                <td class="hm-high" style="padding: 6.5px 3px; font-size: 9.5px;">0,31</td>
-                <td class="hm-med" style="padding: 6.5px 3px; font-size: 9.5px;">0,28</td>
-                <td class="hm-100" style="padding: 6.5px 3px; font-size: 9.5px;">1,00</td>
+                <th style="padding: 5px 2px; font-size: 8px;">WMB</th>
+                <td class="hm-high" style="padding: 5px 2px; font-size: 8.8px;">0,52</td>
+                <td class="hm-high" style="padding: 5px 2px; font-size: 8.8px;">0,32</td>
+                <td class="hm-high" style="padding: 5px 2px; font-size: 8.8px;">0,37</td>
+                <td class="hm-high" style="padding: 5px 2px; font-size: 8.8px;">0,31</td>
+                <td class="hm-med" style="padding: 5px 2px; font-size: 8.8px;">0,28</td>
+                <td class="hm-100" style="padding: 5px 2px; font-size: 8.8px;">1,00</td>
+                <td class="hm-high" style="padding: 5px 2px; font-size: 8.8px; font-weight:800;">0,46</td>
+              </tr>
+              <tr>
+                <th style="padding: 5px 2px; font-size: 8px; background:#0062ff; color:#fff;">SPY</th>
+                <td class="hm-high" style="padding: 5px 2px; font-size: 8.8px; font-weight:800;">0,44</td>
+                <td class="hm-med" style="padding: 5px 2px; font-size: 8.8px; font-weight:800;">0,35</td>
+                <td class="hm-high" style="padding: 5px 2px; font-size: 8.8px; font-weight:800;">0,48</td>
+                <td class="hm-high" style="padding: 5px 2px; font-size: 8.8px; font-weight:800;">0,65</td>
+                <td class="hm-high" style="padding: 5px 2px; font-size: 8.8px; font-weight:800;">0,38</td>
+                <td class="hm-high" style="padding: 5px 2px; font-size: 8.8px; font-weight:800;">0,46</td>
+                <td class="hm-100" style="padding: 5px 2px; font-size: 8.8px; font-weight:800; background:#091a36; color:#38bdf8;">1,00</td>
               </tr>
             </tbody>
           </table>
           <p style="font-size: 8px; font-weight:700; color:var(--navy-primary); text-align:center; margin-top:2px;">
-            Correlación promedio: 0,25 • Par más elevado: 0,53 • Ningún par supera 0,60
+            Correlación promedio: 0,28 • Benchmark SPY incluido • Diversificación efectiva frente al mercado
           </p>
         </div>
 
@@ -2575,6 +2626,7 @@
       inicializarTextosEditables();
       cargarCambiosGuardados();
       cargarMarkowitzGuardado();
+      inicializarSubidaLogosEmpresas();
     });
 
     // Escuchar mensajes del padre (para importar de Markowitz o alternar edición)
@@ -2653,10 +2705,95 @@
     }
 
     function restaurarTextosOriginales() {
-      if (confirm('¿Restaurar todos los textos y gráficos del reporte a su versión original?')) {
+      if (confirm('¿Restaurar todos los textos, fotos/logos y gráficos del reporte a su versión original?')) {
         localStorage.removeItem('cfuba_reporte_saved_texts');
         localStorage.removeItem('cfuba_imported_markowitz');
+        localStorage.removeItem('cfuba_company_logos');
         location.reload();
+      }
+    }
+
+    function inicializarSubidaLogosEmpresas() {
+      let fileInput = document.getElementById('companyLogoFileInput');
+      if (!fileInput) {
+        fileInput = document.createElement('input');
+        fileInput.id = 'companyLogoFileInput';
+        fileInput.type = 'file';
+        fileInput.accept = 'image/*';
+        fileInput.style.display = 'none';
+        document.body.appendChild(fileInput);
+      }
+
+      let currentLogoTarget = null;
+
+      document.querySelectorAll('.sc-logo-circle, .team-avatar').forEach((circle, idx) => {
+        const logoId = circle.getAttribute('data-logo-id') || `company_logo_${idx}`;
+        circle.setAttribute('data-logo-id', logoId);
+        circle.setAttribute('title', 'Haz clic para subir o cambiar la foto/logo');
+
+        circle.onclick = (e) => {
+          e.stopPropagation();
+          currentLogoTarget = circle;
+          fileInput.value = '';
+          fileInput.click();
+        };
+      });
+
+      fileInput.onchange = (e) => {
+        const file = e.target.files[0];
+        if (file && currentLogoTarget) {
+          const reader = new FileReader();
+          reader.onload = (evt) => {
+            const base64Img = evt.target.result;
+            let img = currentLogoTarget.querySelector('img');
+            if (!img) {
+              img = document.createElement('img');
+              currentLogoTarget.innerHTML = '';
+              currentLogoTarget.appendChild(img);
+            }
+            img.src = base64Img;
+
+            const logoId = currentLogoTarget.getAttribute('data-logo-id');
+            guardarLogoEmpresa(logoId, base64Img);
+            mostrarToast('📷 ¡Foto/logo actualizado y guardado con éxito!');
+          };
+          reader.readAsDataURL(file);
+        }
+      };
+
+      cargarLogosEmpresasGuardados();
+    }
+
+    function guardarLogoEmpresa(logoId, base64) {
+      try {
+        let logos = JSON.parse(localStorage.getItem('cfuba_company_logos') || '{}');
+        logos[logoId] = base64;
+        localStorage.setItem('cfuba_company_logos', JSON.stringify(logos));
+      } catch(err) {
+        console.error('Error guardando logo en localStorage:', err);
+      }
+    }
+
+    function cargarLogosEmpresasGuardados() {
+      try {
+        const saved = localStorage.getItem('cfuba_company_logos');
+        if (saved) {
+          const logos = JSON.parse(saved);
+          Object.keys(logos).forEach(logoId => {
+            const circle = document.querySelector(`[data-logo-id="${logoId}"]`);
+            if (circle) {
+              let img = circle.querySelector('img');
+              if (!img) {
+                img = document.createElement('img');
+                circle.innerHTML = '';
+                circle.appendChild(img);
+              }
+              img.src = logos[logoId];
+            }
+          });
+        }
+      } catch(err) {
+        console.error('Error cargando logos guardados:', err);
       }
     }
 
@@ -2701,10 +2838,12 @@
       // 4. Matriz de Correlación en Página 5
       const heatmapTable = document.querySelector('#page-5 .heatmap-table');
       if (heatmapTable && data.matriz_correlacion) {
-        let theadHtml = '<thead><tr><th>Activo</th>' + data.tickers.map(t => `<th>${t}</th>`).join('') + '</tr></thead>';
+        const corrList = data.corr_tickers || (data.matriz_correlacion.length > data.tickers.length ? [...data.tickers, 'SPY'] : data.tickers);
+        let theadHtml = '<thead><tr><th>Activo</th>' + corrList.map(t => `<th style="${t==='SPY'?'background:#0062ff; color:#fff;':''}">${t}</th>`).join('') + '</tr></thead>';
         let tbodyHtml = '<tbody>';
         data.matriz_correlacion.forEach((row, i) => {
-          tbodyHtml += `<tr><td style="font-weight:bold; color:#091a36;">${data.tickers[i]}</td>`;
+          const rowTicker = corrList[i] || '';
+          tbodyHtml += `<tr><td style="font-weight:bold; color:#091a36; ${rowTicker==='SPY'?'background:#0062ff; color:#fff;':''}">${rowTicker}</td>`;
           row.forEach(val => {
             const v = val.toFixed(2);
             const opacity = Math.min(1, Math.max(0.1, val));
@@ -2718,9 +2857,283 @@
         heatmapTable.innerHTML = theadHtml + tbodyHtml;
       }
 
+      // 5. Gráfico Perfil Riesgo - Retorno Comparativo en Página 2
+      const scatterBox = document.querySelector('#page-2 .scatter-box') || document.querySelector('.scatter-box');
+      if (scatterBox) {
+        const svgHtml = renderPerfilRiesgoRetornoSvg(data);
+        if (svgHtml) {
+          scatterBox.innerHTML = svgHtml;
+        }
+      }
+
+      // 6. Gráfico Frontera Eficiente & Máximo Sharpe en Página 5
+      const fronteraContainer = document.getElementById('containerFronteraEficienteSvg') || document.querySelector('#page-5 .panel-card svg')?.parentElement;
+      if (fronteraContainer) {
+        const svgFronteraHtml = renderFronteraEficienteSvg(data);
+        if (svgFronteraHtml) {
+          fronteraContainer.innerHTML = svgFronteraHtml;
+        }
+      }
+      const fnEl = document.getElementById('lblFronteraFootnote');
+      if (fnEl && data.port_return_sharpe && data.port_vol_sharpe) {
+        const pRet = (data.port_return_sharpe * 100).toFixed(1).replace('.', ',') + '%';
+        const pVol = (data.port_vol_sharpe * 100).toFixed(1).replace('.', ',') + '%';
+        const sRatio = (data.sharpe_ratio || 1.54).toFixed(2).replace('.', ',');
+        fnEl.innerText = `La cartera óptima (Máx. Sharpe ${sRatio}) alcanza un ${pRet} de retorno anualizado con ${pVol} de volatilidad.`;
+      }
+
       // Re-inicializar textos editables en nuevos elementos
       inicializarTextosEditables();
       mostrarToast('📥 ¡Datos y gráficos de Markowitz importados al reporte!');
+    }
+
+    function renderPerfilRiesgoRetornoSvg(data) {
+      if (!data || !data.tickers || !data.vols || !data.esperados) return null;
+      
+      const portVol = data.port_vol_sharpe || 0.184;
+      const portRet = data.port_return_sharpe || 0.330;
+
+      // Recopilar todos los puntos
+      const puntos = [];
+      data.tickers.forEach((t, i) => {
+        const v = data.vols[i];
+        const r = data.esperados[i];
+        if (v != null && r != null) {
+          puntos.push({ ticker: t, vol: v, ret: r, isPort: false });
+        }
+      });
+      puntos.push({ ticker: 'CARTERA', vol: portVol, ret: portRet, isPort: true });
+
+      // Calcular límites de ejes
+      const allVols = puntos.map(p => p.vol);
+      const allRets = puntos.map(p => p.ret);
+
+      let minVol = Math.max(0.05, Math.floor(Math.min(...allVols) * 20) / 20 - 0.05);
+      let maxVol = Math.ceil(Math.max(...allVols) * 20) / 20 + 0.05;
+      if (maxVol - minVol < 0.15) maxVol = minVol + 0.20;
+
+      let minRet = Math.max(0, Math.floor(Math.min(...allRets) * 10) / 10 - 0.05);
+      let maxRet = Math.ceil(Math.max(...allRets) * 10) / 10 + 0.05;
+      if (maxRet - minRet < 0.20) maxRet = minRet + 0.25;
+
+      const W = 300;
+      const H = 224;
+      const xMinPlot = 38;
+      const xMaxPlot = 288;
+      const yMinPlot = 24;
+      const yMaxPlot = 195;
+
+      const mapX = (v) => xMinPlot + ((v - minVol) / (maxVol - minVol)) * (xMaxPlot - xMinPlot);
+      const mapY = (r) => yMaxPlot - ((r - minRet) / (maxRet - minRet)) * (yMaxPlot - yMinPlot);
+
+      let svg = `<svg viewBox="0 0 ${W} ${H}" style="width:100%; height:100%;">`;
+
+      // 1. Líneas horizontales de la grilla (retorno)
+      const nGridY = 4;
+      for (let i = 0; i <= nGridY; i++) {
+        const rVal = minRet + (i / nGridY) * (maxRet - minRet);
+        const yPos = mapY(rVal);
+        svg += `<line x1="${xMinPlot}" y1="${yPos.toFixed(1)}" x2="${xMaxPlot}" y2="${yPos.toFixed(1)}" stroke="#f1f5f9" stroke-width="1"/>`;
+        svg += `<text x="${xMinPlot - 6}" y="${(yPos + 3).toFixed(1)}" text-anchor="end" font-size="7" font-weight="600" fill="#64748b">${(rVal * 100).toFixed(0)}%</text>`;
+      }
+
+      // 2. Líneas de eje
+      svg += `<line x1="${xMinPlot}" y1="${yMinPlot}" x2="${xMinPlot}" y2="${yMaxPlot}" stroke="#cbd5e1" stroke-width="1.2"/>`;
+      svg += `<line x1="${xMinPlot}" y1="${yMaxPlot}" x2="${xMaxPlot}" y2="${yMaxPlot}" stroke="#cbd5e1" stroke-width="1.2"/>`;
+      svg += `<text x="12" y="${((yMinPlot + yMaxPlot)/2).toFixed(1)}" text-anchor="middle" font-size="7.5" font-weight="700" fill="#0e2246" transform="rotate(-90 12 ${((yMinPlot + yMaxPlot)/2).toFixed(1)})">CAGR (%)</text>`;
+
+      // 3. Ticks y etiquetas verticales (volatilidad)
+      const nGridX = 4;
+      for (let i = 0; i <= nGridX; i++) {
+        const vVal = minVol + (i / nGridX) * (maxVol - minVol);
+        const xPos = mapX(vVal);
+        svg += `<text x="${xPos.toFixed(1)}" y="${yMaxPlot + 10}" text-anchor="middle" font-size="7" font-weight="600" fill="#64748b">${(vVal * 100).toFixed(0)}%</text>`;
+      }
+      svg += `<text x="${((xMinPlot + xMaxPlot)/2).toFixed(1)}" y="${H - 2}" text-anchor="middle" font-size="7.5" font-weight="700" fill="#0e2246">Volatilidad Anualizada (%)</text>`;
+
+      // 4. Dibujar puntos de activos individuales
+      puntos.filter(p => !p.isPort).forEach((p) => {
+        const cx = mapX(p.vol);
+        const cy = mapY(p.ret);
+        const retTxt = (p.ret * 100).toFixed(1).replace('.', ',') + '%';
+        const labelTxt = `${p.ticker} (${retTxt})`;
+        const lblW = Math.max(38, labelTxt.length * 4.8);
+        const offsetLeft = cx + lblW + 10 > xMaxPlot;
+        const rectX = offsetLeft ? cx - lblW - 6 : cx + 6;
+        const rectY = cy - 6;
+
+        svg += `<circle cx="${cx.toFixed(1)}" cy="${cy.toFixed(1)}" r="3.5" fill="#475569"/>`;
+        svg += `<rect x="${rectX.toFixed(1)}" y="${rectY.toFixed(1)}" width="${lblW.toFixed(1)}" height="11" rx="2.5" fill="#ffffff" stroke="#e2e8f0" stroke-width="0.7"/>`;
+        svg += `<text x="${(rectX + lblW/2).toFixed(1)}" y="${(rectY + 8).toFixed(1)}" text-anchor="middle" font-size="6.8" font-weight="700" fill="#091a36">${labelTxt}</text>`;
+      });
+
+      // 5. Dibujar punto de la CARTERA ÓPTIMA (destacado)
+      const portPt = puntos.find(p => p.isPort);
+      if (portPt) {
+        const cx = mapX(portPt.vol);
+        const cy = mapY(portPt.ret);
+        const portRetStr = (portPt.ret * 100).toFixed(1).replace('.', ',') + '%';
+        const portVolStr = (portPt.vol * 100).toFixed(1).replace('.', ',') + '%';
+        const badgeTxt = `★ CARTERA (${portRetStr} / ${portVolStr})`;
+        const badgeW = 114;
+        
+        let badgeX = cx - badgeW / 2;
+        if (badgeX < xMinPlot + 2) badgeX = xMinPlot + 2;
+        if (badgeX + badgeW > xMaxPlot - 2) badgeX = xMaxPlot - badgeW - 2;
+        let badgeY = cy - 20;
+        if (badgeY < 4) badgeY = cy + 8;
+
+        svg += `<circle cx="${cx.toFixed(1)}" cy="${cy.toFixed(1)}" r="7.5" fill="#0062ff" opacity="0.25"/>`;
+        svg += `<circle cx="${cx.toFixed(1)}" cy="${cy.toFixed(1)}" r="4.5" fill="#0062ff"/>`;
+        svg += `<rect x="${badgeX.toFixed(1)}" y="${badgeY.toFixed(1)}" width="${badgeW}" height="13.5" rx="3.5" fill="#0062ff"/>`;
+        svg += `<text x="${(badgeX + badgeW/2).toFixed(1)}" y="${(badgeY + 9.5).toFixed(1)}" text-anchor="middle" font-size="7.2" font-weight="800" fill="#ffffff">${badgeTxt}</text>`;
+      }
+
+      svg += `</svg>`;
+      return svg;
+    }
+
+    function renderFronteraEficienteSvg(data) {
+      if (!data) return null;
+      
+      const portVol = data.port_vol_sharpe || 0.184;
+      const portRet = data.port_return_sharpe || 0.330;
+      const sharpe = data.sharpe_ratio || 1.54;
+
+      // Extraer y ordenar puntos de frontera
+      let pts = [];
+      if (data.frontera_puntos && data.frontera_puntos.length > 0) {
+        pts = data.frontera_puntos.map(p => Array.isArray(p) ? { vol: p[0], ret: p[1] } : { vol: p.vol, ret: p.ret });
+        pts.sort((a, b) => a.vol - b.vol);
+      } else {
+        const minV = Math.max(0.10, portVol * 0.85);
+        const minR = Math.max(0.08, portRet * 0.60);
+        pts = [
+          { vol: minV, ret: minR },
+          { vol: minV * 1.04, ret: minR * 1.25 },
+          { vol: portVol, ret: portRet },
+          { vol: portVol * 1.25, ret: portRet * 1.08 },
+          { vol: portVol * 1.60, ret: portRet * 1.15 },
+          { vol: portVol * 1.95, ret: portRet * 1.18 }
+        ];
+      }
+
+      // Encontrar punto de mínima varianza (menor volatilidad en la frontera)
+      const minVarPt = pts[0] || { vol: portVol * 0.9, ret: portRet * 0.65 };
+
+      // Calcular límites de ejes
+      const allVols = [portVol, minVarPt.vol, ...pts.map(p => p.vol)];
+      if (data.vols) allVols.push(...data.vols);
+      const allRets = [portRet, minVarPt.ret, ...pts.map(p => p.ret)];
+      if (data.esperados) allRets.push(...data.esperados);
+
+      let minVol = Math.max(0.08, Math.floor(Math.min(...allVols) * 25) / 25 - 0.04);
+      let maxVol = Math.ceil(Math.max(...allVols) * 25) / 25 + 0.04;
+      if (maxVol - minVol < 0.16) maxVol = minVol + 0.20;
+
+      let minRet = Math.max(0, Math.floor(Math.min(...allRets) * 15) / 15 - 0.05);
+      let maxRet = Math.ceil(Math.max(...allRets) * 15) / 15 + 0.05;
+      if (maxRet - minRet < 0.20) maxRet = minRet + 0.28;
+
+      const W = 330;
+      const H = 195;
+      const xMinPlot = 38;
+      const xMaxPlot = 318;
+      const yMinPlot = 24;
+      const yMaxPlot = 160;
+
+      const mapX = (v) => xMinPlot + ((v - minVol) / (maxVol - minVol)) * (xMaxPlot - xMinPlot);
+      const mapY = (r) => yMaxPlot - ((r - minRet) / (maxRet - minRet)) * (yMaxPlot - yMinPlot);
+
+      let svg = `<svg viewBox="0 0 ${W} ${H}" style="width: 100%; height: auto; max-height: 180px; display: block;">`;
+
+      // 1. Grid horizontal y etiquetas Y
+      const nGridY = 4;
+      for (let i = 0; i <= nGridY; i++) {
+        const rVal = minRet + (i / nGridY) * (maxRet - minRet);
+        const yPos = mapY(rVal);
+        const strokeColor = i === 0 ? '#cbd5e1' : '#f1f5f9';
+        const strokeW = i === 0 ? '1.2' : '1';
+        svg += `<line x1="${xMinPlot}" y1="${yPos.toFixed(1)}" x2="${xMaxPlot}" y2="${yPos.toFixed(1)}" stroke="${strokeColor}" stroke-width="${strokeW}"/>`;
+        svg += `<text x="${xMinPlot - 5}" y="${(yPos + 3.5).toFixed(1)}" text-anchor="end" font-size="7.5" font-weight="600" fill="#64748b">${(rVal * 100).toFixed(0)}%</text>`;
+      }
+
+      // 2. Eje vertical
+      svg += `<line x1="${xMinPlot}" y1="${yMinPlot - 8}" x2="${xMinPlot}" y2="${yMaxPlot}" stroke="#cbd5e1" stroke-width="1.2"/>`;
+      svg += `<text x="11" y="${((yMinPlot + yMaxPlot)/2).toFixed(1)}" text-anchor="middle" font-size="8" font-weight="700" fill="#0e2246" transform="rotate(-90 11 ${((yMinPlot + yMaxPlot)/2).toFixed(1)})">Retorno (%)</text>`;
+
+      // 3. Ticks y etiquetas X
+      const nGridX = 5;
+      for (let i = 0; i <= nGridX; i++) {
+        const vVal = minVol + (i / nGridX) * (maxVol - minVol);
+        const xPos = mapX(vVal);
+        svg += `<text x="${xPos.toFixed(1)}" y="${yMaxPlot + 14}" text-anchor="middle" font-size="7.5" font-weight="600" fill="#64748b">${(vVal * 100).toFixed(0)}%</text>`;
+      }
+      svg += `<text x="${((xMinPlot + xMaxPlot)/2).toFixed(1)}" y="${H - 6}" text-anchor="middle" font-size="8" font-weight="700" fill="#0e2246">Volatilidad Anualizada σ (%)</text>`;
+
+      // 4. Nube de portafolios simulados (Monte Carlo Scatter)
+      svg += `<g fill="#93c5fd" opacity="0.45">`;
+      const numClouds = 42;
+      for (let i = 0; i < numClouds; i++) {
+        const seedV = (Math.sin(i * 997 + 1) * 0.5 + 0.5);
+        const seedR = (Math.cos(i * 613 + 2) * 0.5 + 0.5);
+        const simV = minVarPt.vol + seedV * (maxVol - minVarPt.vol * 0.95);
+        const maxRAtV = minVarPt.ret + (portRet * 1.15 - minVarPt.ret) * Math.pow((simV - minVol)/(maxVol - minVol), 0.35);
+        const simR = minRet + seedR * (maxRAtV - minRet);
+        const cx = mapX(simV);
+        const cy = mapY(simR);
+        if (cx >= xMinPlot && cx <= xMaxPlot && cy >= yMinPlot && cy <= yMaxPlot) {
+          svg += `<circle cx="${cx.toFixed(1)}" cy="${cy.toFixed(1)}" r="2"/>`;
+        }
+      }
+      svg += `</g>`;
+
+      // 5. Curva de Frontera Eficiente (Path)
+      const pathD = pts.map((p, idx) => {
+        const x = mapX(p.vol).toFixed(1);
+        const y = mapY(p.ret).toFixed(1);
+        return idx === 0 ? `M ${x} ${y}` : `L ${x} ${y}`;
+      }).join(' ');
+      svg += `<path d="${pathD}" stroke="#0062ff" stroke-width="2.8" fill="none" stroke-linecap="round"/>`;
+
+      // 6. Punto de Mínima Varianza
+      const mvX = mapX(minVarPt.vol);
+      const mvY = mapY(minVarPt.ret);
+      const mvRetStr = (minVarPt.vol * 100).toFixed(1).replace('.', ',') + '%';
+      const mvBadgeW = 106;
+      let mvBoxX = mvX + 18;
+      if (mvBoxX + mvBadgeW > xMaxPlot) mvBoxX = mvX - mvBadgeW - 14;
+      let mvBoxY = mvY + 8;
+      if (mvBoxY + 18 > yMaxPlot) mvBoxY = mvY - 24;
+
+      svg += `<circle cx="${mvX.toFixed(1)}" cy="${mvY.toFixed(1)}" r="4" fill="#091a36"/>`;
+      svg += `<line x1="${mvX.toFixed(1)}" y1="${mvY.toFixed(1)}" x2="${(mvBoxX).toFixed(1)}" y2="${(mvBoxY + 8).toFixed(1)}" stroke="#64748b" stroke-width="1"/>`;
+      svg += `<rect x="${mvBoxX.toFixed(1)}" y="${mvBoxY.toFixed(1)}" width="${mvBadgeW}" height="17" rx="3.5" fill="#ffffff" stroke="#cbd5e1" stroke-width="1"/>`;
+      svg += `<text x="${(mvBoxX + mvBadgeW/2).toFixed(1)}" y="${(mvBoxY + 12).toFixed(1)}" text-anchor="middle" font-size="7.5" font-weight="700" fill="#091a36">Mín. Varianza (${mvRetStr})</text>`;
+
+      // 7. Punto de Máximo Sharpe (Cartera Óptima)
+      const msX = mapX(portVol);
+      const msY = mapY(portRet);
+      const portRetStr = (portRet * 100).toFixed(1).replace('.', ',') + '%';
+      const portVolStr = (portVol * 100).toFixed(1).replace('.', ',') + '%';
+      const sharpeStr = sharpe.toFixed(2).replace('.', ',');
+      const msBadgeTxt = `★ Cartera Final: Máx. Sharpe (${sharpeStr}) [${portRetStr} / ${portVolStr}]`;
+      const msBadgeW = 200;
+      
+      let msBoxX = msX + 24;
+      if (msBoxX + msBadgeW > xMaxPlot) msBoxX = xMaxPlot - msBadgeW;
+      let msBoxY = msY - 26;
+      if (msBoxY < 6) msBoxY = msY + 14;
+
+      svg += `<circle cx="${msX.toFixed(1)}" cy="${msY.toFixed(1)}" r="8" fill="#0062ff" opacity="0.25"/>`;
+      svg += `<circle cx="${msX.toFixed(1)}" cy="${msY.toFixed(1)}" r="5" fill="#0062ff"/>`;
+      svg += `<circle cx="${msX.toFixed(1)}" cy="${msY.toFixed(1)}" r="2.2" fill="#ffffff"/>`;
+      svg += `<path d="M ${msX.toFixed(1)} ${msY.toFixed(1)} L ${(msBoxX - 10).toFixed(1)} ${(msBoxY + 9).toFixed(1)} L ${msBoxX.toFixed(1)} ${(msBoxY + 9).toFixed(1)}" stroke="#0062ff" stroke-width="1.3" fill="none"/>`;
+      svg += `<rect x="${msBoxX.toFixed(1)}" y="${msBoxY.toFixed(1)}" width="${msBadgeW}" height="18" rx="4" fill="#091a36"/>`;
+      svg += `<text x="${(msBoxX + msBadgeW/2).toFixed(1)}" y="${(msBoxY + 12.5).toFixed(1)}" text-anchor="middle" font-size="7.6" font-weight="800" fill="#ffffff">${msBadgeTxt}</text>`;
+
+      svg += `</svg>`;
+      return svg;
     }
 
     function cargarMarkowitzGuardado() {

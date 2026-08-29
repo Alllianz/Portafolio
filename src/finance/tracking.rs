@@ -195,6 +195,33 @@ pub fn ejecutar_seguimiento_cartera(
         Err(_) => (req.ccl_ref, 0.0),
     };
 
+    let mut corr_tickers = tickers.clone();
+    if !corr_tickers.contains(&"SPY".to_string()) {
+        corr_tickers.push("SPY".to_string());
+    }
+
+    let n_corr = corr_tickers.len();
+    let n_rets = n_velas.saturating_sub(1);
+    let mut retornos_corr = nalgebra::DMatrix::zeros(n_rets, n_corr);
+    for (col_idx, t) in corr_tickers.iter().enumerate() {
+        if let Some(col_rets) = retornos_map.get(t) {
+            for row_idx in 0..n_rets.min(col_rets.len()) {
+                retornos_corr[(row_idx, col_idx)] = col_rets[row_idx];
+            }
+        }
+    }
+
+    let cov_corr = crate::finance::stats::calcular_matriz_covarianza(&retornos_corr, false);
+    let mut matriz_correlacion = vec![vec![0.0; n_corr]; n_corr];
+    for r in 0..n_corr {
+        let std_r = cov_corr[(r, r)].sqrt().max(1e-12);
+        for c in 0..n_corr {
+            let std_c = cov_corr[(c, c)].sqrt().max(1e-12);
+            let corr = cov_corr[(r, c)] / (std_r * std_c);
+            matriz_correlacion[r][c] = (corr * 100.0).round() / 100.0;
+        }
+    }
+
     Ok(TrackingResponse {
         success: true,
         message: format!("Seguimiento de portafolio calculado exitosamente desde {}", actual_start_date),
@@ -233,6 +260,7 @@ pub fn ejecutar_seguimiento_cartera(
         ccl_ref: req.ccl_ref,
         rf_rate: rf_anual,
         frontera_puntos: vec![(vol_anual, ann_ret)],
-        matriz_correlacion: vec![vec![1.0; n_activos]; n_activos],
+        corr_tickers,
+        matriz_correlacion,
     })
 }

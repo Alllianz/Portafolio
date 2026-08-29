@@ -28,6 +28,7 @@ pub struct OptimizarResponse {
     pub series_map: HashMap<String, Vec<f64>>,
     pub time_labels: Vec<String>,
     pub frontera_puntos: Vec<(f64, f64)>, // (volatilidad_anual, retorno_anual)
+    pub corr_tickers: Vec<String>,
     pub matriz_correlacion: Vec<Vec<f64>>,
 }
 
@@ -109,6 +110,7 @@ pub struct TrackingResponse {
     pub ccl_ref: f64,
     pub rf_rate: f64,
     pub frontera_puntos: Vec<(f64, f64)>,
+    pub corr_tickers: Vec<String>,
     pub matriz_correlacion: Vec<Vec<f64>>,
 }
 
@@ -131,6 +133,28 @@ pub struct DescargarTickersResponse {
     pub success: bool,
     pub message: String,
     pub procesados: Vec<(String, usize, bool)>,
+}
+
+#[derive(Debug, Clone, Deserialize, Serialize)]
+pub struct CarteraGuardadaItem {
+    pub id: i64,
+    pub nombre: String,
+    pub descripcion: String,
+    pub fecha_creacion: String,
+    pub tipo_ponderacion: String,
+    pub tickers: Vec<String>,
+    pub pesos: Vec<f64>,
+    pub retorno_esperado: Option<f64>,
+    pub volatilidad: Option<f64>,
+    pub sharpe_ratio: Option<f64>,
+    pub ccl_ref: Option<f64>,
+    pub rf_rate: Option<f64>,
+}
+
+#[derive(Debug, Clone, Deserialize, Serialize)]
+pub struct ListarCarterasResponse {
+    pub total: usize,
+    pub carteras: Vec<CarteraGuardadaItem>,
 }
 
 #[derive(Debug, Clone, Deserialize, Serialize)]

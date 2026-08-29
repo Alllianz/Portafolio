@@ -52,6 +52,26 @@ pub struct DescargarTickersRequest {
     pub tickers: Vec<String>,
 }
 
+#[derive(Debug, Clone, Deserialize, Serialize)]
+pub struct GuardarCarteraRequest {
+    pub nombre: String,
+    #[serde(default)]
+    pub descripcion: Option<String>,
+    #[serde(default = "default_tipo_ponderacion")]
+    pub tipo_ponderacion: String, // "sharpe", "sortino", "manual"
+    pub tickers: Vec<String>,
+    pub pesos: Vec<f64>,
+    pub retorno_esperado: Option<f64>,
+    pub volatilidad: Option<f64>,
+    pub sharpe_ratio: Option<f64>,
+    pub ccl_ref: Option<f64>,
+    pub rf_rate: Option<f64>,
+}
+
+fn default_tipo_ponderacion() -> String {
+    "sharpe".to_string()
+}
+
 fn default_n_velas() -> usize {
     2520
 }

@@ -1143,6 +1143,25 @@ const INDEX_HTML: &str = r##"<!DOCTYPE html>
             </tbody>
           </table>
         </div>
+
+        <!-- Acciones para Guardar y Exportar Cartera a la Base de Datos -->
+        <div class="card-panel" style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px; margin-top:14px; background:linear-gradient(135deg, var(--slate-50), #EFF6FF); border-left:4px solid var(--blue-600);">
+          <div>
+            <span style="font-weight:800; font-size:0.95rem; color:var(--navy-900);">💾 Guardar Cartera en Base de Datos SQLite</span>
+            <p style="font-size:0.8rem; color:var(--slate-600); margin-top:2px;">Almacene las ponderaciones calculadas en la base de datos para importar en Seguimiento o auditar históricamente.</p>
+          </div>
+          <div style="display:flex; gap:10px; flex-wrap:wrap;">
+            <button id="btnGuardarSharpe" class="btn-action-primary" style="background:#16a34a; padding:8px 16px; font-size:0.85rem;" onclick="abrirModalGuardarCartera('sharpe')">
+              <span>💾</span> Guardar Máx. Sharpe
+            </button>
+            <button id="btnGuardarSortino" class="btn-action-primary" style="background:#0284c7; padding:8px 16px; font-size:0.85rem;" onclick="abrirModalGuardarCartera('sortino')">
+              <span>💾</span> Guardar Máx. Sortino
+            </button>
+            <button class="btn-action-primary" style="background:var(--navy-900); padding:8px 16px; font-size:0.85rem;" onclick="enviarOptimizacionASeguimiento()">
+              <span>📈</span> Enviar a Seguimiento
+            </button>
+          </div>
+        </div>
       </section>
 
       <!-- VISTA 2: VALIDACIÓN IS / OOS -->
@@ -1292,10 +1311,35 @@ const INDEX_HTML: &str = r##"<!DOCTYPE html>
           <span id="statusBannerTrackText">Calculando seguimiento de portafolio...</span>
         </div>
 
+        <!-- IMPORTADOR DE CARTERAS GUARDADAS DESDE SQLITE -->
+        <div class="card-panel" style="border-left:4px solid var(--blue-600); margin-bottom:14px; background:linear-gradient(135deg, var(--slate-50), #EFF6FF);">
+          <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px;">
+            <div>
+              <span style="font-weight:800; font-size:0.95rem; color:var(--navy-900);">📂 Importar Cartera desde Base de Datos SQLite</span>
+              <p style="font-size:0.8rem; color:var(--slate-600); margin-top:2px;">Seleccione una cartera previamente guardada para cargar automáticamente sus activos y ponderaciones.</p>
+            </div>
+            <div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap;">
+              <select id="selectCarterasDbTrack" class="input-control" style="min-width:260px; padding:6px 10px; font-size:0.85rem;" onchange="previewCarteraSeleccionadaTrack()">
+                <option value="">-- Seleccionar Cartera Guardada --</option>
+              </select>
+              <button class="btn-action-primary" style="padding:7px 14px; font-size:0.85rem; background:#16a34a;" onclick="cargarCarteraSeleccionadaTrack()">
+                <span>📥</span> Cargar en Seguimiento
+              </button>
+            </div>
+          </div>
+          <div id="previewCarteraTrack" style="margin-top:8px; font-size:0.82rem; color:var(--blue-700); font-weight:700; display:none; background:#FFF; padding:6px 12px; border-radius:6px; border:1px solid var(--blue-100);"></div>
+        </div>
+
         <div class="card-panel">
-          <div class="input-group">
-            <label>Activos de la Cartera</label>
-            <input type="text" id="trackTickers" class="input-control" value="AAPL, YPF, AMZN">
+          <div style="display:grid; grid-template-columns: 1fr 1fr; gap:12px; margin-bottom:12px;">
+            <div class="input-group">
+              <label>Activos de la Cartera</label>
+              <input type="text" id="trackTickers" class="input-control" value="AAPL, YPF, AMZN">
+            </div>
+            <div class="input-group">
+              <label>👥 Autores del Seguimiento / Integrantes & Cargos</label>
+              <input type="text" id="trackIntegrantes" class="input-control" value="Fausto Crivelli (Presidente de Portafolio) · Luciano Mora (Analista Sr) · Florencia Beluzzo (Analista Sr)" placeholder="Ej: Fausto Crivelli (Presidente de Portafolio) · Luciano Mora (Analista Sr)">
+            </div>
           </div>
           <div class="form-grid-controls">
             <div class="input-group">
@@ -1402,7 +1446,11 @@ const INDEX_HTML: &str = r##"<!DOCTYPE html>
             <h2>Informe de Seguimiento de Portafolio vs SPY</h2>
             <p>Maquetación ejecutiva editable: monitoreo de capital, curvas de drawdown, tabla comparativa y espacio para notas del comité de inversiones.</p>
           </div>
-          <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+          <div style="display: flex; gap: 8px; flex-wrap: wrap; align-items: center;">
+            <div style="display: flex; align-items: center; gap: 6px; background: #FFF; padding: 4px 10px; border-radius: 8px; border: 1px solid var(--slate-300);">
+              <span style="font-size: 0.82rem; font-weight: 700; color: var(--navy-900);">👥 Autores:</span>
+              <input type="text" id="reportTrackIntegrantesInput" class="input-control" style="width: 320px; padding: 4px 8px; font-size: 0.8rem;" value="Fausto Crivelli (Presidente de Portafolio) · Luciano Mora (Analista Sr) · Florencia Beluzzo (Analista Sr)" placeholder="Nombres y cargos de autores" oninput="actualizarIntegrantesReporteSeguimiento(this.value)">
+            </div>
             <button id="btnParentEditTrackReport" class="btn-action-primary" style="background: #D97706;" onclick="toggleModoEdicionReporteSeguimiento()">
               <span id="iconParentEditTrack">✏️</span> <span id="textParentEditTrack">Modo Edición: OFF</span>
             </button>
@@ -1489,6 +1537,30 @@ const INDEX_HTML: &str = r##"<!DOCTYPE html>
             </thead>
             <tbody id="tbodyDbResumen">
               <tr><td colspan="4" style="text-align: center;">Cargando datos de SQLite...</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- TABLA DE CARTERAS GUARDADAS EN SQLITE -->
+        <div class="table-card" style="margin-top: 22px;">
+          <div class="chart-panel-header" style="margin-bottom: 12px;">
+            <span class="chart-panel-title">📁 Carteras de Inversión Guardadas en Base de Datos (<span id="countCarterasDb">0</span>)</span>
+            <button class="ticker-chip" style="background:var(--blue-600); color:#FFF; padding:6px 14px;" onclick="cargarCarterasDb()">🔄 Actualizar Carteras</button>
+          </div>
+          <table class="custom-table" id="tablaCarterasDb">
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Nombre de Cartera</th>
+                <th>Tipo</th>
+                <th>Activos & Ponderaciones</th>
+                <th>Métricas Estimadas</th>
+                <th>Fecha Guardado</th>
+                <th style="text-align:center;">Acciones</th>
+              </tr>
+            </thead>
+            <tbody id="tbodyCarterasDb">
+              <tr><td colspan="7" style="text-align: center;">Cargando carteras guardadas de SQLite...</td></tr>
             </tbody>
           </table>
         </div>
@@ -1834,6 +1906,36 @@ const INDEX_HTML: &str = r##"<!DOCTYPE html>
     </main>
   </div>
 
+  <!-- Modal Guardar Cartera en SQLite -->
+  <div id="modalGuardarCartera" class="modal-overlay" style="display:none; position:fixed; inset:0; background:rgba(9,26,54,0.7); z-index:9999; align-items:center; justify-content:center; backdrop-filter:blur(4px);">
+    <div class="modal-card" style="background:#ffffff; border-radius:12px; width:540px; max-width:92%; padding:24px; box-shadow:0 24px 60px rgba(0,0,0,0.35); border:1px solid var(--slate-200);">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
+        <h3 style="font-size:1.25rem; font-weight:800; color:var(--navy-900);">💾 Guardar Cartera en Base de Datos</h3>
+        <button onclick="cerrarModalGuardarCartera()" style="background:none; border:none; font-size:1.4rem; color:var(--slate-400); cursor:pointer; padding:0 4px;">&times;</button>
+      </div>
+      <p style="font-size:0.85rem; color:var(--slate-600); margin-bottom:16px;">Almacene las ponderaciones óptimas en SQLite (portafolio.db) para importar en Seguimiento o realizar auditorías históricas.</p>
+      
+      <div class="input-group" style="margin-bottom:12px;">
+        <label style="font-weight:700; font-size:0.85rem; color:var(--slate-700);">Nombre de la Cartera *</label>
+        <input type="text" id="inputModalNombreCartera" class="input-control" placeholder="Ej: Cartera Óptima Markowitz Agosto 2026">
+      </div>
+
+      <div class="input-group" style="margin-bottom:12px;">
+        <label style="font-weight:700; font-size:0.85rem; color:var(--slate-700);">Descripción / Notas del Comité</label>
+        <input type="text" id="inputModalDescCartera" class="input-control" placeholder="Ej: 6 activos seleccionados, rebalanceo mensual recomendado">
+      </div>
+
+      <div id="modalPreviewCartera" style="background:var(--slate-50); border:1px solid var(--slate-200); border-radius:8px; padding:12px; font-size:0.85rem; margin-bottom:18px; max-height:160px; overflow-y:auto;">
+        <!-- Tickers y pesos calculados -->
+      </div>
+
+      <div style="display:flex; justify-content:flex-end; gap:10px;">
+        <button class="ticker-chip" style="background:var(--slate-200); color:var(--slate-700); padding:8px 18px;" onclick="cerrarModalGuardarCartera()">Cancelar</button>
+        <button class="btn-action-primary" style="padding:8px 20px; background:#16a34a;" onclick="confirmarGuardarCarteraDb()">💾 Guardar Cartera</button>
+      </div>
+    </div>
+  </div>
+
   <!-- Toast Notification -->
   <div id="toastBox" class="toast-box">
     <span id="toastMsg">Mensaje</span>
@@ -1852,7 +1954,13 @@ const INDEX_HTML: &str = r##"<!DOCTYPE html>
       const btn = Array.from(document.querySelectorAll('.menu-item-btn')).find(b => b.getAttribute('onclick')?.includes(viewId));
       if (btn) btn.classList.add('active');
 
-      if (viewId === 'view-db') cargarResumenDb();
+      if (viewId === 'view-db') {
+        cargarResumenDb();
+        cargarCarterasDb();
+      }
+      if (viewId === 'view-tracking') {
+        cargarCarterasDb();
+      }
     }
 
     function toggleFullscreen() {
@@ -2168,12 +2276,14 @@ const INDEX_HTML: &str = r##"<!DOCTYPE html>
       });
 
       // 6. Matriz de Correlación (Mapa de Calor continuo Azul a Blanco)
+      const corrList = data.corr_tickers || (data.matriz_correlacion && data.matriz_correlacion.length > data.tickers.length ? [...data.tickers, 'SPY'] : data.tickers);
       const thead = document.getElementById('theadCorr');
-      thead.innerHTML = '<th style="text-align:center;">Activo</th>' + data.tickers.map(t => `<th style="text-align:center;">${t}</th>`).join('');
+      thead.innerHTML = '<th style="text-align:center;">Activo</th>' + corrList.map(t => `<th style="text-align:center;">${t}</th>`).join('');
       const tbody = document.getElementById('tbodyCorr');
       tbody.innerHTML = '';
       data.matriz_correlacion.forEach((fila, r) => {
-        let rowHtml = `<td style="font-weight:800; background:var(--slate-50); color:var(--navy-900); text-align:center;">${data.tickers[r]}</td>`;
+        const rowTicker = corrList[r] || '';
+        let rowHtml = `<td style="font-weight:800; background:var(--slate-50); color:var(--navy-900); text-align:center;">${rowTicker}</td>`;
         fila.forEach((val, c) => {
           // Escala continua: val de 0 a 1 -> opacidad de 0.03 (blanco suave) a 0.92 (azul intenso)
           const norm = Math.max(0, Math.min(1, val));
@@ -2181,7 +2291,7 @@ const INDEX_HTML: &str = r##"<!DOCTYPE html>
           const bg = `rgba(0, 98, 255, ${opacity})`;
           const textColor = norm > 0.55 ? '#FFFFFF' : '#0A192F';
           rowHtml += `
-            <td style="background:${bg}; color:${textColor}; font-family:'JetBrains Mono', monospace; font-weight:800; text-align:center; transition:all 0.15s ease;" title="Correlación ${data.tickers[r]} vs ${data.tickers[c]}: ${val.toFixed(2)}">
+            <td style="background:${bg}; color:${textColor}; font-family:'JetBrains Mono', monospace; font-weight:800; text-align:center; transition:all 0.15s ease;" title="Correlación ${rowTicker} vs ${corrList[c] || ''}: ${val.toFixed(2)}">
               ${val.toFixed(2)}
             </td>`;
         });
@@ -2205,6 +2315,233 @@ const INDEX_HTML: &str = r##"<!DOCTYPE html>
           </tr>
         `;
       });
+    }
+
+    // ===== GESTIÓN DE CARTERAS GUARDADAS EN SQLITE =====
+    let listaCarterasGuardadas = [];
+    let tipoCarteraAGuardar = 'sharpe';
+
+    function abrirModalGuardarCartera(tipo) {
+      if (!window.lastOptResult) {
+        showToast("⚠️ Primero debe ejecutar una optimización de cartera.");
+        return;
+      }
+      tipoCarteraAGuardar = tipo;
+      const data = window.lastOptResult;
+      const tipoTxt = tipo === 'sharpe' ? 'Máximo Sharpe' : 'Máximo Sortino';
+      const pesos = tipo === 'sharpe' ? data.pesos_sharpe : data.pesos_sortino;
+      
+      const fechaHoy = new Date().toISOString().split('T')[0];
+      document.getElementById('inputModalNombreCartera').value = `Cartera Óptima ${tipoTxt} (${fechaHoy})`;
+      document.getElementById('inputModalDescCartera').value = `${data.tickers.length} activos optimizados según ${tipoTxt}.`;
+
+      let previewHtml = `<div style="font-weight:800; color:var(--navy-900); margin-bottom:6px;">Estrategia: <span style="color:var(--blue-600);">${tipoTxt}</span> | ${data.tickers.length} Activos:</div>`;
+      previewHtml += `<div style="display:flex; flex-wrap:wrap; gap:6px;">`;
+      data.tickers.forEach((t, i) => {
+        const w = (pesos[i] * 100).toFixed(1);
+        previewHtml += `<span style="background:#FFF; border:1px solid var(--slate-200); padding:3px 8px; border-radius:6px; font-weight:700; color:var(--navy-900); font-size:0.8rem;">${t}: <strong style="color:var(--blue-600);">${w}%</strong></span>`;
+      });
+      previewHtml += `</div>`;
+      previewHtml += `<div style="margin-top:8px; font-size:0.8rem; color:var(--slate-600);">Retorno Estimado: ${(data.port_return_sharpe * 100).toFixed(1)}% | Volatilidad: ${(data.port_vol_sharpe * 100).toFixed(1)}% | Sharpe: ${data.sharpe_ratio.toFixed(2)}</div>`;
+      
+      document.getElementById('modalPreviewCartera').innerHTML = previewHtml;
+      document.getElementById('modalGuardarCartera').style.display = 'flex';
+    }
+
+    function cerrarModalGuardarCartera() {
+      document.getElementById('modalGuardarCartera').style.display = 'none';
+    }
+
+    async function confirmarGuardarCarteraDb() {
+      const nombre = document.getElementById('inputModalNombreCartera').value.trim();
+      const descripcion = document.getElementById('inputModalDescCartera').value.trim();
+      if (!nombre) {
+        showToast("⚠️ Ingrese un nombre para la cartera.");
+        return;
+      }
+      if (!window.lastOptResult) return;
+
+      const data = window.lastOptResult;
+      const pesos = tipoCarteraAGuardar === 'sharpe' ? data.pesos_sharpe : data.pesos_sortino;
+
+      const payload = {
+        nombre,
+        descripcion: descripcion || null,
+        tipo_ponderacion: tipoCarteraAGuardar,
+        tickers: data.tickers,
+        pesos: pesos,
+        retorno_esperado: data.port_return_sharpe,
+        volatilidad: data.port_vol_sharpe,
+        sharpe_ratio: data.sharpe_ratio,
+        ccl_ref: data.ccl_ref,
+        rf_rate: data.rf_rate
+      };
+
+      try {
+        const res = await fetch('/api/carteras/guardar', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+        const json = await res.json();
+        if (json.success) {
+          cerrarModalGuardarCartera();
+          showToast(`✓ Cartera "${nombre}" guardada con éxito en SQLite.`);
+          cargarCarterasDb();
+        } else {
+          showToast("❌ Error al guardar cartera: " + (json.error || "Desconocido"));
+        }
+      } catch (err) {
+        showToast("❌ Error de conexión: " + err.message);
+      }
+    }
+
+    async function cargarCarterasDb() {
+      try {
+        const res = await fetch('/api/carteras');
+        const json = await res.json();
+        if (!json.success || !json.data) return;
+
+        listaCarterasGuardadas = json.data.carteras || [];
+        const countEl = document.getElementById('countCarterasDb');
+        if (countEl) countEl.innerText = `${listaCarterasGuardadas.length}`;
+
+        // 1. Llenar tabla en view-db
+        const tbody = document.getElementById('tbodyCarterasDb');
+        if (tbody) {
+          if (listaCarterasGuardadas.length === 0) {
+            tbody.innerHTML = '<tr><td colspan="7" style="text-align:center; color:var(--slate-500); padding:16px;">No hay carteras guardadas aún. Guarde una cartera desde la pestaña de Optimización Markowitz.</td></tr>';
+          } else {
+            tbody.innerHTML = '';
+            listaCarterasGuardadas.forEach(c => {
+              const tipoBadge = c.tipo_ponderacion === 'sharpe' 
+                ? '<span class="ticker-badge" style="background:#dcfce7; color:#15803d; border-color:#86efac;">Máx. Sharpe</span>'
+                : '<span class="ticker-badge" style="background:#e0f2fe; color:#0369a1; border-color:#7dd3fc;">Máx. Sortino</span>';
+              
+              let weightsBadges = '<div style="display:flex; flex-wrap:wrap; gap:4px; max-width:320px;">';
+              c.tickers.forEach((t, i) => {
+                const w = c.pesos && c.pesos[i] ? (c.pesos[i] * 100).toFixed(1) : '0.0';
+                weightsBadges += `<span style="font-size:0.75rem; background:var(--slate-100); padding:2px 6px; border-radius:4px; font-weight:700; color:var(--navy-900);">${t} ${w}%</span>`;
+              });
+              weightsBadges += '</div>';
+
+              const ret = c.retorno_esperado != null ? (c.retorno_esperado * 100).toFixed(1) + '%' : '--';
+              const vol = c.volatilidad != null ? (c.volatilidad * 100).toFixed(1) + '%' : '--';
+              const sharpe = c.sharpe_ratio != null ? c.sharpe_ratio.toFixed(2) : '--';
+              const metricsTxt = `<div style="font-size:0.8rem; line-height:1.35;"><strong>Sharpe:</strong> ${sharpe}<br><span style="color:var(--slate-500);">Ret: ${ret} | Vol: ${vol}</span></div>`;
+
+              tbody.innerHTML += `
+                <tr>
+                  <td style="font-weight:800; color:var(--slate-500);">#${c.id}</td>
+                  <td>
+                    <div style="font-weight:800; color:var(--navy-900); font-size:0.9rem;">${c.nombre}</div>
+                    <div style="font-size:0.78rem; color:var(--slate-500);">${c.descripcion || ''}</div>
+                  </td>
+                  <td>${tipoBadge}</td>
+                  <td>${weightsBadges}</td>
+                  <td>${metricsTxt}</td>
+                  <td style="font-size:0.8rem; color:var(--slate-600);">${c.fecha_creacion}</td>
+                  <td style="text-align:center;">
+                    <div style="display:flex; gap:6px; justify-content:center;">
+                      <button class="ticker-chip" style="background:var(--blue-600); color:#FFF; padding:5px 10px; font-size:0.78rem;" onclick="importarCarteraDirectaATrack(${c.id})" title="Cargar en Seguimiento">📈 Seguimiento</button>
+                      <button class="ticker-chip" style="background:#fee2e2; color:#b91c1c; border-color:#fca5a5; padding:5px 8px; font-size:0.78rem;" onclick="eliminarCarteraDb(${c.id})" title="Eliminar de la Base de Datos">🗑️</button>
+                    </div>
+                  </td>
+                </tr>
+              `;
+            });
+          }
+        }
+
+        // 2. Llenar selector en view-tracking
+        const selectTrack = document.getElementById('selectCarterasDbTrack');
+        if (selectTrack) {
+          const currVal = selectTrack.value;
+          selectTrack.innerHTML = '<option value="">-- Seleccionar Cartera Guardada --</option>';
+          listaCarterasGuardadas.forEach(c => {
+            selectTrack.innerHTML += `<option value="${c.id}">${c.nombre} (${c.tickers.length} activos · ${c.fecha_creacion.split(' ')[0]})</option>`;
+          });
+          if (currVal) selectTrack.value = currVal;
+        }
+      } catch (err) {
+        console.error("Error al cargar carteras guardadas:", err);
+      }
+    }
+
+    function previewCarteraSeleccionadaTrack() {
+      const selectTrack = document.getElementById('selectCarterasDbTrack');
+      const previewDiv = document.getElementById('previewCarteraTrack');
+      if (!selectTrack || !previewDiv) return;
+
+      const id = parseInt(selectTrack.value);
+      const cartera = listaCarterasGuardadas.find(c => c.id === id);
+      if (!cartera) {
+        previewDiv.style.display = 'none';
+        return;
+      }
+
+      const pesosStr = cartera.tickers.map((t, i) => `${t}: ${(cartera.pesos[i] * 100).toFixed(1)}%`).join(', ');
+      previewDiv.innerHTML = `✓ <strong>${cartera.nombre}</strong> &bull; Ponderaciones: ${pesosStr}`;
+      previewDiv.style.display = 'block';
+    }
+
+    function cargarCarteraSeleccionadaTrack() {
+      const selectTrack = document.getElementById('selectCarterasDbTrack');
+      if (!selectTrack || !selectTrack.value) {
+        showToast("⚠️ Seleccione una cartera guardada de la lista desplegable.");
+        return;
+      }
+      importarCarteraDirectaATrack(parseInt(selectTrack.value));
+    }
+
+    function importarCarteraDirectaATrack(id) {
+      const cartera = listaCarterasGuardadas.find(c => c.id === id);
+      if (!cartera) {
+        showToast("⚠️ No se encontró la cartera en memoria.");
+        return;
+      }
+
+      document.getElementById('trackTickers').value = cartera.tickers.join(', ');
+      document.getElementById('trackPesos').value = cartera.pesos.map(w => (w * 100).toFixed(1)).join(', ');
+      if (cartera.ccl_ref) {
+        document.getElementById('trackCcl').value = cartera.ccl_ref;
+      }
+
+      switchView('view-tracking');
+      showToast(`📥 Cartera "${cartera.nombre}" importada en Seguimiento.`);
+    }
+
+    async function eliminarCarteraDb(id) {
+      if (!confirm(`¿Está seguro de que desea eliminar permanentemente la cartera #${id} de la base de datos SQLite?`)) {
+        return;
+      }
+      try {
+        const res = await fetch(`/api/carteras/${id}`, { method: 'DELETE' });
+        const json = await res.json();
+        if (json.success) {
+          showToast(`✓ Cartera #${id} eliminada de SQLite.`);
+          cargarCarterasDb();
+        } else {
+          showToast("❌ Error al eliminar: " + (json.error || "Desconocido"));
+        }
+      } catch (err) {
+        showToast("❌ Error: " + err.message);
+      }
+    }
+
+    function enviarOptimizacionASeguimiento() {
+      if (!window.lastOptResult) {
+        showToast("⚠️ Primero ejecute una optimización de cartera.");
+        return;
+      }
+      const data = window.lastOptResult;
+      document.getElementById('trackTickers').value = data.tickers.join(', ');
+      document.getElementById('trackPesos').value = data.pesos_sharpe.map(w => (w * 100).toFixed(1)).join(', ');
+      if (data.ccl_ref) {
+        document.getElementById('trackCcl').value = data.ccl_ref;
+      }
+      switchView('view-tracking');
+      showToast("📥 Cartera óptima transferida a la pestaña de Seguimiento.");
     }
 
     async function ejecutarIsOos() {
@@ -2374,8 +2711,16 @@ const INDEX_HTML: &str = r##"<!DOCTYPE html>
         }
 
         const d = data.data;
+        const integrantes = document.getElementById('trackIntegrantes')?.value.trim() || 'Fausto Crivelli (Presidente de Portafolio) · Luciano Mora (Analista Sr) · Florencia Beluzzo (Analista Sr)';
+        d.integrantes = integrantes;
+        d.rebalance_freq = payload.rebalance_freq;
+
         window.lastTrackResult = d;
         try { localStorage.setItem('cfuba_last_tracking_data', JSON.stringify(d)); } catch(e){}
+
+        const repInput = document.getElementById('reportTrackIntegrantesInput');
+        if (repInput) repInput.value = integrantes;
+
         const iframeSeg = document.getElementById('iframeReporteSeguimiento');
         if (iframeSeg && iframeSeg.contentWindow) {
           iframeSeg.contentWindow.postMessage({ type: 'IMPORT_TRACKING', payload: d }, '*');
@@ -2919,6 +3264,20 @@ const INDEX_HTML: &str = r##"<!DOCTYPE html>
       showToast(modoEdicionSeguimientoActivo ? "✏️ Modo edición activado: haz clic en cualquier texto del informe de seguimiento para modificarlo." : "🔒 Modo edición desactivado.");
     }
 
+    function actualizarIntegrantesReporteSeguimiento(val) {
+      const iframe = document.getElementById('iframeReporteSeguimiento');
+      if (iframe && iframe.contentWindow) {
+        iframe.contentWindow.postMessage({ type: 'UPDATE_INTEGRANTES', integrantes: val }, '*');
+      }
+      const trackInput = document.getElementById('trackIntegrantes');
+      if (trackInput && trackInput.value !== val) {
+        trackInput.value = val;
+      }
+      if (window.lastTrackResult) {
+        window.lastTrackResult.integrantes = val;
+      }
+    }
+
     function importarDatosSeguimientoAReporte() {
       if (!window.lastTrackResult) {
         const saved = localStorage.getItem('cfuba_last_tracking_data');
@@ -2930,10 +3289,15 @@ const INDEX_HTML: &str = r##"<!DOCTYPE html>
         showToast("⚠️ Primero ejecute una simulación en la pestaña 'Seguimiento vs SPY'.");
         return;
       }
+      const integrantes = document.getElementById('trackIntegrantes')?.value.trim() || 'Fausto Crivelli (Presidente de Portafolio) · Luciano Mora (Analista Sr) · Florencia Beluzzo (Analista Sr)';
+      window.lastTrackResult.integrantes = integrantes;
+      const repInput = document.getElementById('reportTrackIntegrantesInput');
+      if (repInput) repInput.value = integrantes;
+
       const iframe = document.getElementById('iframeReporteSeguimiento');
       if (iframe && iframe.contentWindow) {
         iframe.contentWindow.postMessage({ type: 'IMPORT_TRACKING', payload: window.lastTrackResult }, '*');
-        showToast("📥 ¡Datos y gráficos de seguimiento sincronizados con éxito!");
+        showToast("📥 ¡Datos, integrantes y gráficos de seguimiento sincronizados con éxito!");
       }
     }
 
@@ -2981,6 +3345,7 @@ const INDEX_HTML: &str = r##"<!DOCTYPE html>
     // Inicialización inmediata al cargar el DOM sin bloqueos
     document.addEventListener('DOMContentLoaded', () => {
       cargarResumenDb().then(() => {
+        cargarCarterasDb();
         ejecutarOptimizacion();
       });
 

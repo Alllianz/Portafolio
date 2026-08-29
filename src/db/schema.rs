@@ -12,5 +12,22 @@ pub fn inicializar_esquema(db_path: &str) -> Result<Connection> {
         )",
         [],
     )?;
+    conn.execute(
+        "CREATE TABLE IF NOT EXISTS carteras_guardadas (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            nombre TEXT NOT NULL,
+            descripcion TEXT NOT NULL,
+            fecha_creacion TEXT NOT NULL,
+            tipo_ponderacion TEXT NOT NULL,
+            tickers_json TEXT NOT NULL,
+            pesos_json TEXT NOT NULL,
+            retorno_esperado REAL,
+            volatilidad REAL,
+            sharpe_ratio REAL,
+            ccl_ref REAL,
+            rf_rate REAL
+        )",
+        [],
+    )?;
     Ok(conn)
 }

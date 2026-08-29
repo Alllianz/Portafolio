@@ -92,7 +92,7 @@
       min-height: 1122px;
       max-height: 1122px;
       background: var(--bg-page);
-      padding: 18px 34px 14px 34px;
+      padding: 16px 36px 14px 36px;
       display: flex;
       flex-direction: column;
       justify-content: space-between;
@@ -106,31 +106,31 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
-      margin-bottom: 6px;
-      padding-bottom: 6px;
+      margin-bottom: 8px;
+      padding-bottom: 8px;
       border-bottom: 2px solid var(--navy-dark);
     }
 
     .header-left {
       display: flex;
       align-items: center;
-      gap: 12px;
+      gap: 16px;
     }
 
     .header-logo {
-      height: 36px;
+      height: 76px;
       width: auto;
       object-fit: contain;
     }
 
     .header-divider {
-      width: 1px;
-      height: 22px;
+      width: 2px;
+      height: 46px;
       background: var(--card-border);
     }
 
     .header-title {
-      font-size: 11px;
+      font-size: 12px;
       font-weight: 800;
       color: var(--navy-dark);
       text-transform: uppercase;
@@ -140,38 +140,42 @@
     .page-tab {
       background: #091a36;
       color: #38bdf8;
-      font-size: 9.5px;
+      font-size: 10px;
       font-weight: 800;
-      padding: 3.5px 10px;
+      padding: 4px 12px;
       border-radius: 20px;
       letter-spacing: 0.5px;
+      white-space: nowrap;
+      display: inline-block;
+      flex-shrink: 0;
     }
 
     /* Título principal */
     .title-block {
-      margin-bottom: 8px;
+      margin-bottom: 10px;
       display: flex;
       justify-content: space-between;
       align-items: flex-end;
+      gap: 16px;
     }
 
     .main-title {
       font-family: 'Playfair Display', serif;
-      font-size: 20px;
+      font-size: 21px;
       font-weight: 800;
       color: var(--navy-dark);
       line-height: 1.15;
     }
 
     .main-subtitle {
-      font-size: 10.5px;
+      font-size: 11px;
       font-weight: 600;
       color: var(--blue-accent);
-      margin-top: 2px;
+      margin-top: 3px;
     }
 
     .authors-subtitle {
-      font-size: 9px;
+      font-size: 9.5px;
       color: var(--text-muted);
       margin-top: 2px;
     }
@@ -180,15 +184,15 @@
     .kpi-grid {
       display: grid;
       grid-template-columns: repeat(6, 1fr);
-      gap: 6px;
-      margin-bottom: 8px;
+      gap: 8px;
+      margin-bottom: 10px;
     }
 
     .kpi-box {
       background: var(--blue-light);
       border: 1px solid var(--blue-border);
-      border-radius: 6px;
-      padding: 6px 4px;
+      border-radius: 8px;
+      padding: 8px 6px;
       text-align: center;
       display: flex;
       flex-direction: column;
@@ -197,7 +201,7 @@
     }
 
     .kpi-lbl {
-      font-size: 7.8px;
+      font-size: 8px;
       font-weight: 700;
       color: var(--text-muted);
       text-transform: uppercase;
@@ -207,7 +211,7 @@
 
     .kpi-val {
       font-family: 'JetBrains Mono', monospace;
-      font-size: 13px;
+      font-size: 14px;
       font-weight: 800;
       color: var(--navy-dark);
     }
@@ -219,14 +223,14 @@
     .panel-card {
       background: #ffffff;
       border: 1px solid var(--card-border);
-      border-radius: 6px;
-      padding: 8px 12px;
-      margin-bottom: 8px;
+      border-radius: 8px;
+      padding: 10px 14px;
+      margin-bottom: 10px;
       box-shadow: var(--shadow-subtle);
     }
 
     .panel-header-title {
-      font-size: 10.5px;
+      font-size: 11px;
       font-weight: 800;
       color: var(--navy-dark);
       text-transform: uppercase;
@@ -236,31 +240,31 @@
       align-items: center;
       justify-content: space-between;
       border-bottom: 1.5px solid var(--blue-light);
-      padding-bottom: 3px;
+      padding-bottom: 4px;
     }
 
     .chart-box {
       position: relative;
       width: 100%;
-      height: 160px;
+      height: 200px;
     }
 
     /* Tabla Comparativa */
     .table-compare {
       width: 100%;
       border-collapse: collapse;
-      font-size: 8.8px;
+      font-size: 9.2px;
       margin-top: 2px;
     }
     .table-compare th {
       background: #091a36;
       color: #ffffff;
-      padding: 4px 6px;
+      padding: 4.5px 7px;
       font-weight: 700;
       text-align: left;
     }
     .table-compare td {
-      padding: 3.5px 6px;
+      padding: 4px 7px;
       border-bottom: 1px solid var(--card-border);
       color: var(--text-body);
     }
@@ -272,24 +276,24 @@
       background: #fdfefe;
       border: 1px solid var(--blue-border);
       border-left: 4px solid var(--blue-accent);
-      border-radius: 6px;
-      padding: 8px 10px;
+      border-radius: 8px;
+      padding: 10px 12px;
       margin-bottom: 0;
     }
 
     .editorial-title {
-      font-size: 10.5px;
+      font-size: 11px;
       font-weight: 800;
       color: var(--navy-dark);
-      margin-bottom: 4px;
+      margin-bottom: 5px;
       display: flex;
       align-items: center;
       gap: 6px;
     }
 
     .editorial-p {
-      font-size: 8.6px;
-      line-height: 1.35;
+      font-size: 9px;
+      line-height: 1.4;
       color: var(--text-body);
       margin-bottom: 4px;
     }
@@ -299,7 +303,7 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
-      padding-top: 6px;
+      padding-top: 8px;
       border-top: 1px solid var(--card-border);
       position: relative;
     }
@@ -307,16 +311,16 @@
     .footer-left {
       display: flex;
       align-items: center;
-      gap: 8px;
+      gap: 10px;
     }
 
     .footer-info-circ {
-      width: 13px;
-      height: 13px;
+      width: 14px;
+      height: 14px;
       border-radius: 50%;
       background: var(--navy-dark);
       color: #fff;
-      font-size: 7.5px;
+      font-size: 8px;
       font-weight: bold;
       display: flex;
       align-items: center;
@@ -324,13 +328,13 @@
     }
 
     .footer-text-small {
-      font-size: 7.8px;
+      font-size: 8px;
       color: var(--text-muted);
-      line-height: 1.15;
+      line-height: 1.2;
     }
 
     .footer-logo {
-      height: 22px;
+      height: 52px;
       width: auto;
       object-fit: contain;
     }
@@ -390,7 +394,7 @@
         min-height: 1122px !important;
         max-height: 1122px !important;
         width: 794px !important;
-        padding: 18px 34px 14px 34px !important;
+        padding: 16px 36px 14px 36px !important;
         overflow: hidden !important;
         -webkit-print-color-adjust: exact !important;
         print-color-adjust: exact !important;
@@ -427,10 +431,10 @@
       <div>
         <h1 class="main-title editable-text" data-edit-id="tr_title">Seguimiento Cuantitativo de Cartera vs SPY</h1>
         <p class="main-subtitle editable-text" data-edit-id="tr_sub">Monitoreo de Equity, Control de Drawdowns y Rendimiento Relativo con Rebalanceo Periódico</p>
-        <p class="authors-subtitle editable-text" data-edit-id="tr_auth">Club de Finanzas UBA · Comité de Renta Variable · Benchmark: <strong>SPY (S&P 500)</strong> · Rebalanceo: <strong id="lblRebalanceFreq">Mensual (21 ruedas)</strong></p>
+        <p class="authors-subtitle editable-text" data-edit-id="tr_auth">Autores: <span id="lblIntegrantesTexto"><strong>Fausto Crivelli</strong> (Presidente de Portafolio) · <strong>Luciano Mora</strong> (Analista Sr) · <strong>Florencia Beluzzo</strong> (Analista Sr)</span> · Benchmark: <strong>SPY (S&P 500)</strong> · Rebalanceo: <strong id="lblRebalanceFreq">Mensual (21 ruedas)</strong></p>
       </div>
-      <div style="text-align: right;">
-        <span class="page-tab" style="background:#0062ff; color:#fff;" id="lblDateRange">Histórico Reciente</span>
+      <div style="text-align: right; flex-shrink: 0; margin-bottom: 2px;">
+        <span class="page-tab" style="background:#0062ff; color:#fff; font-size: 9.5px; padding: 5px 12px;" id="lblDateRange">Histórico Reciente</span>
       </div>
     </div>
 
@@ -463,29 +467,29 @@
     </div>
 
     <!-- Panel 1: Gráfico de Curva de Equity -->
-    <div class="panel-card" style="margin-bottom: 8px;">
+    <div class="panel-card" style="margin-bottom: 10px;">
       <div class="panel-header-title">
         <span>📈 Evolución de Equity Acumulado (Base 100 = Inicio)</span>
-        <span style="font-size: 8.5px; color: var(--blue-accent); font-weight:700;">Cartera Óptima vs SPY Benchmark</span>
+        <span style="font-size: 9px; color: var(--blue-accent); font-weight:700;">Cartera Óptima vs SPY Benchmark</span>
       </div>
-      <div class="chart-box" style="height: 175px;">
+      <div class="chart-box" style="height: 200px;">
         <canvas id="chartReportEquity"></canvas>
       </div>
     </div>
 
     <!-- Panel 2: Gráfico de Drawdown Submarino -->
-    <div class="panel-card" style="margin-bottom: 8px;">
+    <div class="panel-card" style="margin-bottom: 10px;">
       <div class="panel-header-title">
         <span>📉 Perfil de Riesgo: Curva Submarina de Drawdown (%)</span>
-        <span style="font-size: 8.5px; color: var(--red-down); font-weight:700;">Pérdida % desde Máximos Históricos</span>
+        <span style="font-size: 9px; color: var(--red-down); font-weight:700;">Pérdida % desde Máximos Históricos</span>
       </div>
-      <div class="chart-box" style="height: 110px;">
+      <div class="chart-box" style="height: 120px;">
         <canvas id="chartReportDD"></canvas>
       </div>
     </div>
 
     <!-- Panel 3: Tabla Comparativa y Comentarios del Comité -->
-    <div style="display: grid; grid-template-columns: 1.15fr 1fr; gap: 10px; margin-bottom: 6px;">
+    <div style="display: grid; grid-template-columns: 1.15fr 1fr; gap: 12px; margin-bottom: 8px;">
       <!-- Tabla Comparativa -->
       <div class="panel-card" style="margin-bottom: 0; padding: 10px 12px;">
         <div class="panel-header-title" style="margin-bottom: 4px;">
@@ -546,9 +550,13 @@
         <p class="editorial-p editable-text" data-edit-id="tr_comment_2">
           La política de <strong>rebalanceo periódico</strong> permitió recortar ganancias en los activos que experimentaron fuertes subidas y recomprar posiciones rezagadas a valuaciones más atractivas, neutralizando la distorsión de ponderaciones.
         </p>
-        <p class="editorial-p editable-text" data-edit-id="tr_comment_3" style="margin-bottom:0;">
+        <p class="editorial-p editable-text" data-edit-id="tr_comment_3" style="margin-bottom:4px;">
           <strong>Conclusión:</strong> Se mantiene la recomendación de sostener las ponderaciones objetivo sin alteraciones tácticas extraordinarias.
         </p>
+        <div style="margin-top: 6px; padding-top: 5px; border-top: 1px dashed var(--blue-border); font-size: 8.8px; color: var(--navy-dark); display: flex; justify-content: space-between; align-items: center;">
+          <span><strong>Autores:</strong> <span id="lblEditorialIntegrantes" class="editable-text" data-edit-id="tr_team"><strong>Fausto Crivelli</strong> (Presidente de Portafolio) · <strong>Luciano Mora</strong> (Analista Sr) · <strong>Florencia Beluzzo</strong> (Analista Sr)</span></span>
+          <span style="color: var(--text-muted); font-size: 8px;">Club de Finanzas UBA</span>
+        </div>
       </div>
     </div>
 
@@ -575,6 +583,22 @@
     let chartDD = null;
     let modoEdicion = false;
 
+    function formatearAutoresHtml(str) {
+      if (!str) return '';
+      if (str.includes('<strong') || str.includes('<b>')) return str;
+      const partes = str.split(/(?: · | - | \- | , )/);
+      return partes.map(p => {
+        p = p.trim();
+        const match = p.match(/^([^(]+)(\([^)]+\))?$/);
+        if (match) {
+          const nombre = match[1].trim();
+          const rol = match[2] ? ' ' + match[2].trim() : '';
+          return `<strong>${nombre}</strong>${rol}`;
+        }
+        return `<strong>${p}</strong>`;
+      }).join(' · ');
+    }
+
     document.addEventListener('DOMContentLoaded', () => {
       inicializarTextosEditables();
       cargarTextosGuardados();
@@ -587,6 +611,13 @@
       if (!event.data) return;
       if (event.data.type === 'IMPORT_TRACKING') {
         aplicarDatosSeguimiento(event.data.payload);
+      } else if (event.data.type === 'UPDATE_INTEGRANTES') {
+        const val = event.data.integrantes || 'Fausto Crivelli (Presidente de Portafolio) · Luciano Mora (Analista Sr) · Florencia Beluzzo (Analista Sr)';
+        const formatted = formatearAutoresHtml(val);
+        const el1 = document.getElementById('lblIntegrantesTexto');
+        if (el1) el1.innerHTML = formatted;
+        const el2 = document.getElementById('lblEditorialIntegrantes');
+        if (el2) el2.innerHTML = formatted;
       } else if (event.data.type === 'TOGGLE_EDIT') {
         toggleModoEdicion(event.data.active);
       } else if (event.data.type === 'SAVE_EDITS') {
@@ -766,6 +797,18 @@
       const start = data.actual_start_date || data.fecha_inicio || '2024-01-01';
       const end = data.time_labels && data.time_labels.length > 0 ? data.time_labels[data.time_labels.length - 1] : 'Actual';
       document.getElementById('lblDateRange').innerText = `${start} a ${end} (${data.n_velas || data.port_equity_curve.length} ruedas)`;
+
+      if (data.integrantes) {
+        const formatted = formatearAutoresHtml(data.integrantes);
+        const el1 = document.getElementById('lblIntegrantesTexto');
+        if (el1) el1.innerHTML = formatted;
+        const el2 = document.getElementById('lblEditorialIntegrantes');
+        if (el2) el2.innerHTML = formatted;
+      }
+      if (data.rebalance_freq) {
+        const rfEl = document.getElementById('lblRebalanceFreq');
+        if (rfEl) rfEl.innerText = data.rebalance_freq.charAt(0).toUpperCase() + data.rebalance_freq.slice(1);
+      }
 
       // 2. KPIs
       const portGain = data.tracking_gain_pct || 0;
