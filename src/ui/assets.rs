@@ -1006,6 +1006,8 @@ const INDEX_HTML: &str = r##"<!DOCTYPE html>
               <button class="ticker-chip" onclick="agregarTicker('optTickers', 'CEG')">+ CEG</button>
               <button class="ticker-chip" onclick="agregarTicker('optTickers', 'SO')">+ SO</button>
               <button class="ticker-chip" onclick="agregarTicker('optTickers', 'XOM')">+ XOM</button>
+              <button class="ticker-chip" onclick="agregarTicker('optTickers', 'MSTR')">+ MSTR</button>
+              <button class="ticker-chip" onclick="agregarTicker('optTickers', 'RACE')">+ RACE</button>
             </div>
           </div>
 
@@ -1170,6 +1172,8 @@ const INDEX_HTML: &str = r##"<!DOCTYPE html>
               <button class="ticker-chip" onclick="agregarTicker('isOosTickers', 'CEG')">+ CEG</button>
               <button class="ticker-chip" onclick="agregarTicker('isOosTickers', 'SO')">+ SO</button>
               <button class="ticker-chip" onclick="agregarTicker('isOosTickers', 'XOM')">+ XOM</button>
+              <button class="ticker-chip" onclick="agregarTicker('isOosTickers', 'MSTR')">+ MSTR</button>
+              <button class="ticker-chip" onclick="agregarTicker('isOosTickers', 'RACE')">+ RACE</button>
             </div>
           </div>
 
@@ -2446,8 +2450,11 @@ const INDEX_HTML: &str = r##"<!DOCTYPE html>
       { sym: 'BBD', name: 'Banco Bradesco S.A.', cat: 'cedears', sector: 'Bancos Brasil' },
       { sym: 'NU', name: 'Nu Holdings Ltd. (Nubank)', cat: 'cedears', sector: 'Fintech Latam' },
       { sym: 'ARCOS', name: 'Arcos Dorados Holdings (McDonalds Latam)', cat: 'cedears', sector: 'Consumo Masivo' },
+      { sym: 'MSTR', name: 'MicroStrategy Inc. (Bitcoin Treasury & Software)', cat: 'cedears', sector: 'Software & Cripto' },
+      { sym: 'RACE', name: 'Ferrari N.V. (Supercars de Lujo & F1)', cat: 'cedears', sector: 'Automotriz de Lujo' },
 
       // 💻 Big Tech & Inteligencia Artificial
+      { sym: 'MSTR', name: 'MicroStrategy Inc. (Bitcoin Proxy / Analytics)', cat: 'big_tech', sector: 'Software & Bitcoin' },
       { sym: 'GOOGL', name: 'Alphabet Inc. (Google Clase A)', cat: 'big_tech', sector: 'Tecnología & IA' },
       { sym: 'GOOG', name: 'Alphabet Inc. (Google Clase C)', cat: 'big_tech', sector: 'Tecnología & IA' },
       { sym: 'AAPL', name: 'Apple Inc.', cat: 'big_tech', sector: 'Hardware & Servicios' },
@@ -2518,6 +2525,7 @@ const INDEX_HTML: &str = r##"<!DOCTYPE html>
       { sym: 'BA', name: 'The Boeing Company', cat: 'sp500', sector: 'Aeroespacial & Defensa' },
       { sym: 'LMT', name: 'Lockheed Martin Corp.', cat: 'sp500', sector: 'Defensa & Aviación' },
       { sym: 'GE', name: 'General Electric Company (GE Aerospace)', cat: 'sp500', sector: 'Turbinas & Aviación' },
+      { sym: 'RACE', name: 'Ferrari N.V. (Supercars & Exclusividad)', cat: 'sp500', sector: 'Automotriz de Lujo' },
 
       // ⚡ Energía, Petróleo & Utilities / Nuclear
       { sym: 'XOM', name: 'Exxon Mobil Corporation', cat: 'energia', sector: 'Petróleo & Gas Integrado' },

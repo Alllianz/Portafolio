@@ -24,6 +24,8 @@ pub fn inicializar_ratios_cedear() -> HashMap<String, f64> {
     ratios.insert("NVDA".to_string(), 1.0 / 24.0);
     ratios.insert("META".to_string(), 1.0 / 24.0);
     ratios.insert("TSLA".to_string(), 1.0 / 15.0);
+    ratios.insert("MSTR".to_string(), 1.0 / 40.0);
+    ratios.insert("RACE".to_string(), 1.0 / 15.0);
     ratios
 }
 
