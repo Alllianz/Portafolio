@@ -180,6 +180,22 @@
       margin-top: 2px;
     }
 
+    .comp-badge {
+      background: #f0f6ff;
+      border: 1px solid #bfdbfe;
+      border-radius: 4px;
+      padding: 2px 7px;
+      font-size: 8.5px;
+      color: var(--navy-dark);
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }
+    .comp-badge strong {
+      color: #0062ff;
+      font-weight: 800;
+    }
+
     /* Cuadrícula de KPIs */
     .kpi-grid {
       display: grid;
@@ -432,6 +448,9 @@
         <h1 class="main-title editable-text" data-edit-id="tr_title">Seguimiento Cuantitativo de Cartera vs SPY</h1>
         <p class="main-subtitle editable-text" data-edit-id="tr_sub">Monitoreo de Equity, Control de Drawdowns y Rendimiento Relativo con Rebalanceo Periódico</p>
         <p class="authors-subtitle editable-text" data-edit-id="tr_auth">Autores: <span id="lblIntegrantesTexto"><strong>Fausto Crivelli</strong> (Presidente de Portafolio) · <strong>Luciano Mora</strong> (Analista Sr) · <strong>Florencia Beluzzo</strong> (Analista Sr)</span> · Benchmark: <strong>SPY (S&P 500)</strong> · Rebalanceo: <strong id="lblRebalanceFreq">Mensual (21 ruedas)</strong></p>
+        <p class="authors-subtitle editable-text" data-edit-id="tr_comp" style="margin-top: 3px; font-size: 9.3px; color: var(--navy-dark);">
+          <strong style="color: #0062ff;">💼 Composición de Cartera:</strong> <span id="lblComposicionTexto"><strong>AAPL</strong> (40,0%) · <strong>YPF</strong> (30,0%) · <strong>AMZN</strong> (30,0%)</span>
+        </p>
       </div>
       <div style="text-align: right; flex-shrink: 0; margin-bottom: 2px;">
         <span class="page-tab" style="background:#0062ff; color:#fff; font-size: 9.5px; padding: 5px 12px;" id="lblDateRange">Histórico Reciente</span>
@@ -537,6 +556,17 @@
             </tr>
           </tbody>
         </table>
+        <div style="margin-top: 8px; padding-top: 6px; border-top: 1px dashed var(--blue-border);">
+          <div style="font-size: 8.5px; font-weight: 700; color: var(--navy-dark); margin-bottom: 4px; display: flex; justify-content: space-between; align-items: center;">
+            <span style="display: flex; align-items: center; gap: 4px;"><span style="color:#0062ff;">💼</span> Composición & Pesos Objetivo</span>
+            <span style="font-size: 7.8px; color: var(--blue-accent); font-weight: 700;">100% Invertido</span>
+          </div>
+          <div id="lblComposicionBadgesPanel" style="display: flex; flex-wrap: wrap; gap: 4px;">
+            <span class="comp-badge"><strong>AAPL</strong> 40,0%</span>
+            <span class="comp-badge"><strong>YPF</strong> 30,0%</span>
+            <span class="comp-badge"><strong>AMZN</strong> 30,0%</span>
+          </div>
+        </div>
       </div>
 
       <!-- Espacio Editorial / Tesis de Seguimiento -->
@@ -808,6 +838,25 @@
       if (data.rebalance_freq) {
         const rfEl = document.getElementById('lblRebalanceFreq');
         if (rfEl) rfEl.innerText = data.rebalance_freq.charAt(0).toUpperCase() + data.rebalance_freq.slice(1);
+      }
+
+      // 1b. Composición y Ponderaciones
+      if (data.tickers && data.pesos && data.tickers.length > 0) {
+        const totalW = data.pesos.reduce((a, b) => a + b, 0);
+        const formattedItems = data.tickers.map((t, idx) => {
+          const w = data.pesos[idx] || 0;
+          const pct = totalW > 0 ? ((w / totalW) * 100).toFixed(1).replace('.', ',') : w.toFixed(1).replace('.', ',');
+          return { ticker: t, pct: pct };
+        });
+
+        const compSub = document.getElementById('lblComposicionTexto');
+        if (compSub) {
+          compSub.innerHTML = formattedItems.map(item => `<strong>${item.ticker}</strong> (${item.pct}%)`).join(' · ');
+        }
+        const compBadges = document.getElementById('lblComposicionBadgesPanel');
+        if (compBadges) {
+          compBadges.innerHTML = formattedItems.map(item => `<span class="comp-badge"><strong>${item.ticker}</strong> ${item.pct}%</span>`).join('');
+        }
       }
 
       // 2. KPIs

@@ -22,6 +22,7 @@ pub fn crear_router(state: AppState) -> Router {
         .route("/api/optimizar", post(handlers::handler_optimizar))
         .route("/api/is_oos", post(handlers::handler_is_oos))
         .route("/api/tracking", post(handlers::handler_tracking))
+        .route("/api/experimental/neural-allocation", post(handlers::handler_neural_allocation))
         .route("/api/db/tickers", get(handlers::handler_get_tickers))
         .route("/api/db/resumen", get(handlers::handler_get_resumen))
         .route("/api/db/descargar", post(handlers::handler_descargar_tickers))

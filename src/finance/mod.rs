@@ -1,5 +1,6 @@
 pub mod arbitraje;
 pub mod capm;
+pub mod deep_portfolio;
 pub mod frontera;
 pub mod is_oos;
 pub mod optimizacion;

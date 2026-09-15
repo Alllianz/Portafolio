@@ -107,3 +107,50 @@ fn default_min_bound() -> f64 {
 fn default_poblacional() -> bool {
     false
 }
+
+#[derive(Debug, Clone, Deserialize, Serialize)]
+pub struct NeuralAllocationRequest {
+    #[serde(default)]
+    pub tickers: Vec<String>,
+    #[serde(default = "default_neural_lookback")]
+    pub lookback_window: usize,
+    #[serde(default = "default_neural_rebalance")]
+    pub rebalance_freq: usize,
+    #[serde(default = "default_max_cardinality")]
+    pub max_cardinality: usize,
+    #[serde(default = "default_min_asset_weight")]
+    pub min_asset_weight: f64,
+    #[serde(default = "default_fee_bps")]
+    pub transaction_fee_bps: f64,
+    #[serde(default = "default_ccl_ref")]
+    pub ccl_ref: f64,
+    #[serde(default = "default_rf_rate")]
+    pub rf_rate: f64,
+    #[serde(default = "default_seed")]
+    pub seed: u64,
+}
+
+fn default_neural_lookback() -> usize {
+    63
+}
+
+fn default_neural_rebalance() -> usize {
+    21
+}
+
+fn default_max_cardinality() -> usize {
+    5
+}
+
+fn default_min_asset_weight() -> f64 {
+    0.05
+}
+
+fn default_fee_bps() -> f64 {
+    10.0
+}
+
+fn default_seed() -> u64 {
+    42
+}
+

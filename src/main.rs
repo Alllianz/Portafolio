@@ -42,22 +42,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     let url = format!("http://{}", local_addr);
 
     println!("✓ Servidor HTTP cuantitativo iniciado en: {}", url);
-    println!("✓ Abriendo aplicación en ventana de pantalla completa...\n");
-
-    // Watchdog de latido: tolerancia de 20s con refresco continuo en cada petición API
-    let watchdog_state = state.clone();
-    tokio::spawn(async move {
-        tokio::time::sleep(Duration::from_secs(30)).await;
-        loop {
-            tokio::time::sleep(Duration::from_secs(3)).await;
-            let last = watchdog_state.last_heartbeat.load(Ordering::SeqCst);
-            let now = chrono::Utc::now().timestamp();
-            if now - last > 20 {
-                println!("\n✓ Ventana del navegador cerrada por el usuario. Apagando servidor...");
-                std::process::exit(0);
-            }
-        }
-    });
+    println!("✓ Abriendo aplicación en navegador...\n");
 
     let app_router = server::crear_router(state);
 

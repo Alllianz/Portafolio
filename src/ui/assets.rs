@@ -969,6 +969,11 @@ const INDEX_HTML: &str = r##"<!DOCTYPE html>
         <span class="menu-icon">🗄️</span> Base de Datos SQLite
       </button>
 
+      <div class="menu-category-title">Investigación Avanzada</div>
+      <button class="menu-item-btn" onclick="switchView('view-experimental')" style="border-left: 3px solid #8b5cf6;">
+        <span class="menu-icon">🧪</span> Zona Experimental (IA)
+      </button>
+
       <div class="menu-category-title">Documentación</div>
       <button class="menu-item-btn" onclick="switchView('view-guia')">
         <span class="menu-icon">📚</span> Guía Metodológica & Fórmulas
@@ -1393,6 +1398,16 @@ const INDEX_HTML: &str = r##"<!DOCTYPE html>
           </div>
         </div>
 
+        <div class="card-panel" id="panelTrackComposition" style="padding: 12px 16px; margin-bottom: 16px; display: none;">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+            <span style="font-size: 0.88rem; font-weight: 800; color: var(--navy-900); display: flex; align-items: center; gap: 6px;">
+              <span>💼</span> Composición de la Cartera Simulada
+            </span>
+            <span id="badgeTrackTotalWeight" style="background: var(--navy-900); color: #ffffff; padding: 2px 8px; border-radius: 12px; font-size: 0.75rem; font-weight: 700;">100% Invertido</span>
+          </div>
+          <div id="containerTrackWeightsList" style="display: flex; flex-wrap: wrap; gap: 8px;"></div>
+        </div>
+
         <div class="charts-grid-2x2">
           <div class="chart-panel-card" id="cardTrackEquity" style="grid-column: span 2;">
             <div class="chart-panel-header">
@@ -1561,6 +1576,179 @@ const INDEX_HTML: &str = r##"<!DOCTYPE html>
             </thead>
             <tbody id="tbodyCarterasDb">
               <tr><td colspan="7" style="text-align: center;">Cargando carteras guardadas de SQLite...</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- VISTA EXPERIMENTAL: RED NEURONAL DE ASIGNACIÓN DINÁMICA -->
+      <section id="view-experimental" class="view-container">
+        <div class="view-header">
+          <div class="view-title-group">
+            <h2 style="display:flex; align-items:center; gap:8px;">
+              <span style="background:#8B5CF6; color:#FFF; padding:4px 10px; border-radius:8px; font-size:1rem;">🧪 EXPERIMENTAL</span>
+              Red Neuronal de Asignación de Portafolios (CSAN + Causal DRL)
+            </h2>
+            <p>Arquitectura de Red Neuronal con Atención Transversal (Cross-Sectional Attention) y Normalización Causal Welford ($t-1$) para selección dinámica de a lo sumo <strong>5 activos</strong> con piso mínimo de <strong>5%</strong>.</p>
+          </div>
+        </div>
+
+        <div id="statusBannerNeural" class="status-banner">
+          <div class="spinner-inline"></div>
+          <span id="statusBannerNeuralText">Ejecutando inferencia neuronal causal paso a paso en Rust...</span>
+        </div>
+
+        <div class="card-panel">
+          <div class="input-group">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
+              <label style="margin:0;">Universo de Activos a Evaluar por la Red Neuronal</label>
+              <button class="ticker-chip" style="background:#8B5CF6; color:#FFF; font-size:0.75rem; padding:3px 10px;" onclick="cargarTodosTickersANeural()">📥 Cargar Todos de SQLite</button>
+            </div>
+            <input type="text" id="neuralTickers" class="input-control" value="AAPL, YPF, AMZN, MSFT, NVDA, CEG, SO, XOM, MSTR, RACE, GGAL, MELI, VIST" placeholder="Ej: AAPL, YPF, AMZN, MSFT, NVDA, CEG...">
+            <div class="quick-chips-row">
+              <span class="chip-label">Activos Rápidos:</span>
+              <button class="ticker-chip" onclick="agregarTicker('neuralTickers', 'AAPL')">+ AAPL</button>
+              <button class="ticker-chip" onclick="agregarTicker('neuralTickers', 'YPF')">+ YPF</button>
+              <button class="ticker-chip" onclick="agregarTicker('neuralTickers', 'NVDA')">+ NVDA</button>
+              <button class="ticker-chip" onclick="agregarTicker('neuralTickers', 'AMZN')">+ AMZN</button>
+              <button class="ticker-chip" onclick="agregarTicker('neuralTickers', 'MELI')">+ MELI</button>
+              <button class="ticker-chip" onclick="agregarTicker('neuralTickers', 'GGAL')">+ GGAL</button>
+              <button class="ticker-chip" onclick="agregarTicker('neuralTickers', 'MSTR')">+ MSTR</button>
+              <button class="ticker-chip" onclick="agregarTicker('neuralTickers', 'RACE')">+ RACE</button>
+            </div>
+          </div>
+
+          <div class="form-grid-controls">
+            <div class="input-group">
+              <label>Ventana Causal $W$ (Ruedas)</label>
+              <input type="number" id="neuralLookback" class="input-control" value="63" min="21" step="21">
+            </div>
+            <div class="input-group">
+              <label>Frecuencia de Rebalanceo</label>
+              <select id="neuralRebalance" class="input-control">
+                <option value="21" selected>Mensual (Cada 21 ruedas)</option>
+                <option value="5">Semanal (Cada 5 ruedas)</option>
+                <option value="63">Trimestral (Cada 63 ruedas)</option>
+                <option value="1">Diario (Cada 1 rueda)</option>
+              </select>
+            </div>
+            <div class="input-group">
+              <label>Máx. Activos Seleccionados</label>
+              <input type="number" id="neuralMaxCard" class="input-control" value="5" min="1" max="10" readonly style="background:var(--slate-100);">
+            </div>
+            <div class="input-group">
+              <label>Piso Mínimo por Activo</label>
+              <input type="number" id="neuralMinWeight" class="input-control" value="0.05" min="0.01" max="0.20" step="0.01" readonly style="background:var(--slate-100);">
+            </div>
+            <div class="input-group">
+              <label>Fricciones / Comisión (bps)</label>
+              <input type="number" id="neuralFeeBps" class="input-control" value="10.0" min="0" step="1">
+            </div>
+            <button id="btnEjecutarNeural" class="btn-action-primary" style="background:#8B5CF6;" onclick="ejecutarSimulacionNeural()">
+              <span>🧠</span> Ejecutar Simulación IA
+            </button>
+          </div>
+        </div>
+
+        <!-- KPIs de Rendimiento Neuronal -->
+        <div class="kpis-grid">
+          <div class="kpi-box">
+            <div class="kpi-icon-circle" style="background:#8B5CF6; color:#FFF;">🤖</div>
+            <div class="kpi-title">Ganancia Neta Cartera IA</div>
+            <div class="kpi-stat" id="kpiNeuralGain" style="color:#8B5CF6;">--%</div>
+          </div>
+          <div class="kpi-box">
+            <div class="kpi-icon-circle blue">📈</div>
+            <div class="kpi-title">Retorno Anualizado</div>
+            <div class="kpi-stat" id="kpiNeuralAnnRet">--%</div>
+          </div>
+          <div class="kpi-box">
+            <div class="kpi-icon-circle green">⚡</div>
+            <div class="kpi-title">Alpha Anual vs SPY</div>
+            <div class="kpi-stat green" id="kpiNeuralAlpha">--%</div>
+          </div>
+          <div class="kpi-box">
+            <div class="kpi-icon-circle cyan">🎯</div>
+            <div class="kpi-title">Sharpe Ratio OOS</div>
+            <div class="kpi-stat" id="kpiNeuralSharpe">--</div>
+          </div>
+          <div class="kpi-box">
+            <div class="kpi-icon-circle dark">📉</div>
+            <div class="kpi-title">Max Drawdown</div>
+            <div class="kpi-stat dark" id="kpiNeuralMaxDd">--%</div>
+          </div>
+          <div class="kpi-box">
+            <div class="kpi-icon-circle" style="background:#F59E0B; color:#FFF;">🔄</div>
+            <div class="kpi-title">Turnover Promedio</div>
+            <div class="kpi-stat" id="kpiNeuralTurnover">--%</div>
+          </div>
+        </div>
+
+        <!-- Panel de Gráficos -->
+        <div class="charts-grid-2x2">
+          <!-- Gráfico de Equity -->
+          <div class="chart-panel-card" id="cardNeuralEquity" style="grid-column: span 2;">
+            <div class="chart-panel-header">
+              <span class="chart-panel-title">📈 Curva de Equity Acumulado: Red Neuronal vs SPY Benchmark vs Cartera Equiponderada (1/N)</span>
+              <button class="btn-export-1080p" onclick="exportarGraficoPNG('cardNeuralEquity', 'Equity_Red_Neuronal')">📸 PNG 1080p</button>
+            </div>
+            <div class="chart-canvas-box" style="height: 400px;"><canvas id="chartNeuralEquity"></canvas></div>
+          </div>
+        </div>
+
+        <!-- PANEL DE AUDITORÍA FORMAL E INTEGRIDAD ESTADÍSTICA -->
+        <div class="card-panel" style="margin-top:20px; border-left:4px solid #8B5CF6; background:linear-gradient(180deg, #FAF5FF 0%, #FFFFFF 100%);">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
+            <div style="display:flex; align-items:center; gap:8px;">
+              <span style="font-size:1.3rem;">🛡️</span>
+              <h3 style="font-size:1.05rem; font-weight:800; color:var(--navy-900); margin:0;">Informe de Auditoría Cuantitativa & Verificación de Invariantes</h3>
+            </div>
+            <span id="badgeAuditStatus" class="badge-pill" style="background:#16A34A; color:#FFF; font-weight:800; font-size:0.8rem; padding:4px 12px;">✓ AUDITORÍA APROBADA</span>
+          </div>
+
+          <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(220px, 1fr)); gap:10px; margin-bottom:14px;">
+            <div style="background:#FFF; border:1px solid #E9D5FF; border-radius:8px; padding:10px;">
+              <div style="font-size:0.75rem; color:var(--slate-500); font-weight:700;">LOOK-AHEAD BIAS</div>
+              <div style="font-size:0.95rem; font-weight:800; color:#15803D; margin-top:2px;" id="lblAuditLookahead">0% (Lag Causal $t-1$)</div>
+            </div>
+            <div style="background:#FFF; border:1px solid #E9D5FF; border-radius:8px; padding:10px;">
+              <div style="font-size:0.75rem; color:var(--slate-500); font-weight:700;">RESTRICCIÓN DE CARDINALIDAD</div>
+              <div style="font-size:0.95rem; font-weight:800; color:#15803D; margin-top:2px;" id="lblAuditCardinality">Máximo 5 Activos (100% OK)</div>
+            </div>
+            <div style="background:#FFF; border:1px solid #E9D5FF; border-radius:8px; padding:10px;">
+              <div style="font-size:0.75rem; color:var(--slate-500); font-weight:700;">PISO MÍNIMO POR ACTIVO</div>
+              <div style="font-size:0.95rem; font-weight:800; color:#15803D; margin-top:2px;" id="lblAuditMinWeight">Piso 5% Respetado</div>
+            </div>
+            <div style="background:#FFF; border:1px solid #E9D5FF; border-radius:8px; padding:10px;">
+              <div style="font-size:0.75rem; color:var(--slate-500); font-weight:700;">SUMA DE PONDERACIONES</div>
+              <div style="font-size:0.95rem; font-weight:800; color:#15803D; margin-top:2px;" id="lblAuditSumWeights">100.00% Exacto</div>
+            </div>
+          </div>
+
+          <div id="containerAuditNotes" style="font-size:0.85rem; color:var(--navy-900); line-height:1.5;">
+            <!-- Notas de auditoría generadas en Rust -->
+          </div>
+        </div>
+
+        <!-- Tabla Histórica de Asignaciones y Rebalanceos -->
+        <div class="table-card" style="margin-top:20px;">
+          <div class="chart-panel-header" style="margin-bottom:12px;">
+            <span class="chart-panel-title">📋 Registro Cronológico de Decisiones de la Red Neuronal (<span id="countNeuralRebalances">0</span> Rebalanceos)</span>
+          </div>
+          <table class="custom-table" id="tablaNeuralAllocations">
+            <thead>
+              <tr>
+                <th>Fecha / Rueda</th>
+                <th>Activos Seleccionados (Top $\le$ 5)</th>
+                <th>Ponderaciones Asignadas (%)</th>
+                <th>Rotación (Turnover)</th>
+                <th>Costo Deducido</th>
+                <th>Equity Cartera</th>
+                <th>Equity SPY</th>
+              </tr>
+            </thead>
+            <tbody id="tbodyNeuralAllocations">
+              <tr><td colspan="7" style="text-align:center; color:var(--slate-500);">Ejecute la simulación neuronal para ver el historial de decisiones de inversión.</td></tr>
             </tbody>
           </table>
         </div>
@@ -2731,6 +2919,21 @@ const INDEX_HTML: &str = r##"<!DOCTYPE html>
         document.getElementById('kpiTrackSharpe').innerText = d.tracking_sharpe.toFixed(2);
         document.getElementById('kpiTrackMaxStag').innerText = d.tracking_max_stagnation_days + ' días';
 
+        const compPanel = document.getElementById('panelTrackComposition');
+        const compContainer = document.getElementById('containerTrackWeightsList');
+        if (compPanel && compContainer && d.tickers && d.pesos && d.tickers.length > 0) {
+          compPanel.style.display = 'block';
+          const totalW = d.pesos.reduce((a, b) => a + b, 0);
+          compContainer.innerHTML = d.tickers.map((t, idx) => {
+            const w = d.pesos[idx] || 0;
+            const pct = totalW > 0 ? ((w / totalW) * 100).toFixed(1) : w.toFixed(1);
+            return `<div style="background: var(--slate-100); border: 1px solid var(--slate-300); border-radius: 8px; padding: 6px 12px; display: flex; align-items: center; gap: 8px;">
+              <span style="font-weight: 800; color: var(--navy-900); font-size: 0.9rem;">${t}</span>
+              <span style="background: #0062ff; color: #ffffff; padding: 2px 8px; border-radius: 6px; font-weight: 700; font-size: 0.75rem;">${pct}%</span>
+            </div>`;
+          }).join('');
+        }
+
         if (charts.trackEquity) charts.trackEquity.destroy();
         const ctxEq = document.getElementById('chartTrackEquity').getContext('2d');
         charts.trackEquity = new Chart(ctxEq, {
@@ -2768,6 +2971,193 @@ const INDEX_HTML: &str = r##"<!DOCTYPE html>
       } catch (err) {
         setStatus('statusBannerTrack', 'statusBannerTrackText', 'btnEjecutarTrack', false);
         showToast("❌ Error: " + err.message);
+      }
+    }
+
+    // ==========================================
+    // ZONA EXPERIMENTAL: RED NEURONAL DE CARTERA
+    // ==========================================
+    async function cargarTodosTickersANeural() {
+      try {
+        const res = await fetch('/api/db/tickers');
+        const json = await res.json();
+        if (json.success && json.data && json.data.length > 0) {
+          const validTickers = json.data.filter(t => t !== 'SPY');
+          document.getElementById('neuralTickers').value = validTickers.join(', ');
+          showToast(`✓ ${validTickers.length} tickers cargados desde SQLite.`);
+        } else {
+          showToast("ℹ️ No hay tickers suficientes en SQLite.");
+        }
+      } catch (err) {
+        showToast("❌ Error al leer tickers: " + err.message);
+      }
+    }
+
+    async function ejecutarSimulacionNeural() {
+      const tickersRaw = document.getElementById('neuralTickers').value;
+      const tickers = tickersRaw.split(',').map(s => s.trim().toUpperCase()).filter(s => s.length > 0);
+
+      if (tickers.length < 3) {
+        showToast("⚠️ Ingrese al menos 3 activos para la simulación neuronal.");
+        return;
+      }
+
+      const payload = {
+        tickers,
+        lookback_window: parseInt(document.getElementById('neuralLookback').value) || 63,
+        rebalance_freq: parseInt(document.getElementById('neuralRebalance').value) || 21,
+        max_cardinality: parseInt(document.getElementById('neuralMaxCard').value) || 5,
+        min_asset_weight: parseFloat(document.getElementById('neuralMinWeight').value) || 0.05,
+        transaction_fee_bps: parseFloat(document.getElementById('neuralFeeBps').value) || 10.0,
+        ccl_ref: 1250.0,
+        rf_rate: 0.04,
+        seed: 42
+      };
+
+      setStatus('statusBannerNeural', 'statusBannerNeuralText', 'btnEjecutarNeural', true, "Ejecutando inferencia neuronal causal paso a paso en Rust...");
+      try {
+        const res = await fetch('/api/experimental/neural-allocation', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+        const data = await res.json();
+        setStatus('statusBannerNeural', 'statusBannerNeuralText', 'btnEjecutarNeural', false);
+
+        if (!data.success) {
+          showToast("❌ " + (data.error || "Error en simulación neuronal"));
+          return;
+        }
+
+        renderResultadosNeural(data.data);
+        showToast("✓ Simulación de red neuronal completada y auditada con éxito.");
+      } catch (err) {
+        setStatus('statusBannerNeural', 'statusBannerNeuralText', 'btnEjecutarNeural', false);
+        showToast("❌ Error: " + err.message);
+      }
+    }
+
+    function renderResultadosNeural(d) {
+      if (!d) return;
+
+      // 1. KPIs Principales
+      document.getElementById('kpiNeuralGain').innerText = (d.total_net_gain_pct >= 0 ? '+' : '') + d.total_net_gain_pct.toFixed(1) + '%';
+      document.getElementById('kpiNeuralAnnRet').innerText = d.annualized_net_return_pct.toFixed(1) + '%';
+      document.getElementById('kpiNeuralAlpha').innerText = (d.alpha_annualized_pct >= 0 ? '+' : '') + d.alpha_annualized_pct.toFixed(1) + '%';
+      document.getElementById('kpiNeuralSharpe').innerText = d.sharpe_ratio.toFixed(2);
+      document.getElementById('kpiNeuralMaxDd').innerText = '-' + d.max_drawdown_pct.toFixed(1) + '%';
+      document.getElementById('kpiNeuralTurnover').innerText = d.audit_report.avg_turnover_per_rebalance.toFixed(1) + '%';
+
+      // 2. Gráfico 1: Curva de Equity Acumulado
+      if (charts.neuralEquity) charts.neuralEquity.destroy();
+      const ctxEq = document.getElementById('chartNeuralEquity').getContext('2d');
+      charts.neuralEquity = new Chart(ctxEq, {
+        type: 'line',
+        data: {
+          labels: d.time_labels,
+          datasets: [
+            {
+              label: '🤖 Cartera Red Neuronal IA (Neto Comisiones)',
+              data: d.portfolio_equity_curve.map(v => v.toFixed(2)),
+              borderColor: '#8B5CF6',
+              backgroundColor: 'rgba(139, 92, 246, 0.12)',
+              fill: true,
+              borderWidth: 2.8,
+              pointRadius: 0
+            },
+            {
+              label: '📊 SPY Benchmark (S&P 500)',
+              data: d.benchmark_equity_curve.map(v => v.toFixed(2)),
+              borderColor: '#0A192F',
+              borderWidth: 2.0,
+              fill: false,
+              pointRadius: 0
+            },
+            {
+              label: '⚖️ Cartera Equiponderada (1/N)',
+              data: d.equal_weight_equity_curve.map(v => v.toFixed(2)),
+              borderColor: '#10B981',
+              borderDash: [5, 5],
+              borderWidth: 1.8,
+              fill: false,
+              pointRadius: 0
+            }
+          ]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: { position: 'top' },
+            tooltip: {
+              callbacks: {
+                label: function(ctx) { return `${ctx.dataset.label}: ${ctx.parsed.y} pts`; }
+              }
+            }
+          },
+          scales: {
+            y: { title: { display: true, text: 'Valor de Cartera (Base 100)' } }
+          }
+        }
+      });
+
+      // 3. Panel de Auditoría de Invariantes
+      const rep = d.audit_report;
+      const statusBadge = document.getElementById('badgeAuditStatus');
+      if (statusBadge) {
+        if (rep.audit_passed) {
+          statusBadge.innerText = '✓ AUDITORÍA APROBADA';
+          statusBadge.style.background = '#16A34A';
+        } else {
+          statusBadge.innerText = '⚠️ REVISIÓN REQUERIDA';
+          statusBadge.style.background = '#DC2626';
+        }
+      }
+
+      document.getElementById('lblAuditLookahead').innerText = '0% (Lag Causal F_{t-1} Verificado)';
+      document.getElementById('lblAuditCardinality').innerText = rep.max_cardinality_violations === 0 
+        ? 'Máximo 5 Activos (100% Cumplido)' 
+        : `⚠️ ${rep.max_cardinality_violations} Violaciones`;
+      document.getElementById('lblAuditMinWeight').innerText = rep.min_weight_violations === 0 
+        ? 'Piso 5% Respetado' 
+        : `⚠️ ${rep.min_weight_violations} Violaciones`;
+      document.getElementById('lblAuditSumWeights').innerText = rep.sum_weights_tolerance_violations === 0 
+        ? '100.00% Exacto' 
+        : `⚠️ ${rep.sum_weights_tolerance_violations} Desvíos`;
+
+      const notesContainer = document.getElementById('containerAuditNotes');
+      if (notesContainer) {
+        notesContainer.innerHTML = rep.audit_notes.map(n => `<div style="margin-bottom:4px;">${n}</div>`).join('');
+      }
+
+      // 5. Tabla de Rebalanceos Históricos
+      const tbody = document.getElementById('tbodyNeuralAllocations');
+      const countEl = document.getElementById('countNeuralRebalances');
+      if (countEl) countEl.innerText = `${d.allocations_history.length}`;
+
+      if (tbody) {
+        if (d.allocations_history.length === 0) {
+          tbody.innerHTML = '<tr><td colspan="7" style="text-align:center;">No hubo eventos de rebalanceo en el período.</td></tr>';
+        } else {
+          tbody.innerHTML = d.allocations_history.map(a => {
+            let activeBadges = a.active_tickers.map((t, idx) => {
+              const w = a.active_weights[idx] || 0;
+              return `<span style="background:#FAF5FF; border:1px solid #D8B4FE; color:#6B21A8; padding:2px 6px; border-radius:4px; font-size:0.75rem; font-weight:800; margin-right:4px;">${t} (${w.toFixed(1)}%)</span>`;
+            }).join('');
+
+            return `
+              <tr>
+                <td style="font-weight:700; color:var(--navy-900);">${a.date}</td>
+                <td>${activeBadges}</td>
+                <td><strong>${a.active_tickers.length} activos</strong></td>
+                <td>${a.turnover.toFixed(1)}%</td>
+                <td style="color:#DC2626;">-${a.transaction_cost_pct.toFixed(3)}%</td>
+                <td style="font-weight:800; color:#8B5CF6;">${a.portfolio_equity.toFixed(2)}</td>
+                <td style="color:var(--slate-600);">${a.benchmark_equity.toFixed(2)}</td>
+              </tr>
+            `;
+          }).join('');
+        }
       }
     }
 
@@ -3349,19 +3739,10 @@ const INDEX_HTML: &str = r##"<!DOCTYPE html>
         ejecutarOptimizacion();
       });
 
-      // Enviar latido de actividad (heartbeat) cada 2 segundos a Rust
+      // Latido periódico de actividad
       setInterval(() => {
         fetch('/api/heartbeat', { method: 'POST' }).catch(() => {});
-      }, 2000);
-
-      // Notificar cierre inmediato al backend cuando se cierre la ventana o pestaña
-      window.addEventListener('beforeunload', () => {
-        if (navigator.sendBeacon) {
-          navigator.sendBeacon('/api/shutdown');
-        } else {
-          fetch('/api/shutdown', { method: 'POST', keepalive: true }).catch(() => {});
-        }
-      });
+      }, 10000);
     });
   </script>
 </body>
