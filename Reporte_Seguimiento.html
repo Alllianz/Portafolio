@@ -875,14 +875,135 @@
       document.getElementById('tkSharpe').innerText = (data.tracking_sharpe || 0).toFixed(2);
       document.getElementById('tkMaxStag').innerText = (data.tracking_max_stagnation_days || 0) + ' Ruedas';
 
-      // 3. Tabla Comparativa
-      document.getElementById('tblGainPort').innerText = (portGain >= 0 ? '+' : '') + portGain.toFixed(1) + '%';
-      document.getElementById('tblGainSpy').innerText = (spyGain >= 0 ? '+' : '') + spyGain.toFixed(1) + '%';
-      document.getElementById('tblGainDiff').innerText = (alpha >= 0 ? '+' : '') + alpha.toFixed(1) + '%';
+      // 3. Métricas Financieras del Período Exacto
+      // 3.1 Drawdown y Máximo Drawdown
+      const portDdSerie = calcularDrawdownSerie(data.port_equity_curve);
+      const spyDdSerie = (data.spy_equity_curve && data.spy_equity_curve.length > 0)
+        ? calcularDrawdownSerie(data.spy_equity_curve)
+        : [];
+      const mddPort = data.tracking_max_dd_pct !== undefined
+        ? data.tracking_max_dd_pct
+        : Math.abs(portDdSerie.reduce((min, v) => (v < min ? v : min), 0));
+      const mddSpy = spyDdSerie.length > 0
+        ? Math.abs(spyDdSerie.reduce((min, v) => (v < min ? v : min), 0))
+        : 0;
+      const diffMdd = mddSpy - mddPort; // Positivo indica que la cartera tuvo menor caída que el benchmark
 
-      document.getElementById('tblSharpePort').innerText = (data.tracking_sharpe || 0).toFixed(2);
-      document.getElementById('tblMddPort').innerText = '-' + (data.tracking_max_dd_pct || 0).toFixed(1) + '%';
-      document.getElementById('tblStagPort').innerText = (data.tracking_max_stagnation_days || 0) + ' Días';
+      // 3.2 Volatilidad Anualizada del Período
+      const nRuedas = data.port_equity_curve.length;
+      const diasAnual = 252;
+      let volPortPct = (data.vol_anual || 0) * 100;
+      let volSpyPct = 0;
+      let sharpeSpy = 0;
+
+      if (data.spy_equity_curve && data.spy_equity_curve.length > 1) {
+        const spyRets = [];
+        for (let i = 1; i < data.spy_equity_curve.length; i++) {
+          const prev = data.spy_equity_curve[i - 1];
+          const curr = data.spy_equity_curve[i];
+          if (prev > 0) spyRets.push((curr / prev) - 1.0);
+        }
+        if (spyRets.length > 1) {
+          const meanSpyRet = spyRets.reduce((a, b) => a + b, 0) / spyRets.length;
+          const varSpy = spyRets.reduce((acc, r) => acc + Math.pow(r - meanSpyRet, 2), 0) / (spyRets.length - 1);
+          const volSpyDiaria = Math.sqrt(varSpy);
+          volSpyPct = volSpyDiaria * Math.sqrt(diasAnual) * 100;
+
+          const rfAnual = (data.rf_rate || 0.04);
+          const annSpyRet = meanSpyRet * diasAnual;
+          if (volSpyPct > 0) {
+            sharpeSpy = (annSpyRet - rfAnual) / (volSpyPct / 100);
+          }
+        }
+      }
+
+      if (volPortPct === 0 && data.port_equity_curve.length > 1) {
+        const portRets = [];
+        for (let i = 1; i < data.port_equity_curve.length; i++) {
+          const prev = data.port_equity_curve[i - 1];
+          const curr = data.port_equity_curve[i];
+          if (prev > 0) portRets.push((curr / prev) - 1.0);
+        }
+        if (portRets.length > 1) {
+          const meanPortRet = portRets.reduce((a, b) => a + b, 0) / portRets.length;
+          const varPort = portRets.reduce((acc, r) => acc + Math.pow(r - meanPortRet, 2), 0) / (portRets.length - 1);
+          volPortPct = Math.sqrt(varPort) * Math.sqrt(diasAnual) * 100;
+        }
+      }
+
+      const diffVol = volPortPct - volSpyPct;
+      const sharpePort = data.tracking_sharpe || 0;
+      const diffSharpe = sharpePort - sharpeSpy;
+
+      // 3.3 Estancamiento del Período
+      let spyPeak = data.spy_equity_curve && data.spy_equity_curve.length > 0 ? data.spy_equity_curve[0] : 100;
+      let spyMaxStag = 0;
+      let spyCurrentStag = 0;
+      if (data.spy_equity_curve) {
+        for (let i = 0; i < data.spy_equity_curve.length; i++) {
+          const val = data.spy_equity_curve[i];
+          if (val >= spyPeak) {
+            spyPeak = val;
+            spyCurrentStag = 0;
+          } else {
+            spyCurrentStag++;
+            if (spyCurrentStag > spyMaxStag) spyMaxStag = spyCurrentStag;
+          }
+        }
+      }
+      const portStag = data.tracking_max_stagnation_days || 0;
+      const diffStag = portStag - spyMaxStag;
+
+      // Actualizar Tabla Comparativa
+      const elGainPort = document.getElementById('tblGainPort');
+      const elGainSpy = document.getElementById('tblGainSpy');
+      const elGainDiff = document.getElementById('tblGainDiff');
+      if (elGainPort) elGainPort.innerText = (portGain >= 0 ? '+' : '') + portGain.toFixed(1) + '%';
+      if (elGainSpy) elGainSpy.innerText = (spyGain >= 0 ? '+' : '') + spyGain.toFixed(1) + '%';
+      if (elGainDiff) {
+        elGainDiff.innerText = (alpha >= 0 ? '+' : '') + alpha.toFixed(1) + '%';
+        elGainDiff.style.color = alpha >= 0 ? 'var(--green-up)' : 'var(--red-down)';
+      }
+
+      const elVolPort = document.getElementById('tblVolPort');
+      const elVolSpy = document.getElementById('tblVolSpy');
+      const elVolDiff = document.getElementById('tblVolDiff');
+      if (elVolPort) elVolPort.innerText = volPortPct.toFixed(1) + '%';
+      if (elVolSpy) elVolSpy.innerText = volSpyPct.toFixed(1) + '%';
+      if (elVolDiff) {
+        elVolDiff.innerText = (diffVol >= 0 ? '+' : '') + diffVol.toFixed(1) + '%';
+        elVolDiff.style.color = diffVol <= 0 ? 'var(--green-up)' : 'var(--red-down)'; // Menor volatilidad suele ser favorable
+      }
+
+      const elSharpePort = document.getElementById('tblSharpePort');
+      const elSharpeSpy = document.getElementById('tblSharpeSpy');
+      const elSharpeDiff = document.getElementById('tblSharpeDiff');
+      if (elSharpePort) elSharpePort.innerText = sharpePort.toFixed(2);
+      if (elSharpeSpy) elSharpeSpy.innerText = sharpeSpy.toFixed(2);
+      if (elSharpeDiff) {
+        elSharpeDiff.innerText = (diffSharpe >= 0 ? '+' : '') + diffSharpe.toFixed(2);
+        elSharpeDiff.style.color = diffSharpe >= 0 ? 'var(--green-up)' : 'var(--red-down)';
+      }
+
+      const elMddPort = document.getElementById('tblMddPort');
+      const elMddSpy = document.getElementById('tblMddSpy');
+      const elMddDiff = document.getElementById('tblMddDiff');
+      if (elMddPort) elMddPort.innerText = '-' + mddPort.toFixed(1) + '%';
+      if (elMddSpy) elMddSpy.innerText = '-' + mddSpy.toFixed(1) + '%';
+      if (elMddDiff) {
+        elMddDiff.innerText = (diffMdd >= 0 ? '+' : '') + diffMdd.toFixed(1) + '%';
+        elMddDiff.style.color = diffMdd >= 0 ? 'var(--green-up)' : 'var(--red-down)';
+      }
+
+      const elStagPort = document.getElementById('tblStagPort');
+      const elStagSpy = document.getElementById('tblStagSpy');
+      const elStagDiff = document.getElementById('tblStagDiff');
+      if (elStagPort) elStagPort.innerText = portStag + ' Días';
+      if (elStagSpy) elStagSpy.innerText = spyMaxStag + ' Días';
+      if (elStagDiff) {
+        elStagDiff.innerText = (diffStag <= 0 ? '' : '+') + diffStag + ' Días';
+        elStagDiff.style.color = diffStag <= 0 ? 'var(--green-up)' : 'var(--red-down)'; // Menos estancamiento es favorable
+      }
 
       // 4. Gráficos
       const labels = data.time_labels || Array.from({length: data.port_equity_curve.length}, (_, i) => `Rueda ${i+1}`);

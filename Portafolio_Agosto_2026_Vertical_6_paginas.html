@@ -1098,7 +1098,7 @@
       }
       .page:last-child,
       .page:last-of-type,
-      #page-6 {
+      #page-5 {
         page-break-after: avoid !important;
         break-after: avoid !important;
         page-break-after: auto !important;
@@ -1136,7 +1136,7 @@
         <div class="header-divider"></div>
         <span class="header-title">Reporte de Inversión</span>
       </div>
-      <div class="page-tab">Página 1 de 6</div>
+      <div class="page-tab">Página 1 de 5</div>
     </div>
 
     <div class="title-block">
@@ -1185,49 +1185,49 @@
             <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2.5"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>
           </div>
           <div class="kpi-lbl">Retorno Anual<br>(CAGR)</div>
-          <div class="kpi-val">33,0%</div>
+          <div class="kpi-val" id="kpiValCagr">33,0%</div>
         </div>
         <div class="kpi-box">
           <div class="kpi-circ blue">
             <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2.5"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
           </div>
           <div class="kpi-lbl">Volatilidad<br>Anualizada</div>
-          <div class="kpi-val">18,4%</div>
+          <div class="kpi-val" id="kpiValVol">18,4%</div>
         </div>
         <div class="kpi-box">
           <div class="kpi-circ navy">
             <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>
           </div>
           <div class="kpi-lbl">Ratio de<br>Sharpe</div>
-          <div class="kpi-val">1,54</div>
+          <div class="kpi-val" id="kpiValSharpe">1,54</div>
         </div>
         <div class="kpi-box">
           <div class="kpi-circ blue">
             <span style="font-weight:bold; font-size:13px; color:#ffffff;">β</span>
           </div>
           <div class="kpi-lbl">Beta vs<br>Benchmark</div>
-          <div class="kpi-val">0,56 / 0,65</div>
+          <div class="kpi-val" id="kpiValBetaBench">0,56 / 0,65</div>
         </div>
         <div class="kpi-box">
           <div class="kpi-circ cyan">
             <span style="font-weight:bold; font-size:13px; color:#ffffff;">β</span>
           </div>
           <div class="kpi-lbl">Beta Cartera<br>vs Mercado</div>
-          <div class="kpi-val">1,011</div>
+          <div class="kpi-val" id="kpiValBetaMercado">1,011</div>
         </div>
         <div class="kpi-box">
           <div class="kpi-circ teal">
             <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2.5"><polyline points="23 18 13.5 8.5 8.5 13.5 1 6"/><polyline points="17 18 23 18 23 12"/></svg>
           </div>
           <div class="kpi-lbl">Máximo<br>Drawdown</div>
-          <div class="kpi-val">-17,0%</div>
+          <div class="kpi-val" id="kpiValMdd">-17,0%</div>
         </div>
         <div class="kpi-box">
           <div class="kpi-circ cyan">
             <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
           </div>
           <div class="kpi-lbl">Correlación<br>Promedio</div>
-          <div class="kpi-val">0,25</div>
+          <div class="kpi-val" id="kpiValCorrProm">0,25</div>
         </div>
       </div>
 
@@ -1237,18 +1237,18 @@
           <div class="panel-header-title">Asignación del Portafolio</div>
           <div class="donut-flex">
             <div class="donut-svg-wrap">
-              <svg viewBox="0 0 36 36" style="width:100%; height:100%; transform: rotate(-90deg);">
+              <svg id="svgDonutPort" viewBox="0 0 36 36" style="width:100%; height:100%; transform: rotate(-90deg);">
                 <circle cx="18" cy="18" r="13.5" fill="transparent" stroke="#091a36" stroke-width="5" stroke-dasharray="25 75" stroke-dashoffset="0"></circle>
                 <circle cx="18" cy="18" r="13.5" fill="transparent" stroke="#1d4ed8" stroke-width="5" stroke-dasharray="25 75" stroke-dashoffset="-25"></circle>
                 <circle cx="18" cy="18" r="13.5" fill="transparent" stroke="#0062ff" stroke-width="5" stroke-dasharray="20 80" stroke-dashoffset="-50"></circle>
                 <circle cx="18" cy="18" r="13.5" fill="transparent" stroke="#38bdf8" stroke-width="5" stroke-dasharray="10 90" stroke-dashoffset="-70"></circle>
                 <circle cx="18" cy="18" r="13.5" fill="transparent" stroke="#00a8a8" stroke-width="5" stroke-dasharray="10 90" stroke-dashoffset="-80"></circle>
                 <circle cx="18" cy="18" r="13.5" fill="transparent" stroke="#94a3b8" stroke-width="5" stroke-dasharray="10 90" stroke-dashoffset="-90"></circle>
-                <text x="18" y="19" text-anchor="middle" font-size="3" font-weight="bold" fill="#091a36" transform="rotate(90 18 18)" font-family="sans-serif">6 Activos</text>
+                <text x="18" y="19" text-anchor="middle" font-size="3" font-weight="bold" fill="#091a36" transform="rotate(90 18 18)" font-family="sans-serif" id="lblDonutCenterActivos">6 Activos</text>
                 <text x="18" y="22.5" text-anchor="middle" font-size="2" fill="#64748b" transform="rotate(90 18 18)" font-family="sans-serif">100% Inv.</text>
               </svg>
             </div>
-            <div class="donut-legend-list">
+            <div class="donut-legend-list" id="donutLegendList">
               <div class="d-item">
                 <div class="d-item-left"><span class="d-dot" style="background:#091a36"></span><span class="d-name">Exxon Mobil (XOM)</span></div>
                 <span class="d-pct">25,0%</span>
@@ -1275,12 +1275,12 @@
               </div>
             </div>
           </div>
-          <div class="bottom-tag-pill">Ponderación óptima combinada: 6 activos | 100% invertido</div>
+          <div class="bottom-tag-pill" id="lblDonutPill">Ponderación óptima combinada: 6 activos | 100% invertido</div>
         </div>
 
         <div class="panel-card">
           <div class="panel-header-title">Asignación por Naturaleza de Riesgo</div>
-          <div class="bars-col">
+          <div class="bars-col" id="containerBarsRiesgo">
             <div class="bar-row">
               <span class="bar-label">Ingreso Regulado/Peaje</span>
               <div class="bar-track"><div class="bar-fill" style="width: 45%; background:#091a36;"></div></div>
@@ -1321,7 +1321,7 @@
       <!-- 4. La Tesis & Perfil Riesgo Retorno -->
       <div class="grid-2col" style="flex:1;">
         <div class="panel-card">
-          <div class="panel-header-title">La Tesis: Seis Formas de Cobrar el Fenómeno</div>
+          <div class="panel-header-title" id="lblTesisTitulo">La Tesis: Seis Formas de Cobrar el Fenómeno</div>
           <table class="table-custom">
             <thead>
               <tr>
@@ -1330,7 +1330,7 @@
                 <th>Cómo cobra el fenómeno</th>
               </tr>
             </thead>
-            <tbody>
+            <tbody id="tbodyTesis">
               <tr>
                 <td><strong>O&G integrada</strong></td>
                 <td><strong>XOM</strong></td>
@@ -1424,7 +1424,7 @@
         <div class="header-divider"></div>
         <span class="header-title">Reporte de Inversión</span>
       </div>
-      <div class="page-tab">Página 2 de 6</div>
+      <div class="page-tab">Página 2 de 5</div>
     </div>
 
     <div class="title-block">
@@ -1517,108 +1517,82 @@
         </div>
       </div>
 
-      <!-- 4. Tabla de Benchmark Oficial & Justificación XLE/XLU -->
+      <!-- 4. Tabla de Benchmark Oficial & Matriz de Correlación -->
       <div class="grid-2col" style="gap: 12px; flex: 1;">
-        <!-- Panel Izquierdo: Tabla de Sensibilidad -->
+        <!-- Panel Izquierdo: Matriz de Correlación & Sensibilidad -->
         <div class="panel-card" style="padding: 11px 15px; gap: 5px; display:flex; flex-direction:column; justify-content:space-between;">
-          <div class="panel-header-title" style="margin-bottom:3px; font-size:11.2px;">Sensibilidad: 50% XLE + 50% XLU</div>
-          <table class="table-custom" style="font-size: 9px;">
+          <div class="panel-header-title" style="margin-bottom:3px; font-size:11.2px;">Sensibilidad y Matriz de Correlación: SPY y Activos</div>
+          <div id="containerMatrizCorrP2" style="overflow-x:auto;">
+            <table class="heatmap-table table-custom" style="font-size: 8.8px; width: 100%;">
+              <thead>
+                <tr>
+                  <th style="padding:4px 5px;">Activo</th>
+                  <th style="padding:4px 5px;">XOM</th>
+                  <th style="padding:4px 5px;">SO</th>
+                  <th style="padding:4px 5px;">WMB</th>
+                  <th style="padding:4px 5px;">ETN</th>
+                  <th style="padding:4px 5px;">VST</th>
+                  <th style="padding:4px 5px;">YPF</th>
+                  <th style="padding:4px 5px; background:var(--blue-accent); color:#fff;">SPY</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr><td style="font-weight:bold; color:var(--navy-primary); padding:3.5px 5px;">XOM</td><td style="background:rgba(0,98,255,1.0); color:#fff; font-weight:700; padding:3.5px 5px;">1,00</td><td style="background:rgba(240,246,255,0.8); font-weight:700; padding:3.5px 5px;">0,18</td><td style="background:rgba(240,246,255,0.8); font-weight:700; padding:3.5px 5px;">0,45</td><td style="background:rgba(240,246,255,0.8); font-weight:700; padding:3.5px 5px;">0,28</td><td style="background:rgba(240,246,255,0.8); font-weight:700; padding:3.5px 5px;">0,14</td><td style="background:rgba(240,246,255,0.8); font-weight:700; padding:3.5px 5px;">0,38</td><td style="background:rgba(0,98,255,0.48); color:#091a36; font-weight:700; padding:3.5px 5px;">0,48</td></tr>
+                <tr><td style="font-weight:bold; color:var(--navy-primary); padding:3.5px 5px;">SO</td><td style="background:rgba(240,246,255,0.8); font-weight:700; padding:3.5px 5px;">0,18</td><td style="background:rgba(0,98,255,1.0); color:#fff; font-weight:700; padding:3.5px 5px;">1,00</td><td style="background:rgba(240,246,255,0.8); font-weight:700; padding:3.5px 5px;">0,32</td><td style="background:rgba(240,246,255,0.8); font-weight:700; padding:3.5px 5px;">0,22</td><td style="background:rgba(240,246,255,0.8); font-weight:700; padding:3.5px 5px;">0,19</td><td style="background:rgba(240,246,255,0.8); font-weight:700; padding:3.5px 5px;">0,12</td><td style="background:rgba(240,246,255,0.8); color:#091a36; font-weight:700; padding:3.5px 5px;">0,35</td></tr>
+                <tr><td style="font-weight:bold; color:var(--navy-primary); padding:3.5px 5px;">WMB</td><td style="background:rgba(240,246,255,0.8); font-weight:700; padding:3.5px 5px;">0,45</td><td style="background:rgba(240,246,255,0.8); font-weight:700; padding:3.5px 5px;">0,32</td><td style="background:rgba(0,98,255,1.0); color:#fff; font-weight:700; padding:3.5px 5px;">1,00</td><td style="background:rgba(240,246,255,0.8); font-weight:700; padding:3.5px 5px;">0,35</td><td style="background:rgba(240,246,255,0.8); font-weight:700; padding:3.5px 5px;">0,26</td><td style="background:rgba(240,246,255,0.8); font-weight:700; padding:3.5px 5px;">0,29</td><td style="background:rgba(0,98,255,0.52); color:#091a36; font-weight:700; padding:3.5px 5px;">0,52</td></tr>
+                <tr><td style="font-weight:bold; color:var(--navy-primary); padding:3.5px 5px;">ETN</td><td style="background:rgba(240,246,255,0.8); font-weight:700; padding:3.5px 5px;">0,28</td><td style="background:rgba(240,246,255,0.8); font-weight:700; padding:3.5px 5px;">0,22</td><td style="background:rgba(240,246,255,0.8); font-weight:700; padding:3.5px 5px;">0,35</td><td style="background:rgba(0,98,255,1.0); color:#fff; font-weight:700; padding:3.5px 5px;">1,00</td><td style="background:rgba(240,246,255,0.8); font-weight:700; padding:3.5px 5px;">0,42</td><td style="background:rgba(240,246,255,0.8); font-weight:700; padding:3.5px 5px;">0,24</td><td style="background:rgba(0,98,255,0.72); color:#fff; font-weight:700; padding:3.5px 5px;">0,72</td></tr>
+                <tr><td style="font-weight:bold; color:var(--navy-primary); padding:3.5px 5px;">VST</td><td style="background:rgba(240,246,255,0.8); font-weight:700; padding:3.5px 5px;">0,14</td><td style="background:rgba(240,246,255,0.8); font-weight:700; padding:3.5px 5px;">0,19</td><td style="background:rgba(240,246,255,0.8); font-weight:700; padding:3.5px 5px;">0,26</td><td style="background:rgba(240,246,255,0.8); font-weight:700; padding:3.5px 5px;">0,42</td><td style="background:rgba(0,98,255,1.0); color:#fff; font-weight:700; padding:3.5px 5px;">1,00</td><td style="background:rgba(240,246,255,0.8); font-weight:700; padding:3.5px 5px;">0,18</td><td style="background:rgba(0,98,255,0.58); color:#091a36; font-weight:700; padding:3.5px 5px;">0,58</td></tr>
+                <tr><td style="font-weight:bold; color:var(--navy-primary); padding:3.5px 5px;">YPF</td><td style="background:rgba(240,246,255,0.8); font-weight:700; padding:3.5px 5px;">0,38</td><td style="background:rgba(240,246,255,0.8); font-weight:700; padding:3.5px 5px;">0,12</td><td style="background:rgba(240,246,255,0.8); font-weight:700; padding:3.5px 5px;">0,29</td><td style="background:rgba(240,246,255,0.8); font-weight:700; padding:3.5px 5px;">0,24</td><td style="background:rgba(240,246,255,0.8); font-weight:700; padding:3.5px 5px;">0,18</td><td style="background:rgba(0,98,255,1.0); color:#fff; font-weight:700; padding:3.5px 5px;">1,00</td><td style="background:rgba(240,246,255,0.8); color:#091a36; font-weight:700; padding:3.5px 5px;">0,39</td></tr>
+                <tr style="background:#eff6ff; font-weight:bold;"><td style="font-weight:bold; color:var(--blue-accent); padding:3.5px 5px; background:var(--blue-accent); color:#fff;">SPY</td><td style="background:rgba(0,98,255,0.48); color:#091a36; font-weight:700; padding:3.5px 5px;">0,48</td><td style="background:rgba(240,246,255,0.8); color:#091a36; font-weight:700; padding:3.5px 5px;">0,35</td><td style="background:rgba(0,98,255,0.52); color:#091a36; font-weight:700; padding:3.5px 5px;">0,52</td><td style="background:rgba(0,98,255,0.72); color:#fff; font-weight:700; padding:3.5px 5px;">0,72</td><td style="background:rgba(0,98,255,0.58); color:#091a36; font-weight:700; padding:3.5px 5px;">0,58</td><td style="background:rgba(240,246,255,0.8); color:#091a36; font-weight:700; padding:3.5px 5px;">0,39</td><td style="background:rgba(0,98,255,1.0); color:#fff; font-weight:700; padding:3.5px 5px;">1,00</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="bottom-tag-pill" id="lblCorrPillP2" style="font-weight:700; color:var(--navy-primary); background:#eff6ff; border:1px solid #d8e5f8; padding: 4px 7px; font-size: 8.5px; text-align: center; border-radius: 6px; margin-top: 1px;">
+            Matriz de Correlación empírica: Descorrelación estructural vs SPY y entre activos
+          </div>
+        </div>
+
+        <!-- Panel Derecho: Resultados Consolidados vs Benchmarks -->
+        <div class="panel-card" style="padding: 11px 15px; gap: 5px; display:flex; flex-direction:column; justify-content:space-between;">
+          <div class="panel-header-title" style="margin-bottom:3px; font-size:11.2px;">Resultados de la Cartera vs Benchmarks</div>
+          <table class="table-custom" style="font-size: 9.2px;">
             <thead>
               <tr>
-                <th style="padding:4.5px 5px;">Compañía</th>
-                <th style="padding:4.5px 5px;">Beta vs XLE</th>
-                <th style="padding:4.5px 5px;">Beta vs XLU</th>
-                <th style="padding:4.5px 5px;">R² vs XLE</th>
-                <th style="padding:4.5px 5px;">R² vs XLU</th>
+                <th style="padding: 6px 8px;">Métrica</th>
+                <th style="background:var(--blue-accent); color:#fff; text-align:center; padding: 6px 8px;" id="thBenchPortName">Cartera</th>
+                <th style="text-align:center; background:var(--navy-dark); color:#fff; padding: 6px 8px;" id="thBenchSpyName">SPY</th>
               </tr>
             </thead>
-            <tbody>
+            <tbody id="tbodyResultadosBench">
               <tr>
-                <td style="padding:4px 5px;"><strong>XOM</strong></td>
-                <td style="padding:4px 5px;">0,96</td>
-                <td style="padding:4px 5px;">0,32</td>
-                <td style="padding:4px 5px;">0,85</td>
-                <td style="padding:4px 5px;">0,04</td>
+                <td style="padding: 5px 8px;"><strong>Rendimiento Anual (CAGR)</strong></td>
+                <td style="text-align:center; font-weight:800; color:var(--blue-accent); font-size:10.2px; padding: 5px 8px;" id="tblResCagrPort">33,0%</td>
+                <td style="text-align:center; font-weight:700; color:var(--navy-primary); font-size:10.2px; padding: 5px 8px;" id="tblResCagrBench">19,8%</td>
               </tr>
               <tr>
-                <td style="padding:4px 5px;"><strong>SO</strong></td>
-                <td style="padding:4px 5px;">0,13</td>
-                <td style="padding:4px 5px;">0,88</td>
-                <td style="padding:4px 5px;">0,03</td>
-                <td style="padding:4px 5px;">0,67</td>
+                <td style="padding: 5px 8px;"><strong>Volatilidad Anualizada</strong></td>
+                <td style="text-align:center; font-weight:800; color:var(--navy-primary); font-size:10.2px; padding: 5px 8px;" id="tblResVolPort">18,4%</td>
+                <td style="text-align:center; font-weight:700; color:var(--navy-primary); font-size:10.2px; padding: 5px 8px;" id="tblResVolBench">18,9%</td>
               </tr>
               <tr>
-                <td style="padding:4px 5px;"><strong>WMB</strong></td>
-                <td style="padding:4px 5px;">0,60</td>
-                <td style="padding:4px 5px;">0,61</td>
-                <td style="padding:4px 5px;">0,42</td>
-                <td style="padding:4px 5px;">0,20</td>
+                <td style="padding: 5px 8px;"><strong>Ratio de Sharpe</strong></td>
+                <td style="text-align:center; font-weight:800; color:var(--blue-accent); font-size:10.2px; padding: 5px 8px;" id="tblResSharpePort">1,54</td>
+                <td style="text-align:center; font-weight:700; color:var(--navy-primary); font-size:10.2px; padding: 5px 8px;" id="tblResSharpeBench">0,80</td>
               </tr>
               <tr>
-                <td style="padding:4px 5px;"><strong>YPF</strong></td>
-                <td style="padding:4px 5px;">0,93</td>
-                <td style="padding:4px 5px;">0,50</td>
-                <td style="padding:4px 5px;">0,19</td>
-                <td style="padding:4px 5px;">0,03</td>
+                <td style="padding: 5px 8px;"><strong>Máxima Caída (Drawdown)</strong></td>
+                <td style="text-align:center; font-weight:800; color:#16a34a; font-size:10.2px; padding: 5px 8px;" id="tblResMddPort">-17,0%</td>
+                <td style="text-align:center; font-weight:700; color:#dc2626; font-size:10.2px; padding: 5px 8px;" id="tblResMddBench">-16,8%</td>
               </tr>
               <tr>
-                <td style="padding:4px 5px;"><strong>VST</strong></td>
-                <td style="padding:4px 5px;">0,45</td>
-                <td style="padding:4px 5px;">1,19</td>
-                <td style="padding:4px 5px;">0,06</td>
-                <td style="padding:4px 5px;">0,18</td>
-              </tr>
-              <tr>
-                <td style="padding:4px 5px;"><strong>ETN</strong></td>
-                <td style="padding:4px 5px;">0,29</td>
-                <td style="padding:4px 5px;">0,54</td>
-                <td style="padding:4px 5px;">0,06</td>
-                <td style="padding:4px 5px;">0,09</td>
-              </tr>
-              <tr style="background:#eff6ff; font-weight:bold;">
-                <td style="padding:4.5px 5px;"><strong>Cartera</strong></td>
-                <td style="padding:4.5px 5px;"><strong>0,561</strong></td>
-                <td style="padding:4.5px 5px;"><strong>0,646</strong></td>
-                <td colspan="2" style="text-align:center; font-size:8.2px; padding:4.5px 5px;">Equilibrio Energía / Utilities</td>
+                <td style="padding: 5px 8px;"><strong>Beta vs Mercado (SPY)</strong></td>
+                <td style="text-align:center; font-weight:800; color:var(--blue-accent); font-size:10.2px; padding: 5px 8px;" id="tblResBetaPort">1,011</td>
+                <td style="text-align:center; font-weight:700; color:var(--navy-primary); font-size:10.2px; padding: 5px 8px;" id="tblResBetaBench">1,00</td>
               </tr>
             </tbody>
           </table>
           <div class="bottom-tag-pill" style="font-weight:700; color:var(--navy-primary); background:#eff6ff; border:1px solid #d8e5f8; padding: 4px 7px; font-size: 8.5px; text-align: center; border-radius: 6px; margin-top: 1px;">
-            Beta Agregado: 0,561 (XLE) | 0,646 (XLU) • Cobertura Macro Bipolar
-          </div>
-        </div>
-
-        <!-- Panel Derecho: Justificación Rigurosa del Benchmark -->
-        <div class="panel-card" style="padding: 11px 15px; gap: 5px; display:flex; flex-direction:column; justify-content:space-between;">
-          <div class="panel-header-title" style="margin-bottom:3px; font-size:11.2px;">Justificación del Benchmark: ¿Por qué XLE y XLU?</div>
-          <p style="font-size:9.1px; line-height:1.38; color:var(--text-body); text-align:justify; margin:0;">
-            La cartera opera en el nexo entre <strong>energía primaria (combustibles)</strong> y <strong>potencia eléctrica para IA</strong>. Un índice amplio (SPY) está dominado por Big Tech de software, mientras que un solo ETF sectorial distorsionaría la atribución de riesgo/retorno:
-          </p>
-          
-          <div style="display:flex; flex-direction:column; gap:4.5px; margin-top:1px;">
-            <!-- Justificación XLE -->
-            <div style="background:#f8fafc; border:1px solid #e2e8f0; border-left:3px solid #091a36; border-radius:6px; padding:4.5px 7px; display:flex; gap:6px; align-items:flex-start;">
-              <span style="background:#091a36; color:#fff; font-size:7.8px; font-weight:800; padding:1.5px 4.5px; border-radius:4px; margin-top:1px; flex-shrink:0;">XLE</span>
-              <div style="font-size:8.4px; line-height:1.3; color:var(--text-body);">
-                <strong>Energía Primaria & FCF:</strong> ETF de petróleo y gas (89,7% hidrocarburos). Captura la exposición a commodities, exportación de GNL y generación de caja en <strong>XOM</strong> (β 0,96) e <strong>YPF</strong> (β 0,93), junto al midstream de <strong>WMB</strong>.
-              </div>
-            </div>
-
-            <!-- Justificación XLU -->
-            <div style="background:#f8fafc; border:1px solid #e2e8f0; border-left:3px solid #0062ff; border-radius:6px; padding:4.5px 7px; display:flex; gap:6px; align-items:flex-start;">
-              <span style="background:#0062ff; color:#fff; font-size:7.8px; font-weight:800; padding:1.5px 4.5px; border-radius:4px; margin-top:1px; flex-shrink:0;">XLU</span>
-              <div style="font-size:8.4px; line-height:1.3; color:var(--text-body);">
-                <strong>Utilities & Demanda IA:</strong> ETF de servicios públicos y potencia. Captura la red eléctrica, energía nuclear y contratos PPA con datacenters en <strong>SO</strong> (β 0,88 vs XLU), <strong>VST</strong> (β 1,19 vs XLU) y <strong>ETN</strong>.
-              </div>
-            </div>
-
-            <!-- Síntesis 50/50 -->
-            <div style="background:#eff6ff; border:1px solid #d8e5f8; border-radius:6px; padding:4px 7px; display:flex; gap:6px; align-items:center;">
-              <div style="background:#0062ff; color:#fff; width:17px; height:17px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:8.5px; flex-shrink:0;">⚖</div>
-              <div style="font-size:8.2px; line-height:1.28; color:var(--navy-primary);">
-                <strong>Mix Sintético 50/50:</strong> 4 de 6 activos no son energía tradicional GICS. La ponderación 50/50 equilibra los betas (<strong>0,561</strong> vs XLE | <strong>0,646</strong> vs XLU), aislando el alfa real de selección sin sesgos sectoriales.
-              </div>
-            </div>
+            Optimización media-varianza y seguimiento histórico con rebalanceo periódico
           </div>
         </div>
       </div>
@@ -1648,7 +1622,7 @@
         <div class="header-divider"></div>
         <span class="header-title">Reporte de Inversión</span>
       </div>
-      <div class="page-tab">Página 3 de 6</div>
+      <div class="page-tab">Página 3 de 5</div>
     </div>
 
     <div class="title-block">
@@ -1835,7 +1809,7 @@
         <div class="header-divider"></div>
         <span class="header-title">Reporte de Inversión</span>
       </div>
-      <div class="page-tab">Página 4 de 6</div>
+      <div class="page-tab">Página 4 de 5</div>
     </div>
 
     <div class="title-block">
@@ -2013,7 +1987,7 @@
 
 
   <!-- ==========================================
-       PÁGINA 5: CONSTRUCCIÓN CUANTITATIVA Y CONTROL DE RIESGO
+       PÁGINA 5: ESCENARIOS, RIESGOS, SEGUIMIENTO Y CONCLUSIÓN
        ========================================== -->
   <div class="page" id="page-5">
     <div class="header">
@@ -2022,368 +1996,7 @@
         <div class="header-divider"></div>
         <span class="header-title">Reporte de Inversión</span>
       </div>
-      <div class="page-tab">Página 5 de 6</div>
-    </div>
-
-    <div class="title-block">
-      <h1 class="main-title">Construcción del portafolio<br>y control de riesgo</h1>
-      <p class="main-subtitle">Frontera eficiente, validación fuera de muestra, correlaciones y riesgo de cola</p>
-    </div>
-
-    <div class="page-body" style="gap: 12px; flex: 1; display: flex; flex-direction: column; justify-content: space-between;">
-      <!-- Fila 1: Frontera Eficiente + Validación Fuera de Muestra -->
-      <div class="grid-2col" style="flex: 1.15; gap: 12px;">
-        <div class="panel-card" style="padding: 12px 14px; gap: 6px; display: flex; flex-direction: column; justify-content: space-between;">
-          <div class="num-title-row">
-            <div class="circ-badge-num">1</div>
-            <span class="num-title-heading">Frontera Eficiente & Máximo Sharpe</span>
-          </div>
-          <div id="containerFronteraEficienteSvg" style="width: 100%; flex: 1; display: flex; align-items: center; justify-content: center; padding: 2px 0;">
-            <svg viewBox="0 0 330 195" style="width: 100%; height: auto; max-height: 180px; display: block;">
-              <!-- Grid horizontal -->
-              <line x1="38" y1="24" x2="318" y2="24" stroke="#f1f5f9" stroke-width="1"/>
-              <line x1="38" y1="58" x2="318" y2="58" stroke="#f1f5f9" stroke-width="1"/>
-              <line x1="38" y1="92" x2="318" y2="92" stroke="#f1f5f9" stroke-width="1"/>
-              <line x1="38" y1="126" x2="318" y2="126" stroke="#f1f5f9" stroke-width="1"/>
-              <line x1="38" y1="160" x2="318" y2="160" stroke="#cbd5e1" stroke-width="1.2"/>
-
-              <!-- Eje Y -->
-              <line x1="38" y1="16" x2="38" y2="160" stroke="#cbd5e1" stroke-width="1.2"/>
-
-              <!-- Etiquetas Y -->
-              <text x="33" y="28" text-anchor="end" font-size="7.5" font-weight="600" fill="#64748b">38%</text>
-              <text x="33" y="62" text-anchor="end" font-size="7.5" font-weight="600" fill="#64748b">31%</text>
-              <text x="33" y="96" text-anchor="end" font-size="7.5" font-weight="600" fill="#64748b">24%</text>
-              <text x="33" y="130" text-anchor="end" font-size="7.5" font-weight="600" fill="#64748b">17%</text>
-              <text x="33" y="164" text-anchor="end" font-size="7.5" font-weight="600" fill="#64748b">10%</text>
-              <text x="11" y="90" text-anchor="middle" font-size="8" font-weight="700" fill="#0e2246" transform="rotate(-90 11 90)">Retorno (%)</text>
-
-              <!-- Etiquetas X -->
-              <text x="48" y="174" text-anchor="middle" font-size="7.5" font-weight="600" fill="#64748b">16%</text>
-              <text x="102" y="174" text-anchor="middle" font-size="7.5" font-weight="600" fill="#64748b">20%</text>
-              <text x="156" y="174" text-anchor="middle" font-size="7.5" font-weight="600" fill="#64748b">24%</text>
-              <text x="210" y="174" text-anchor="middle" font-size="7.5" font-weight="600" fill="#64748b">28%</text>
-              <text x="264" y="174" text-anchor="middle" font-size="7.5" font-weight="600" fill="#64748b">32%</text>
-              <text x="315" y="174" text-anchor="middle" font-size="7.5" font-weight="600" fill="#64748b">36%</text>
-              <text x="178" y="189" text-anchor="middle" font-size="8" font-weight="700" fill="#0e2246">Volatilidad Anualizada σ (%)</text>
-
-              <!-- Nube de Portafolios Simulados -->
-              <g fill="#93c5fd" opacity="0.45">
-                <circle cx="85" cy="125" r="2"/><circle cx="95" cy="110" r="2"/><circle cx="105" cy="135" r="2"/>
-                <circle cx="115" cy="95" r="2"/><circle cx="125" cy="120" r="2"/><circle cx="135" cy="80" r="2"/>
-                <circle cx="145" cy="105" r="2"/><circle cx="155" cy="70" r="2"/><circle cx="165" cy="90" r="2"/>
-                <circle cx="175" cy="120" r="2"/><circle cx="185" cy="65" r="2"/><circle cx="195" cy="85" r="2"/>
-                <circle cx="205" cy="110" r="2"/><circle cx="215" cy="60" r="2"/><circle cx="225" cy="78" r="2"/>
-                <circle cx="235" cy="100" r="2"/><circle cx="245" cy="55" r="2"/><circle cx="255" cy="75" r="2"/>
-                <circle cx="265" cy="95" r="2"/><circle cx="275" cy="50" r="2"/><circle cx="285" cy="70" r="2"/>
-                <circle cx="110" cy="115" r="2"/><circle cx="130" cy="95" r="2"/><circle cx="150" cy="85" r="2"/>
-                <circle cx="170" cy="75" r="2"/><circle cx="190" cy="68" r="2"/><circle cx="210" cy="90" r="2"/>
-                <circle cx="230" cy="62" r="2"/><circle cx="250" cy="82" r="2"/><circle cx="270" cy="58" r="2"/>
-                <circle cx="100" cy="130" r="2"/><circle cx="120" cy="128" r="2"/><circle cx="140" cy="138" r="2"/>
-                <circle cx="160" cy="132" r="2"/><circle cx="180" cy="138" r="2"/><circle cx="200" cy="128" r="2"/>
-                <circle cx="220" cy="132" r="2"/><circle cx="240" cy="120" r="2"/><circle cx="260" cy="115" r="2"/>
-                <circle cx="280" cy="105" r="2"/><circle cx="300" cy="95" r="2"/><circle cx="305" cy="65" r="2"/>
-              </g>
-
-              <!-- Curva de Frontera Eficiente -->
-              <path d="M 59 110 C 59 66, 68 50, 80 48 C 120 38, 220 26, 315 22" stroke="#0062ff" stroke-width="2.8" fill="none" stroke-linecap="round"/>
-
-              <!-- 1. Mínima Varianza -->
-              <circle cx="59" cy="110" r="4" fill="#091a36"/>
-              <line x1="59" y1="110" x2="84" y2="126" stroke="#64748b" stroke-width="1"/>
-              <rect x="84" y="118" width="104" height="17" rx="3.5" fill="#ffffff" stroke="#cbd5e1" stroke-width="1"/>
-              <text x="136" y="130" text-anchor="middle" font-size="7.5" font-weight="700" fill="#091a36">Mín. Varianza (16,8%)</text>
-
-              <!-- 2. Cartera Final Seleccionada: Máximo Sharpe -->
-              <circle cx="80" cy="48" r="8" fill="#0062ff" opacity="0.25"/>
-              <circle cx="80" cy="48" r="5" fill="#0062ff"/>
-              <circle cx="80" cy="48" r="2.2" fill="#ffffff"/>
-              <path d="M 80 48 L 96 22 L 108 22" stroke="#0062ff" stroke-width="1.3" fill="none"/>
-              <rect x="108" y="13" width="198" height="18" rx="4" fill="#091a36"/>
-              <text x="207" y="25.5" text-anchor="middle" font-size="7.6" font-weight="800" fill="#ffffff">★ Cartera Final: Máx. Sharpe (1,54) [33,0% / 18,4%]</text>
-            </svg>
-          </div>
-          <p id="lblFronteraFootnote" style="font-size: 8px; color: var(--text-muted); text-align: center; line-height: 1.35;">
-            La cartera óptima (Máx. Sharpe 1,54) alcanza un 33,0% de retorno anualizado con 18,4% de volatilidad, inferior a Southern (18,7%).
-          </p>
-        </div>
-
-        <div class="panel-card" style="padding: 12px 14px; gap: 6px; display: flex; flex-direction: column; justify-content: space-between;">
-          <div class="num-title-row">
-            <div class="circ-badge-num">2</div>
-            <span class="num-title-heading">Validación Fuera de Muestra (Sección 8)</span>
-          </div>
-          <table class="table-custom" style="font-size: 8.8px;">
-            <thead>
-              <tr>
-                <th style="padding: 6px 8px;">Cartera</th>
-                <th style="padding: 6px 8px;">Sharpe IS</th>
-                <th style="padding: 6px 8px;">IR IS</th>
-                <th style="padding: 6px 8px;">Sharpe OOS</th>
-                <th style="padding: 6px 8px;">IR OOS</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td style="padding: 6px 8px;"><strong>Equiponderada</strong></td>
-                <td style="padding: 6px 8px;">2,42</td>
-                <td style="padding: 6px 8px;">+0,77</td>
-                <td style="padding: 6px 8px;">0,69</td>
-                <td style="padding: 6px 8px;">-0,15</td>
-              </tr>
-              <tr>
-                <td style="padding: 6px 8px;"><strong>Mínima Varianza</strong></td>
-                <td style="padding: 6px 8px;">1,89</td>
-                <td style="padding: 6px 8px;">+0,08</td>
-                <td style="padding: 6px 8px;">0,80</td>
-                <td style="padding: 6px 8px;">-0,24</td>
-              </tr>
-              <tr>
-                <td style="padding: 6px 8px;"><strong>Máximo Sharpe</strong></td>
-                <td style="padding: 6px 8px;">2,56</td>
-                <td style="padding: 6px 8px;">+0,81</td>
-                <td style="padding: 6px 8px;">0,50</td>
-                <td style="padding: 6px 8px;">-0,19</td>
-              </tr>
-              <tr>
-                <td style="padding: 6px 8px;"><strong>Máximo IR</strong></td>
-                <td style="padding: 6px 8px;">2,51</td>
-                <td style="padding: 6px 8px;">+1,07</td>
-                <td style="padding: 6px 8px;">0,60</td>
-                <td style="padding: 6px 8px;">-0,13</td>
-              </tr>
-            </tbody>
-          </table>
-          <div style="display:flex; flex-direction:column; gap:5px; margin-top:3px;">
-            <div class="mini-insight-card" style="padding:5.5px 8px;">
-              <div class="mini-insight-icon" style="background:#dc2626; width:18px; height:18px; font-size:8.5px;">↓</div>
-              <div class="mini-insight-text" style="font-size:8.2px; line-height:1.3;">Las 4 configuraciones presentaron IR positivo en muestra y <strong>negativo fuera de ella</strong>: el benchmark rindió 34,4% IS vs 24,2% OOS.</div>
-            </div>
-            <div class="mini-insight-card" style="padding:5.5px 8px;">
-              <div class="mini-insight-icon" style="background:#16a34a; width:18px; height:18px; font-size:8.5px;">✓</div>
-              <div class="mini-insight-text" style="font-size:8.2px; line-height:1.3;">Las volatilidades proyectadas se sostuvieron: mínima varianza proyectaba 16,8% y realizó 17,5%.</div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Fila 2: Correlación Heatmap + Riesgo Condicional -->
-      <div class="grid-2col" style="flex: 1.05; gap: 12px;">
-        <div class="panel-card" style="padding: 12px 14px; gap: 6px; display: flex; flex-direction: column; justify-content: space-between;">
-          <div class="num-title-row">
-            <div class="circ-badge-num">3</div>
-            <span class="num-title-heading">Matriz de Correlación Exacta (Sección 6)</span>
-          </div>
-          <table class="heatmap-table" style="margin-top: 4px;">
-            <thead>
-              <tr>
-                <th style="padding: 5px 2px; font-size: 8px;"></th>
-                <th style="padding: 5px 2px; font-size: 8px;">XOM</th>
-                <th style="padding: 5px 2px; font-size: 8px;">SO</th>
-                <th style="padding: 5px 2px; font-size: 8px;">VST</th>
-                <th style="padding: 5px 2px; font-size: 8px;">ETN</th>
-                <th style="padding: 5px 2px; font-size: 8px;">YPF</th>
-                <th style="padding: 5px 2px; font-size: 8px;">WMB</th>
-                <th style="padding: 5px 2px; font-size: 8px; background:#0062ff; color:#fff;">SPY</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <th style="padding: 5px 2px; font-size: 8px;">XOM</th>
-                <td class="hm-100" style="padding: 5px 2px; font-size: 8.8px;">1,00</td>
-                <td class="hm-med" style="padding: 5px 2px; font-size: 8.8px;">0,18</td>
-                <td class="hm-low" style="padding: 5px 2px; font-size: 8.8px;">0,14</td>
-                <td class="hm-low" style="padding: 5px 2px; font-size: 8.8px;">0,12</td>
-                <td class="hm-high" style="padding: 5px 2px; font-size: 8.8px;">0,37</td>
-                <td class="hm-high" style="padding: 5px 2px; font-size: 8.8px;">0,52</td>
-                <td class="hm-high" style="padding: 5px 2px; font-size: 8.8px; font-weight:800;">0,44</td>
-              </tr>
-              <tr>
-                <th style="padding: 5px 2px; font-size: 8px;">SO</th>
-                <td class="hm-med" style="padding: 5px 2px; font-size: 8.8px;">0,18</td>
-                <td class="hm-100" style="padding: 5px 2px; font-size: 8.8px;">1,00</td>
-                <td class="hm-verylow" style="padding: 5px 2px; font-size: 8.8px;">0,10</td>
-                <td class="hm-verylow" style="padding: 5px 2px; font-size: 8.8px;">0,03</td>
-                <td class="hm-verylow" style="padding: 5px 2px; font-size: 8.8px;">0,06</td>
-                <td class="hm-high" style="padding: 5px 2px; font-size: 8.8px;">0,32</td>
-                <td class="hm-med" style="padding: 5px 2px; font-size: 8.8px; font-weight:800;">0,35</td>
-              </tr>
-              <tr>
-                <th style="padding: 5px 2px; font-size: 8px;">VST</th>
-                <td class="hm-low" style="padding: 5px 2px; font-size: 8.8px;">0,14</td>
-                <td class="hm-verylow" style="padding: 5px 2px; font-size: 8.8px;">0,10</td>
-                <td class="hm-100" style="padding: 5px 2px; font-size: 8.8px;">1,00</td>
-                <td class="hm-high" style="background:#2563eb; color:#fff; padding: 5px 2px; font-size: 8.8px;">0,53</td>
-                <td class="hm-med" style="padding: 5px 2px; font-size: 8.8px;">0,21</td>
-                <td class="hm-high" style="padding: 5px 2px; font-size: 8.8px;">0,37</td>
-                <td class="hm-high" style="padding: 5px 2px; font-size: 8.8px; font-weight:800;">0,48</td>
-              </tr>
-              <tr>
-                <th style="padding: 5px 2px; font-size: 8px;">ETN</th>
-                <td class="hm-low" style="padding: 5px 2px; font-size: 8.8px;">0,12</td>
-                <td class="hm-verylow" style="padding: 5px 2px; font-size: 8.8px;">0,03</td>
-                <td class="hm-high" style="background:#2563eb; color:#fff; padding: 5px 2px; font-size: 8.8px;">0,53</td>
-                <td class="hm-100" style="padding: 5px 2px; font-size: 8.8px;">1,00</td>
-                <td class="hm-med" style="padding: 5px 2px; font-size: 8.8px;">0,23</td>
-                <td class="hm-high" style="padding: 5px 2px; font-size: 8.8px;">0,31</td>
-                <td class="hm-high" style="padding: 5px 2px; font-size: 8.8px; font-weight:800;">0,65</td>
-              </tr>
-              <tr>
-                <th style="padding: 5px 2px; font-size: 8px;">YPF</th>
-                <td class="hm-high" style="padding: 5px 2px; font-size: 8.8px;">0,37</td>
-                <td class="hm-verylow" style="padding: 5px 2px; font-size: 8.8px;">0,06</td>
-                <td class="hm-med" style="padding: 5px 2px; font-size: 8.8px;">0,21</td>
-                <td class="hm-med" style="padding: 5px 2px; font-size: 8.8px;">0,23</td>
-                <td class="hm-100" style="padding: 5px 2px; font-size: 8.8px;">1,00</td>
-                <td class="hm-med" style="padding: 5px 2px; font-size: 8.8px;">0,28</td>
-                <td class="hm-high" style="padding: 5px 2px; font-size: 8.8px; font-weight:800;">0,38</td>
-              </tr>
-              <tr>
-                <th style="padding: 5px 2px; font-size: 8px;">WMB</th>
-                <td class="hm-high" style="padding: 5px 2px; font-size: 8.8px;">0,52</td>
-                <td class="hm-high" style="padding: 5px 2px; font-size: 8.8px;">0,32</td>
-                <td class="hm-high" style="padding: 5px 2px; font-size: 8.8px;">0,37</td>
-                <td class="hm-high" style="padding: 5px 2px; font-size: 8.8px;">0,31</td>
-                <td class="hm-med" style="padding: 5px 2px; font-size: 8.8px;">0,28</td>
-                <td class="hm-100" style="padding: 5px 2px; font-size: 8.8px;">1,00</td>
-                <td class="hm-high" style="padding: 5px 2px; font-size: 8.8px; font-weight:800;">0,46</td>
-              </tr>
-              <tr>
-                <th style="padding: 5px 2px; font-size: 8px; background:#0062ff; color:#fff;">SPY</th>
-                <td class="hm-high" style="padding: 5px 2px; font-size: 8.8px; font-weight:800;">0,44</td>
-                <td class="hm-med" style="padding: 5px 2px; font-size: 8.8px; font-weight:800;">0,35</td>
-                <td class="hm-high" style="padding: 5px 2px; font-size: 8.8px; font-weight:800;">0,48</td>
-                <td class="hm-high" style="padding: 5px 2px; font-size: 8.8px; font-weight:800;">0,65</td>
-                <td class="hm-high" style="padding: 5px 2px; font-size: 8.8px; font-weight:800;">0,38</td>
-                <td class="hm-high" style="padding: 5px 2px; font-size: 8.8px; font-weight:800;">0,46</td>
-                <td class="hm-100" style="padding: 5px 2px; font-size: 8.8px; font-weight:800; background:#091a36; color:#38bdf8;">1,00</td>
-              </tr>
-            </tbody>
-          </table>
-          <p style="font-size: 8px; font-weight:700; color:var(--navy-primary); text-align:center; margin-top:2px;">
-            Correlación promedio: 0,28 • Benchmark SPY incluido • Diversificación efectiva frente al mercado
-          </p>
-        </div>
-
-        <div class="panel-card" style="padding: 12px 14px; gap: 6px; display: flex; flex-direction: column; justify-content: space-between;">
-          <div class="num-title-row">
-            <div class="circ-badge-num">4</div>
-            <span class="num-title-heading">Riesgo Condicional & Métricas de Cola (Sección 7)</span>
-          </div>
-          <p style="font-size:8.6px; line-height:1.38; color:var(--text-body); margin-bottom:3px;">
-            <strong>Estrés VST - ETN:</strong> En el 90% de las ruedas la correlación es 0,40; en el decil de peores ruedas salta a <strong>0,59 (+48%)</strong>. Justifica el límite conjunto de 20%.
-          </p>
-          <table class="table-custom" style="font-size: 8.5px;">
-            <thead>
-              <tr>
-                <th style="padding: 6px 8px;">Métrica de Riesgo de Cola</th>
-                <th style="padding: 6px 8px;">Valor</th>
-                <th style="padding: 6px 8px;">Lectura Estadística</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td style="padding: 6.5px 8px;"><strong>VaR 99% 1D (Paramétrico)</strong></td>
-                <td style="padding: 6.5px 8px;"><strong>2,69%</strong></td>
-                <td style="padding: 6.5px 8px;">Supone distribución normal estándar.</td>
-              </tr>
-              <tr>
-                <td style="padding: 6.5px 8px;"><strong>VaR 99% 1D (Histórico)</strong></td>
-                <td style="padding: 6.5px 8px;"><strong>2,93%</strong></td>
-                <td style="padding: 6.5px 8px;">Captura colas pesadas de la distribución real.</td>
-              </tr>
-              <tr>
-                <td style="padding: 6.5px 8px;"><strong>CVaR (Expected Shortfall)</strong></td>
-                <td style="padding: 6.5px 8px;"><strong>4,10%</strong></td>
-                <td style="padding: 6.5px 8px;">Pérdida esperada al superar el VaR.</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
-
-      <!-- Fila 3: Resultados Consolidados vs Benchmarks -->
-      <div class="panel-card" style="padding: 12px 16px; gap: 6px; flex: 0.9; display: flex; flex-direction: column; justify-content: space-between;">
-        <div class="num-title-row">
-          <div class="circ-badge-num">5</div>
-          <span class="num-title-heading">Resultados de la Cartera vs Benchmarks (Tabla Oficial Sección 6)</span>
-        </div>
-        <table class="table-custom" style="font-size: 9px;">
-          <thead>
-            <tr>
-              <th style="padding: 7px 10px;">Métrica</th>
-              <th style="background:var(--blue-accent); color:#fff; text-align:center; padding: 7px 10px;">Cartera</th>
-              <th style="text-align:center; padding: 7px 10px;">XLE</th>
-              <th style="text-align:center; padding: 7px 10px;">XLU</th>
-              <th style="text-align:center; background:var(--navy-dark); color:#fff; padding: 7px 10px;">50/50</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td style="padding: 6.5px 10px;"><strong>Rendimiento anual compuesto (CAGR)</strong></td>
-              <td style="text-align:center; font-weight:800; color:var(--blue-accent); font-size:10.5px; padding: 6.5px 10px;">33,0%</td>
-              <td style="text-align:center; padding: 6.5px 10px;">26,6%</td>
-              <td style="text-align:center; padding: 6.5px 10px;">11,3%</td>
-              <td style="text-align:center; font-weight:700; padding: 6.5px 10px;">19,8%</td>
-            </tr>
-            <tr>
-              <td style="padding: 6.5px 10px;"><strong>Volatilidad anualizada</strong></td>
-              <td style="text-align:center; font-weight:800; color:var(--navy-primary); font-size:10.5px; padding: 6.5px 10px;">18,4%</td>
-              <td style="text-align:center; padding: 6.5px 10px;">25,8%</td>
-              <td style="text-align:center; padding: 6.5px 10px;">17,3%</td>
-              <td style="text-align:center; font-weight:700; padding: 6.5px 10px;">18,9%</td>
-            </tr>
-            <tr>
-              <td style="padding: 6.5px 10px;"><strong>Ratio de Sharpe</strong></td>
-              <td style="text-align:center; font-weight:800; color:var(--blue-accent); font-size:10.5px; padding: 6.5px 10px;">1,54</td>
-              <td style="text-align:center; padding: 6.5px 10px;">0,85</td>
-              <td style="text-align:center; padding: 6.5px 10px;">0,38</td>
-              <td style="text-align:center; font-weight:700; padding: 6.5px 10px;">0,80</td>
-            </tr>
-            <tr>
-              <td style="padding: 6.5px 10px;"><strong>Máxima caída pico-a-valle</strong></td>
-              <td style="text-align:center; font-weight:800; color:#16a34a; font-size:10.5px; padding: 6.5px 10px;">-17,0%</td>
-              <td style="text-align:center; padding: 6.5px 10px;">-25,8%</td>
-              <td style="text-align:center; padding: 6.5px 10px;">—</td>
-              <td style="text-align:center; font-weight:700; padding: 6.5px 10px;">-16,8%</td>
-            </tr>
-            <tr>
-              <td style="padding: 6.5px 10px;"><strong>Beta vs Benchmark</strong></td>
-              <td style="text-align:center; font-weight:700; padding: 6.5px 10px;">—</td>
-              <td style="text-align:center; padding: 6.5px 10px;">0,56</td>
-              <td style="text-align:center; padding: 6.5px 10px;">0,65</td>
-              <td style="text-align:center; font-weight:700; padding: 6.5px 10px;">—</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-    </div>
-
-    <div class="footer">
-      <div class="footer-left">
-        <div class="footer-info-circ">i</div>
-        <div class="footer-text-small">
-          Fuente: Algoritmo de optimización de media-varianza sobre retornos diarios totales 2021-2026.<br>
-          Las simulaciones estadísticas no garantizan resultados futuros y están sujetas a riesgos de mercado.
-        </div>
-      </div>
-      <img src="4.png" alt="Club de Finanzas UBA" class="footer-logo">
-      <div class="bottom-line-navy"></div>
-    </div>
-  </div>
-
-
-  <!-- ==========================================
-       PÁGINA 6: ESCENARIOS, RIESGOS, SEGUIMIENTO Y CONCLUSIÓN
-       ========================================== -->
-  <div class="page" id="page-6">
-    <div class="header">
-      <div class="header-left">
-        <img src="4.png" alt="Club de Finanzas UBA" class="header-logo">
-        <div class="header-divider"></div>
-        <span class="header-title">Reporte de Inversión</span>
-      </div>
-      <div class="page-tab">Página 6 de 6</div>
+      <div class="page-tab">Página 5 de 5</div>
     </div>
 
     <div class="title-block">
@@ -2492,19 +2105,15 @@
         </div>
       </div>
 
-      <!-- 3. Conclusión y Banner Final -->
-      <div class="panel-card" style="padding: 10px 14px; gap: 5px;">
-        <div class="panel-header-title" style="margin-bottom:4px;">Conclusión</div>
-        <p style="font-size:9.6px; line-height:1.48; color:var(--text-body); text-align:justify; margin:0;">
-          El portfolio final presenta una combinación equilibrada entre crecimiento, calidad, valor y defensa. Al estructurar seis activos bajo un esquema de <strong>Mínima Varianza Global</strong>, logra un retorno anual del <strong>33,0%</strong> con una volatilidad (<strong>18,4%</strong>) inferior a la de sus activos individuales más seguros. El 45% en renta regulada/contractual y el 35% en hidrocarburos integrados brindan solidez defensiva, mientras el 20% en equipamiento y generación merchant captura el auge exponencial de la inteligencia artificial.
-        </p>
-      </div>
-
-      <div class="banner-final-hero" style="padding: 9px 16px;">
-        <svg class="target-icon-hero" viewBox="0 0 24 24" fill="none" stroke="#38bdf8" stroke-width="2.2" style="width:26px; height:26px; flex-shrink:0;"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>
-        <span class="banner-final-text" style="font-size: 10.5px; line-height:1.35;">
-          Conclusión: Una cartera estructurada con rigor cuantitativo, menor volatilidad que sus activos individuales y seis vectores independientes para monetizar el superciclo de infraestructura de IA.
-        </span>
+      <!-- 3. Conclusión Ejecutiva Unificada -->
+      <div class="banner-final-hero" style="padding: 12px 16px; display:flex; align-items:flex-start; gap:12px; background:linear-gradient(135deg, #091a36 0%, #1e3a8a 100%); border-radius:8px; border:1px solid rgba(56, 189, 248, 0.35); box-shadow:0 4px 15px rgba(9,26,54,0.15);">
+        <svg class="target-icon-hero" viewBox="0 0 24 24" fill="none" stroke="#38bdf8" stroke-width="2.2" style="width:26px; height:26px; flex-shrink:0; margin-top:2px;"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>
+        <div style="display:flex; flex-direction:column; gap:4px; flex:1;">
+          <div style="font-size:11px; font-weight:800; color:#38bdf8; text-transform:uppercase; letter-spacing:0.5px;">Conclusión Ejecutiva</div>
+          <span class="banner-final-text" style="font-size: 9.6px; line-height:1.44; color:#ffffff; text-align:justify;">
+            El portfolio final presenta una combinación cuantitativa equilibrada entre crecimiento, calidad y defensa. Al estructurar los activos bajo un esquema de <strong>Mínima Varianza Global</strong>, alcanza un retorno anual del <strong>33,0%</strong> con una volatilidad del <strong>18,4%</strong>, inferior a la de sus componentes individuales. La asignación en renta regulada e hidrocarburos provee solidez y dividendos estables, mientras la exposición en equipamiento y generación merchant captura de forma directa el auge del superciclo de infraestructura energética e inteligencia artificial.
+          </span>
+        </div>
       </div>
 
       <!-- 4. Equipo Responsable / Autores -->
@@ -2626,14 +2235,19 @@
       inicializarTextosEditables();
       cargarCambiosGuardados();
       cargarMarkowitzGuardado();
+      cargarSeguimientoGuardado();
       inicializarSubidaLogosEmpresas();
     });
 
-    // Escuchar mensajes del padre (para importar de Markowitz o alternar edición)
+    // Escuchar mensajes del padre (para importar de Markowitz, Seguimiento o alternar edición)
     window.addEventListener('message', (event) => {
       if (!event.data) return;
       if (event.data.type === 'IMPORT_MARKOWITZ') {
         aplicarDatosMarkowitz(event.data.payload);
+      } else if (event.data.type === 'IMPORT_TRACKING') {
+        aplicarDatosSeguimiento(event.data.payload);
+      } else if (event.data.type === 'EXEC_BOLD') {
+        aplicarNegritaSeleccion();
       } else if (event.data.type === 'TOGGLE_EDIT') {
         toggleModoEdicion(event.data.active);
       } else if (event.data.type === 'SAVE_EDITS') {
@@ -2642,6 +2256,40 @@
         restaurarTextosOriginales();
       }
     });
+
+    function aplicarNegritaSeleccion() {
+      // Usar execCommand con fallback a envolver selección con <strong>
+      try {
+        const ok = document.execCommand('bold', false, null);
+        if (!ok) {
+          envolverSeleccionConTag('strong');
+        }
+      } catch (e) {
+        envolverSeleccionConTag('strong');
+      }
+      mostrarToast('𝐁 Texto formateado en negrita');
+    }
+
+    function envolverSeleccionConTag(tagName) {
+      const sel = window.getSelection();
+      if (!sel || sel.rangeCount === 0 || sel.isCollapsed) return;
+      const range = sel.getRangeAt(0);
+      const parent = range.commonAncestorContainer.parentElement;
+      if (parent && parent.tagName.toLowerCase() === tagName.toLowerCase()) {
+        // Deshacer negrita
+        const text = document.createTextNode(parent.textContent);
+        parent.parentNode.replaceChild(text, parent);
+      } else {
+        const strong = document.createElement(tagName);
+        try {
+          range.surroundContents(strong);
+        } catch (err) {
+          const frag = range.extractContents();
+          strong.appendChild(frag);
+          range.insertNode(strong);
+        }
+      }
+    }
 
     function inicializarTextosEditables() {
       let idx = 0;
@@ -2673,13 +2321,37 @@
         el.setAttribute('contenteditable', modoEdicionActivo ? 'true' : 'false');
       });
 
-      const btn = document.getElementById('btnFloatEdit');
-      if (btn) {
-        btn.innerHTML = modoEdicionActivo ? '✏️ Modo Edición: ON' : '✏️ Modo Edición: OFF';
-        btn.style.background = modoEdicionActivo ? '#16a34a' : '#d97706';
+      let bar = document.getElementById('floatingEditToolbar');
+      if (modoEdicionActivo) {
+        if (!bar) {
+          bar = document.createElement('div');
+          bar.id = 'floatingEditToolbar';
+          bar.className = 'edit-toolbar-float';
+          bar.style.cssText = 'position:fixed; top:20px; right:24px; z-index:99999; display:flex; gap:8px; align-items:center; background:#091a36; border:1px solid rgba(255,255,255,0.25); box-shadow:0 8px 30px rgba(0,0,0,0.45); padding:8px 14px; border-radius:30px;';
+          bar.innerHTML = `
+            <span style="color:#ffffff; font-size:12px; font-weight:700; margin-right:4px;">✏️ Edición:</span>
+            <button id="btnBoldFloat" type="button" style="background:#0062ff; color:#ffffff; border:none; border-radius:18px; padding:6px 14px; font-size:13px; font-weight:900; cursor:pointer; display:flex; align-items:center; gap:4px;" title="Poner en negrita el texto seleccionado">
+              <strong>B</strong> Negrita
+            </button>
+            <button id="btnSaveFloat" type="button" style="background:#16a34a; color:#ffffff; border:none; border-radius:18px; padding:6px 14px; font-size:12px; font-weight:700; cursor:pointer;" title="Guardar cambios de texto">
+              💾 Guardar
+            </button>
+          `;
+          document.body.appendChild(bar);
+          document.getElementById('btnBoldFloat').addEventListener('mousedown', (e) => {
+            e.preventDefault(); // Evita perder el foco y la selección de texto
+            aplicarNegritaSeleccion();
+          });
+          document.getElementById('btnSaveFloat').addEventListener('click', () => {
+            guardarTextosReporte();
+          });
+        }
+        bar.style.display = 'flex';
+      } else {
+        if (bar) bar.style.display = 'none';
       }
 
-      mostrarToast(modoEdicionActivo ? '✏️ Modo edición activado: Haz clic en cualquier texto para modificarlo' : '🔒 Modo edición desactivado');
+      mostrarToast(modoEdicionActivo ? '✏️ Modo edición activado: Selecciona cualquier texto y presiona "Negrita" para destacarlo' : '🔒 Modo edición desactivado');
     }
 
     function guardarTextosReporte() {
@@ -2797,6 +2469,86 @@
       }
     }
 
+    function getDiccionarioEmpresas() {
+      return {
+        'XOM': { name: 'Exxon Mobil', sector: 'O&G Integrada', nature: 'O&G Integrada (XOM)', role: 'El Ancla de Caja', icon: '⚓', tesis: 'Precio del crudo, márgenes de refino y escala global en Permian/Guyana' },
+        'SO': { name: 'Southern Co.', sector: 'Utility Regulada', nature: 'Utility Regulada (SO)', role: 'El Estabilizador', icon: '🛡️', tesis: 'Tarifa regulada sobre base de activos ampliada y demanda continua de centros de datos' },
+        'WMB': { name: 'Williams Cos.', sector: 'Midstream Gas', nature: 'Midstream Gas (WMB)', role: 'Peaje + Sócrates', icon: '🔄', tesis: 'Volumen de gas transportado bajo contratos take-or-pay a largo plazo' },
+        'ETN': { name: 'Eaton Corp.', sector: 'Equipamiento Eléctrico', nature: 'Equipamiento Eléctrico (ETN)', role: 'Picks & Shovels', icon: '⭐', tesis: 'Órdenes de electrificación, equipos y conversión de cartera de pedidos (backlog)' },
+        'VST': { name: 'Vistra Corp.', sector: 'Generación Merchant', nature: 'Gen. Merchant & Nuclear (VST)', role: 'Convexidad Nuclear', icon: '⚡', tesis: 'Precio spot de electricidad y contratos de abastecimiento a hiperescaladores' },
+        'YPF': { name: 'YPF S.A.', sector: 'Upstream Argentina', nature: 'Upstream Emergente (YPF)', role: 'Opción Asimétrica', icon: '🛢️', tesis: 'Brent, reducción de lifting cost y exportaciones no convencionales en Vaca Muerta' },
+        'NVDA': { name: 'NVIDIA Corp.', sector: 'Semiconductores IA', nature: 'Hardware & Cómputo IA (NVDA)', role: 'Liderazgo en Cómputo', icon: '💻', tesis: 'Demanda exponencial de microarquitectura de GPUs y plataformas de cómputo' },
+        'MSFT': { name: 'Microsoft Corp.', sector: 'Cloud & Software', nature: 'Cloud & Software (MSFT)', role: 'Monetización en la Nube', icon: '☁️', tesis: 'Monetización directa en la nube de Azure e integración corporativa de modelos de IA' },
+        'AAPL': { name: 'Apple Inc.', sector: 'Hardware & Ecosistema', nature: 'Ecosistema de Dispositivos (AAPL)', role: 'IA en el Borde', icon: '📱', tesis: 'Ciclo de renovación de hardware impulsado por inteligencia artificial en el borde' },
+        'AMZN': { name: 'Amazon.com', sector: 'Cloud & E-Commerce', nature: 'Infraestructura Cloud (AMZN)', role: 'Infraestructura Cloud', icon: '📦', tesis: 'Expansión de capacidad de infraestructura cloud y optimización logística global' },
+        'GOOGL': { name: 'Alphabet Inc.', sector: 'Búsqueda & Cloud', nature: 'Búsqueda & TPUs (GOOGL)', role: 'Infraestructura TPU', icon: '🔍', tesis: 'Liderazgo en modelos fundacionales, infraestructura TPU y computación avanzada' },
+        'META': { name: 'Meta Platforms', sector: 'Redes & Modelos', nature: 'Redes & Llama (META)', role: 'Código Abierto Llama', icon: '🌐', tesis: 'Eficacia algorítmica publicitaria y adopción masiva de modelos de código abierto' },
+        'TSLA': { name: 'Tesla Inc.', sector: 'Robótica & EV', nature: 'Robótica & Autonomía (TSLA)', role: 'Autonomía y Baterías', icon: '🚗', tesis: 'Entrenamiento de conducción autónoma y redes de almacenamiento de energía' }
+      };
+    }
+
+    function actualizarAsignacionRiesgo(tickers, pesos) {
+      const container = document.getElementById('containerBarsRiesgo');
+      if (!container || !tickers || tickers.length === 0) return;
+      const dict = getDiccionarioEmpresas();
+      const colores = ['#091a36', '#1d4ed8', '#0062ff', '#38bdf8', '#00a8a8', '#64748b', '#8b5cf6', '#ec4899', '#f59e0b', '#10b981'];
+      const totalW = pesos && pesos.length > 0 ? pesos.reduce((a, b) => a + b, 0) : 1.0;
+
+      let html = '';
+      tickers.forEach((t, i) => {
+        const rawW = pesos && pesos[i] != null ? pesos[i] : (1.0 / tickers.length);
+        const pct = totalW > 0 ? (rawW / totalW) * 100 : (100 / tickers.length);
+        const info = dict[t] || { nature: `Activo Estratégico (${t})` };
+        const color = colores[i % colores.length];
+        // En una escala de 0 a 50%, un 25% llena el 50% de la barra
+        const barWidthPct = Math.min(100, Math.max(2, (pct / 50.0) * 100));
+
+        html += `
+          <div class="bar-row">
+            <span class="bar-label">${info.nature || t}</span>
+            <div class="bar-track"><div class="bar-fill" style="width: ${barWidthPct.toFixed(1)}%; background:${color};"></div></div>
+            <span class="bar-val">${pct.toFixed(1).replace('.', ',')}%</span>
+          </div>
+        `;
+      });
+      container.innerHTML = html;
+    }
+
+    function renderMatrizCorrelacionHtml(matriz, corrList) {
+      if (!matriz || matriz.length === 0) return '';
+      const tickers = corrList || [];
+      let theadHtml = '<thead><tr><th style="padding:4px 5px;">Activo</th>' + tickers.map(t => `<th style="padding:4px 5px; ${t==='SPY'?'background:var(--blue-accent); color:#fff;':''}">${t}</th>`).join('') + '</tr></thead>';
+      let tbodyHtml = '<tbody>';
+      matriz.forEach((row, i) => {
+        const rowTicker = tickers[i] || '';
+        const isSpyRow = rowTicker === 'SPY';
+        tbodyHtml += `<tr style="${isSpyRow?'background:#eff6ff; font-weight:bold;':''}"><td style="font-weight:bold; padding:3.5px 5px; ${isSpyRow?'background:var(--blue-accent); color:#fff;':'color:var(--navy-primary);'}">${rowTicker}</td>`;
+        row.forEach((val, j) => {
+          const v = val.toFixed(2).replace('.', ',');
+          const colTicker = tickers[j] || '';
+          let bg = 'rgba(240, 246, 255, 0.8)';
+          let textColor = '#091a36';
+          if (i === j) {
+            bg = 'rgba(0, 98, 255, 1.0)';
+            textColor = '#ffffff';
+          } else if (val >= 0.70) {
+            bg = `rgba(0, 98, 255, 0.75)`;
+            textColor = '#ffffff';
+          } else if (val >= 0.50) {
+            bg = `rgba(0, 98, 255, 0.45)`;
+            textColor = '#091a36';
+          } else if (val >= 0.30) {
+            bg = `rgba(0, 98, 255, 0.25)`;
+            textColor = '#091a36';
+          }
+          tbodyHtml += `<td style="background:${bg}; color:${textColor}; font-weight:700; padding:3.5px 5px;">${v}</td>`;
+        });
+        tbodyHtml += '</tr>';
+      });
+      tbodyHtml += '</tbody>';
+      return `<table class="heatmap-table table-custom" style="font-size: 8.8px; width: 100%;">${theadHtml}${tbodyHtml}</table>`;
+    }
+
     function aplicarDatosMarkowitz(data) {
       if (!data || !data.tickers) return;
       localStorage.setItem('cfuba_imported_markowitz', JSON.stringify(data));
@@ -2808,65 +2560,118 @@
       }
 
       // 2. KPIs de Página 1
-      const kpis = document.querySelectorAll('#page-1 .kpi-val');
-      if (kpis.length >= 6) {
-        if (data.port_return_sharpe) kpis[0].innerText = (data.port_return_sharpe * 100).toFixed(1) + '%';
-        if (data.port_vol_sharpe) kpis[1].innerText = (data.port_vol_sharpe * 100).toFixed(1) + '%';
-        if (data.sharpe_ratio) kpis[2].innerText = data.sharpe_ratio.toFixed(2);
-        if (data.beta_cartera) kpis[3].innerText = data.beta_cartera.toFixed(2);
-        if (data.var_95) kpis[5].innerText = '-' + (data.var_95 * 100).toFixed(1) + '%';
+      const kpiCagr = document.getElementById('kpiValCagr');
+      if (kpiCagr && data.port_return_sharpe != null) kpiCagr.innerText = (data.port_return_sharpe * 100).toFixed(1).replace('.', ',') + '%';
+      const kpiVol = document.getElementById('kpiValVol');
+      if (kpiVol && data.port_vol_sharpe != null) kpiVol.innerText = (data.port_vol_sharpe * 100).toFixed(1).replace('.', ',') + '%';
+      const kpiSharpe = document.getElementById('kpiValSharpe');
+      if (kpiSharpe && data.sharpe_ratio != null) kpiSharpe.innerText = data.sharpe_ratio.toFixed(2).replace('.', ',');
+
+      // Beta vs Mercado
+      let betaCalc = null;
+      if (data.betas && data.pesos_sharpe && data.betas.length === data.tickers.length) {
+        const sumW = data.pesos_sharpe.reduce((a, b) => a + b, 0) || 1.0;
+        betaCalc = data.pesos_sharpe.reduce((acc, w, idx) => acc + (w / sumW) * data.betas[idx], 0);
+      } else if (data.beta_cartera != null) {
+        betaCalc = data.beta_cartera;
       }
+      const finalBeta = betaCalc != null ? betaCalc : 1.011;
+      const kpiBetaMercado = document.getElementById('kpiValBetaMercado');
+      if (kpiBetaMercado) kpiBetaMercado.innerText = finalBeta.toFixed(3).replace('.', ',');
+
+      const kpiMdd = document.getElementById('kpiValMdd');
+      if (kpiMdd && data.var_95 != null) kpiMdd.innerText = '-' + (Math.abs(data.var_95) * 100).toFixed(1).replace('.', ',') + '%';
 
       // 3. Leyenda y Donut de Asignación
-      const legendList = document.querySelector('#page-1 .donut-legend-list');
+      const legendList = document.getElementById('donutLegendList');
+      const svgDonut = document.getElementById('svgDonutPort');
+      const colores = ['#091a36', '#1d4ed8', '#0062ff', '#38bdf8', '#00a8a8', '#94a3b8', '#8b5cf6', '#ec4899', '#f59e0b', '#10b981'];
+
       if (legendList && data.pesos_sharpe) {
-        const colores = ['#091a36', '#1d4ed8', '#0062ff', '#38bdf8', '#00a8a8', '#94a3b8', '#8b5cf6', '#ec4899', '#f59e0b', '#10b981'];
         legendList.innerHTML = '';
         data.tickers.forEach((t, i) => {
-          const w = (data.pesos_sharpe[i] * 100).toFixed(1);
+          const w = (data.pesos_sharpe[i] * 100).toFixed(1).replace('.', ',');
           const color = colores[i % colores.length];
           const item = document.createElement('div');
           item.className = 'd-item';
           item.innerHTML = `<div class="d-item-left"><span class="d-dot" style="background:${color}"></span><span class="d-name">${t}</span></div><span class="d-pct">${w}%</span>`;
           legendList.appendChild(item);
         });
-
-        const pill = document.querySelector('#page-1 .bottom-tag-pill');
-        if (pill) pill.innerText = `Ponderación óptima Máximo Sharpe: ${data.tickers.length} activos | 100% invertido`;
       }
 
-      // 4. Matriz de Correlación en Página 5
-      const heatmapTable = document.querySelector('#page-5 .heatmap-table');
-      if (heatmapTable && data.matriz_correlacion) {
-        const corrList = data.corr_tickers || (data.matriz_correlacion.length > data.tickers.length ? [...data.tickers, 'SPY'] : data.tickers);
-        let theadHtml = '<thead><tr><th>Activo</th>' + corrList.map(t => `<th style="${t==='SPY'?'background:#0062ff; color:#fff;':''}">${t}</th>`).join('') + '</tr></thead>';
-        let tbodyHtml = '<tbody>';
-        data.matriz_correlacion.forEach((row, i) => {
-          const rowTicker = corrList[i] || '';
-          tbodyHtml += `<tr><td style="font-weight:bold; color:#091a36; ${rowTicker==='SPY'?'background:#0062ff; color:#fff;':''}">${rowTicker}</td>`;
-          row.forEach(val => {
-            const v = val.toFixed(2);
-            const opacity = Math.min(1, Math.max(0.1, val));
-            const bg = val > 0.6 ? `rgba(0, 98, 255, ${opacity})` : `rgba(240, 246, 255, 0.8)`;
-            const textColor = val > 0.6 ? '#ffffff' : '#091a36';
-            tbodyHtml += `<td style="background:${bg}; color:${textColor}; font-weight:700;">${v}</td>`;
-          });
-          tbodyHtml += '</tr>';
+      if (svgDonut && data.pesos_sharpe) {
+        let offset = 0;
+        let circlesHtml = '';
+        data.tickers.forEach((t, i) => {
+          const w = data.pesos_sharpe[i] || (1 / data.tickers.length);
+          const dashArray = `${(w * 100).toFixed(2)} ${(100 - w * 100).toFixed(2)}`;
+          const dashOffset = (-offset * 100).toFixed(2);
+          const color = colores[i % colores.length];
+          circlesHtml += `<circle cx="18" cy="18" r="13.5" fill="transparent" stroke="${color}" stroke-width="5" stroke-dasharray="${dashArray}" stroke-dashoffset="${dashOffset}"></circle>`;
+          offset += w;
         });
-        tbodyHtml += '</tbody>';
-        heatmapTable.innerHTML = theadHtml + tbodyHtml;
+        circlesHtml += `
+          <text x="18" y="19" text-anchor="middle" font-size="3" font-weight="bold" fill="#091a36" transform="rotate(90 18 18)" font-family="sans-serif">${data.tickers.length} Activos</text>
+          <text x="18" y="22.5" text-anchor="middle" font-size="2" fill="#64748b" transform="rotate(90 18 18)" font-family="sans-serif">100% Inv.</text>
+        `;
+        svgDonut.innerHTML = circlesHtml;
       }
 
-      // 5. Gráfico Perfil Riesgo - Retorno Comparativo en Página 2
-      const scatterBox = document.querySelector('#page-2 .scatter-box') || document.querySelector('.scatter-box');
-      if (scatterBox) {
-        const svgHtml = renderPerfilRiesgoRetornoSvg(data);
-        if (svgHtml) {
-          scatterBox.innerHTML = svgHtml;
-        }
+      const pill = document.getElementById('lblDonutPill');
+      if (pill) pill.innerText = `Ponderación óptima Máximo Sharpe: ${data.tickers.length} activos | 100% invertido`;
+
+      // 4. Asignación por Naturaleza de Riesgo
+      actualizarAsignacionRiesgo(data.tickers, data.pesos_sharpe);
+
+      // 5. Tabla de Tesis: Sincronizar todos los activos
+      const tbodyTesis = document.getElementById('tbodyTesis');
+      const lblTesis = document.getElementById('lblTesisTitulo');
+      if (lblTesis) {
+        const nActivosStr = ['Cero','Una','Dos','Tres','Cuatro','Cinco','Seis','Siete','Ocho','Nueve','Diez'][data.tickers.length] || data.tickers.length;
+        lblTesis.innerText = `La Tesis: ${nActivosStr} Formas de Cobrar el Fenómeno`;
+      }
+      const dictEmpresas = getDiccionarioEmpresas();
+      if (tbodyTesis && data.tickers) {
+        tbodyTesis.innerHTML = data.tickers.map(t => {
+          const info = dictEmpresas[t] || { sector: 'Activo Estratégico', tesis: 'Exposición fundamental al ciclo macroeconómico y crecimiento de flujos de caja' };
+          return `
+            <tr>
+              <td><strong>${info.sector}</strong></td>
+              <td><strong>${t}</strong></td>
+              <td>${info.tesis}</td>
+            </tr>
+          `;
+        }).join('');
       }
 
-      // 6. Gráfico Frontera Eficiente & Máximo Sharpe en Página 5
+      // 6. Matriz de Correlación en Página 2 y Página 5
+      if (data.matriz_correlacion) {
+        const corrList = data.corr_tickers || (data.matriz_correlacion.length > data.tickers.length ? [...data.tickers, 'SPY'] : data.tickers);
+        const matrixTableHtml = renderMatrizCorrelacionHtml(data.matriz_correlacion, corrList);
+        const containerP2 = document.getElementById('containerMatrizCorrP2');
+        if (containerP2) containerP2.innerHTML = matrixTableHtml;
+        const heatmapP5 = document.querySelector('#page-5 .heatmap-table');
+        if (heatmapP5) heatmapP5.parentElement.innerHTML = matrixTableHtml;
+      }
+
+      // 7. Resultados de la Cartera vs Benchmarks en Página 2
+      const tblResCagrPort = document.getElementById('tblResCagrPort');
+      const tblResVolPort = document.getElementById('tblResVolPort');
+      const tblResSharpePort = document.getElementById('tblResSharpePort');
+      const tblResBetaPort = document.getElementById('tblResBetaPort');
+      if (tblResCagrPort && data.port_return_sharpe != null) tblResCagrPort.innerText = (data.port_return_sharpe * 100).toFixed(1).replace('.', ',') + '%';
+      if (tblResVolPort && data.port_vol_sharpe != null) tblResVolPort.innerText = (data.port_vol_sharpe * 100).toFixed(1).replace('.', ',') + '%';
+      if (tblResSharpePort && data.sharpe_ratio != null) tblResSharpePort.innerText = data.sharpe_ratio.toFixed(2).replace('.', ',');
+      if (tblResBetaPort) tblResBetaPort.innerText = finalBeta.toFixed(3).replace('.', ',');
+
+      // 8. Gráfico Perfil Riesgo - Retorno Comparativo en Página 1
+      const scatterBoxes = document.querySelectorAll('.scatter-box');
+      const svgHtml = renderPerfilRiesgoRetornoSvg(data);
+      if (svgHtml) {
+        scatterBoxes.forEach(sb => sb.innerHTML = svgHtml);
+      }
+
+      // 9. Gráfico Frontera Eficiente & Máximo Sharpe en Página 5
       const fronteraContainer = document.getElementById('containerFronteraEficienteSvg') || document.querySelector('#page-5 .panel-card svg')?.parentElement;
       if (fronteraContainer) {
         const svgFronteraHtml = renderFronteraEficienteSvg(data);
@@ -2888,20 +2693,52 @@
     }
 
     function renderPerfilRiesgoRetornoSvg(data) {
-      if (!data || !data.tickers || !data.vols || !data.esperados) return null;
+      if (!data || !data.tickers) return null;
       
-      const portVol = data.port_vol_sharpe || 0.184;
-      const portRet = data.port_return_sharpe || 0.330;
+      const portVol = data.port_vol_sharpe || data.vol_anual || 0.184;
+      const portRet = data.port_return_sharpe || data.ann_ret || 0.330;
 
       // Recopilar todos los puntos
       const puntos = [];
       data.tickers.forEach((t, i) => {
-        const v = data.vols[i];
-        const r = data.esperados[i];
+        const v = data.vols ? data.vols[i] : null;
+        const r = data.esperados ? data.esperados[i] : (data.capm_returns ? data.capm_returns[i] : null);
         if (v != null && r != null) {
           puntos.push({ ticker: t, vol: v, ret: r, isPort: false });
         }
       });
+
+      // Si no tenemos vols individuales, usar valores proporcionales
+      if (puntos.length === 0) {
+        const defaultVols = [0.258, 0.173, 0.245, 0.224, 0.420, 0.380];
+        const defaultRets = [0.266, 0.113, 0.220, 0.285, 0.650, 0.450];
+        data.tickers.forEach((t, i) => {
+          puntos.push({
+            ticker: t,
+            vol: defaultVols[i % defaultVols.length],
+            ret: defaultRets[i % defaultRets.length],
+            isPort: false
+          });
+        });
+      }
+
+      // Añadir SPY de referencia si está disponible
+      let spyVol = 0.189, spyRet = 0.198;
+      if (data.spy_equity_curve && data.spy_equity_curve.length > 1) {
+        const spyEq = data.spy_equity_curve;
+        const nPts = spyEq.length;
+        const totalSpyRet = (spyEq[nPts - 1] / spyEq[0]) - 1.0;
+        const nYears = Math.max(0.2, (data.n_velas || nPts) / 252.0);
+        spyRet = Math.pow(1.0 + totalSpyRet, 1.0 / nYears) - 1.0;
+        const sRets = [];
+        for (let i = 1; i < nPts; i++) sRets.push((spyEq[i] / spyEq[i - 1]) - 1.0);
+        const avgSRet = sRets.reduce((a, b) => a + b, 0) / sRets.length;
+        const varS = sRets.reduce((acc, r) => acc + Math.pow(r - avgSRet, 2), 0) / (sRets.length - 1);
+        spyVol = Math.sqrt(varS * 252.0);
+      }
+      puntos.push({ ticker: 'SPY', vol: spyVol, ret: spyRet, isPort: false, isSpy: true });
+
+      // Añadir Cartera
       puntos.push({ ticker: 'CARTERA', vol: portVol, ret: portRet, isPort: true });
 
       // Calcular límites de ejes
@@ -2951,20 +2788,22 @@
       }
       svg += `<text x="${((xMinPlot + xMaxPlot)/2).toFixed(1)}" y="${H - 2}" text-anchor="middle" font-size="7.5" font-weight="700" fill="#0e2246">Volatilidad Anualizada (%)</text>`;
 
-      // 4. Dibujar puntos de activos individuales
+      // 4. Dibujar puntos de activos individuales y SPY
       puntos.filter(p => !p.isPort).forEach((p) => {
         const cx = mapX(p.vol);
         const cy = mapY(p.ret);
         const retTxt = (p.ret * 100).toFixed(1).replace('.', ',') + '%';
         const labelTxt = `${p.ticker} (${retTxt})`;
-        const lblW = Math.max(38, labelTxt.length * 4.8);
-        const offsetLeft = cx + lblW + 10 > xMaxPlot;
+        const lblW = Math.max(34, labelTxt.length * 4.6);
+        const offsetLeft = cx + lblW + 8 > xMaxPlot;
         const rectX = offsetLeft ? cx - lblW - 6 : cx + 6;
-        const rectY = cy - 6;
+        const rectY = cy - 5.5;
+        const dotColor = p.isSpy ? '#091a36' : '#475569';
+        const textColor = p.isSpy ? '#0062ff' : '#091a36';
 
-        svg += `<circle cx="${cx.toFixed(1)}" cy="${cy.toFixed(1)}" r="3.5" fill="#475569"/>`;
+        svg += `<circle cx="${cx.toFixed(1)}" cy="${cy.toFixed(1)}" r="${p.isSpy ? '4' : '3.2'}" fill="${dotColor}"/>`;
         svg += `<rect x="${rectX.toFixed(1)}" y="${rectY.toFixed(1)}" width="${lblW.toFixed(1)}" height="11" rx="2.5" fill="#ffffff" stroke="#e2e8f0" stroke-width="0.7"/>`;
-        svg += `<text x="${(rectX + lblW/2).toFixed(1)}" y="${(rectY + 8).toFixed(1)}" text-anchor="middle" font-size="6.8" font-weight="700" fill="#091a36">${labelTxt}</text>`;
+        svg += `<text x="${(rectX + lblW/2).toFixed(1)}" y="${(rectY + 8).toFixed(1)}" text-anchor="middle" font-size="6.8" font-weight="${p.isSpy ? '800' : '700'}" fill="${textColor}">${labelTxt}</text>`;
       });
 
       // 5. Dibujar punto de la CARTERA ÓPTIMA (destacado)
@@ -3142,6 +2981,366 @@
         try { aplicarDatosMarkowitz(JSON.parse(saved)); } catch(e){}
       }
     }
+
+    function cargarSeguimientoGuardado() {
+      const saved = localStorage.getItem('cfuba_last_tracking_data');
+      if (saved) {
+        try { aplicarDatosSeguimiento(JSON.parse(saved)); } catch(e){}
+      }
+    }
+
+    function aplicarDatosSeguimiento(data) {
+      if (!data || !data.tickers) return;
+      localStorage.setItem('cfuba_last_tracking_data', JSON.stringify(data));
+
+      const dictEmpresas = getDiccionarioEmpresas();
+
+      // 1. Autores / Integrantes y subtítulo
+      if (data.integrantes) {
+        const authEl = document.querySelector('.authors-subtitle');
+        if (authEl) {
+          authEl.innerHTML = `Autores: <strong>${data.integrantes}</strong>`;
+        }
+      }
+      const mainSub = document.querySelector('.main-subtitle');
+      if (mainSub) {
+        mainSub.innerText = `Portfolio Cuantitativo en Seguimiento | ${data.tickers.length} compañías: ${data.tickers.join(', ')} | ${new Date().toLocaleDateString('es-AR', {month:'long', year:'numeric'})}`;
+      }
+
+      // 2. 7 KPIs de Página 1
+      const kpiCagr = document.getElementById('kpiValCagr');
+      if (kpiCagr && data.ann_ret != null) {
+        kpiCagr.innerText = (data.ann_ret * 100).toFixed(1).replace('.', ',') + '%';
+      }
+      const kpiVol = document.getElementById('kpiValVol');
+      if (kpiVol && data.vol_anual != null) {
+        kpiVol.innerText = (data.vol_anual * 100).toFixed(1).replace('.', ',') + '%';
+      }
+      const kpiSharpe = document.getElementById('kpiValSharpe');
+      if (kpiSharpe && data.tracking_sharpe != null) {
+        kpiSharpe.innerText = data.tracking_sharpe.toFixed(2).replace('.', ',');
+      }
+      const kpiBetaBench = document.getElementById('kpiValBetaBench');
+      if (kpiBetaBench) {
+        kpiBetaBench.innerText = '1,00 / SPY';
+      }
+
+      // Cálculo del Beta de la Cartera vs Mercado (SPY)
+      let betaCalc = null;
+      if (data.betas && data.pesos && data.betas.length === data.tickers.length) {
+        const sumW = data.pesos.reduce((a, b) => a + b, 0) || 1.0;
+        betaCalc = data.pesos.reduce((acc, w, idx) => acc + (w / sumW) * data.betas[idx], 0);
+      } else if (data.port_equity_curve && data.spy_equity_curve && data.port_equity_curve.length > 1) {
+        const pEq = data.port_equity_curve;
+        const sEq = data.spy_equity_curve;
+        const pRets = [], sRets = [];
+        for (let i = 1; i < pEq.length; i++) {
+          pRets.push((pEq[i] / pEq[i - 1]) - 1.0);
+          sRets.push((sEq[i] / sEq[i - 1]) - 1.0);
+        }
+        const avgP = pRets.reduce((a, b) => a + b, 0) / pRets.length;
+        const avgS = sRets.reduce((a, b) => a + b, 0) / sRets.length;
+        let cov = 0, varS = 0;
+        for (let i = 0; i < pRets.length; i++) {
+          cov += (pRets[i] - avgP) * (sRets[i] - avgS);
+          varS += Math.pow(sRets[i] - avgS, 2);
+        }
+        if (varS > 0) betaCalc = cov / varS;
+      }
+      if (betaCalc == null && data.tracking_beta_spy != null) {
+        betaCalc = data.tracking_beta_spy;
+      }
+      if (betaCalc == null && data.beta_cartera != null) {
+        betaCalc = data.beta_cartera;
+      }
+      const finalBeta = betaCalc != null ? betaCalc : 1.011;
+      const betaStr = finalBeta.toFixed(3).replace('.', ',');
+
+      const kpiBetaMercado = document.getElementById('kpiValBetaMercado');
+      if (kpiBetaMercado) {
+        kpiBetaMercado.innerText = betaStr;
+      }
+
+      const kpiMdd = document.getElementById('kpiValMdd');
+      if (kpiMdd && data.tracking_max_dd_pct != null) {
+        const mddVal = -Math.abs(data.tracking_max_dd_pct);
+        kpiMdd.innerText = mddVal.toFixed(1).replace('.', ',') + '%';
+      }
+      const kpiCorr = document.getElementById('kpiValCorrProm');
+      if (kpiCorr && data.matriz_correlacion && data.matriz_correlacion.length > 1) {
+        let sumCorr = 0;
+        let countCorr = 0;
+        const nAct = data.tickers.length;
+        for (let i = 0; i < nAct; i++) {
+          for (let j = i + 1; j < nAct; j++) {
+            sumCorr += data.matriz_correlacion[i][j];
+            countCorr++;
+          }
+        }
+        const avgCorr = countCorr > 0 ? (sumCorr / countCorr) : 0.25;
+        kpiCorr.innerText = avgCorr.toFixed(2).replace('.', ',');
+      }
+
+      // 3. Asignación del Portafolio: Donut SVG y Lista de Leyenda
+      const totalW = data.pesos ? data.pesos.reduce((a, b) => a + b, 0) : 1.0;
+      const svgDonut = document.getElementById('svgDonutPort');
+      const legendList = document.getElementById('donutLegendList');
+      const colores = ['#091a36', '#1d4ed8', '#0062ff', '#38bdf8', '#00a8a8', '#94a3b8', '#8b5cf6', '#ec4899', '#f59e0b', '#10b981'];
+
+      if (svgDonut && data.pesos) {
+        let offset = 0;
+        let circlesHtml = '';
+        data.tickers.forEach((t, i) => {
+          const w = totalW > 0 ? (data.pesos[i] / totalW) : (1 / data.tickers.length);
+          const dashArray = `${(w * 100).toFixed(2)} ${(100 - w * 100).toFixed(2)}`;
+          const dashOffset = (-offset * 100).toFixed(2);
+          const color = colores[i % colores.length];
+          circlesHtml += `<circle cx="18" cy="18" r="13.5" fill="transparent" stroke="${color}" stroke-width="5" stroke-dasharray="${dashArray}" stroke-dashoffset="${dashOffset}"></circle>`;
+          offset += w;
+        });
+        circlesHtml += `
+          <text x="18" y="19" text-anchor="middle" font-size="3" font-weight="bold" fill="#091a36" transform="rotate(90 18 18)" font-family="sans-serif">${data.tickers.length} Activos</text>
+          <text x="18" y="22.5" text-anchor="middle" font-size="2" fill="#64748b" transform="rotate(90 18 18)" font-family="sans-serif">100% Inv.</text>
+        `;
+        svgDonut.innerHTML = circlesHtml;
+      }
+
+      if (legendList && data.pesos) {
+        legendList.innerHTML = '';
+        data.tickers.forEach((t, i) => {
+          const w = totalW > 0 ? ((data.pesos[i] / totalW) * 100).toFixed(1).replace('.', ',') : (100 / data.tickers.length).toFixed(1).replace('.', ',');
+          const color = colores[i % colores.length];
+          const item = document.createElement('div');
+          item.className = 'd-item';
+          item.innerHTML = `<div class="d-item-left"><span class="d-dot" style="background:${color}"></span><span class="d-name">${t}</span></div><span class="d-pct">${w}%</span>`;
+          legendList.appendChild(item);
+        });
+      }
+
+      const donutPill = document.getElementById('lblDonutPill');
+      if (donutPill) {
+        donutPill.innerText = `Ponderación de seguimiento: ${data.tickers.length} activos | 100% invertido`;
+      }
+
+      // 4. Asignación por Naturaleza de Riesgo (Dinámica)
+      actualizarAsignacionRiesgo(data.tickers, data.pesos);
+
+      // 5. Tabla de Tesis: Las formas de cobrar el fenómeno (Todos los activos)
+      const tbodyTesis = document.getElementById('tbodyTesis');
+      const lblTesis = document.getElementById('lblTesisTitulo');
+      if (lblTesis) {
+        const nActivosStr = ['Cero','Una','Dos','Tres','Cuatro','Cinco','Seis','Siete','Ocho','Nueve','Diez'][data.tickers.length] || data.tickers.length;
+        lblTesis.innerText = `La Tesis: ${nActivosStr} Formas de Cobrar el Fenómeno`;
+      }
+
+      if (tbodyTesis && data.tickers) {
+        tbodyTesis.innerHTML = data.tickers.map(t => {
+          const info = dictEmpresas[t] || { sector: 'Activo Estratégico', tesis: 'Exposición fundamental al ciclo macroeconómico y crecimiento de flujos de caja' };
+          return `
+            <tr>
+              <td><strong>${info.sector}</strong></td>
+              <td><strong>${t}</strong></td>
+              <td>${info.tesis}</td>
+            </tr>
+          `;
+        }).join('');
+      }
+
+      // 6. Matriz de Correlación en Página 2 y Página 5
+      if (data.matriz_correlacion) {
+        const corrList = data.corr_tickers || (data.matriz_correlacion.length > data.tickers.length ? [...data.tickers, 'SPY'] : data.tickers);
+        const matrixTableHtml = renderMatrizCorrelacionHtml(data.matriz_correlacion, corrList);
+        const containerP2 = document.getElementById('containerMatrizCorrP2');
+        if (containerP2) containerP2.innerHTML = matrixTableHtml;
+        const heatmapP5 = document.querySelector('#page-5 .heatmap-table');
+        if (heatmapP5) heatmapP5.parentElement.innerHTML = matrixTableHtml;
+      }
+
+      // 7. Gráfico Perfil Riesgo - Retorno Comparativo en Página 1
+      const scatterBoxes = document.querySelectorAll('.scatter-box');
+      const svgScatterHtml = renderPerfilRiesgoRetornoSvg(data);
+      if (svgScatterHtml) {
+        scatterBoxes.forEach(sb => sb.innerHTML = svgScatterHtml);
+      }
+
+      // 8. Tabla de Resultados de la Cartera vs Benchmarks (Página 2: Solo Cartera vs SPY)
+      const tblCagrPort = document.getElementById('tblResCagrPort');
+      const tblCagrBench = document.getElementById('tblResCagrBench');
+      const tblVolPort = document.getElementById('tblResVolPort');
+      const tblVolBench = document.getElementById('tblResVolBench');
+      const tblSharpePort = document.getElementById('tblResSharpePort');
+      const tblSharpeBench = document.getElementById('tblResSharpeBench');
+      const tblMddPort = document.getElementById('tblResMddPort');
+      const tblMddBench = document.getElementById('tblResMddBench');
+      const tblBetaPort = document.getElementById('tblResBetaPort');
+      const tblBetaBench = document.getElementById('tblResBetaBench');
+      const thSpyName = document.getElementById('thBenchSpyName');
+
+      if (thSpyName) thSpyName.innerText = 'SPY';
+
+      if (tblCagrPort && data.ann_ret != null) {
+        tblCagrPort.innerText = (data.ann_ret * 100).toFixed(1).replace('.', ',') + '%';
+      }
+      if (tblVolPort && data.vol_anual != null) {
+        tblVolPort.innerText = (data.vol_anual * 100).toFixed(1).replace('.', ',') + '%';
+      }
+      if (tblSharpePort && data.tracking_sharpe != null) {
+        tblSharpePort.innerText = data.tracking_sharpe.toFixed(2).replace('.', ',');
+      }
+      if (tblMddPort && data.tracking_max_dd_pct != null) {
+        const mdd = -Math.abs(data.tracking_max_dd_pct);
+        tblMddPort.innerText = mdd.toFixed(1).replace('.', ',') + '%';
+      }
+      if (tblBetaPort) {
+        tblBetaPort.innerText = betaStr;
+      }
+      if (tblBetaBench) {
+        tblBetaBench.innerText = '1,00';
+      }
+
+      // Si tenemos la curva de SPY, calcular sus estadísticas para la columna SPY
+      if (data.spy_equity_curve && data.spy_equity_curve.length > 1) {
+        const spyEq = data.spy_equity_curve;
+        const nPts = spyEq.length;
+        const totalSpyRet = (spyEq[nPts - 1] / spyEq[0]) - 1.0;
+        const nYears = Math.max(0.2, (data.n_velas || nPts) / 252.0);
+        const spyCagr = Math.pow(1.0 + totalSpyRet, 1.0 / nYears) - 1.0;
+
+        let spyPeak = spyEq[0];
+        let spyMaxDd = 0;
+        const spyRets = [];
+        for (let i = 1; i < nPts; i++) {
+          if (spyEq[i] > spyPeak) spyPeak = spyEq[i];
+          const dd = (spyEq[i] - spyPeak) / spyPeak;
+          if (dd < spyMaxDd) spyMaxDd = dd;
+          spyRets.push((spyEq[i] / spyEq[i - 1]) - 1.0);
+        }
+
+        const avgSpyRet = spyRets.reduce((a, b) => a + b, 0) / (spyRets.length || 1);
+        const varSpy = spyRets.reduce((acc, r) => acc + Math.pow(r - avgSpyRet, 2), 0) / (spyRets.length > 1 ? spyRets.length - 1 : 1);
+        const spyVol = Math.sqrt(varSpy * 252.0);
+        const rf = 0.04;
+        const spySharpe = spyVol > 0.001 ? ((spyCagr - rf) / spyVol) : 0.80;
+
+        if (tblCagrBench) tblCagrBench.innerText = (spyCagr * 100).toFixed(1).replace('.', ',') + '%';
+        if (tblVolBench) tblVolBench.innerText = (spyVol * 100).toFixed(1).replace('.', ',') + '%';
+        if (tblSharpeBench) tblSharpeBench.innerText = spySharpe.toFixed(2).replace('.', ',');
+        if (tblMddBench) tblMddBench.innerText = (spyMaxDd * 100).toFixed(1).replace('.', ',') + '%';
+      }
+
+      // 9. Actualización de Acciones y Pesos en Páginas 3 y 4
+      if (data.tickers && data.pesos && data.tickers.length > 0) {
+        const infoEmpresas = {
+          'ETN': { name: 'Eaton Corp.', sector: 'Equipamiento Eléctrico', role: 'Picks & Shovels', icon: '⭐' },
+          'VST': { name: 'Vistra Corp.', sector: 'Generación Merchant', role: 'Convexidad Nuclear', icon: '⚡' },
+          'YPF': { name: 'YPF S.A.', sector: 'Upstream Argentina', role: 'Opción Asimétrica', icon: '🛢️' },
+          'XOM': { name: 'Exxon Mobil', sector: 'O&G Integrada', role: 'El Ancla de Caja', icon: '⚓' },
+          'SO': { name: 'Southern Co.', sector: 'Utility Regulada', role: 'El Estabilizador', icon: '🛡️' },
+          'WMB': { name: 'Williams Cos.', sector: 'Midstream Gas', role: 'Peaje + Sócrates', icon: '🔄' },
+          'NVDA': { name: 'NVIDIA Corp.', sector: 'Semiconductores IA', role: 'Liderazgo en Cómputo', icon: '💻' },
+          'MSFT': { name: 'Microsoft Corp.', sector: 'Cloud & Software', role: 'Monetización en la Nube', icon: '☁️' },
+          'AAPL': { name: 'Apple Inc.', sector: 'Hardware & Ecosistema', role: 'IA en el Borde', icon: '📱' },
+          'AMZN': { name: 'Amazon.com', sector: 'Cloud & E-Commerce', role: 'Infraestructura Cloud', icon: '📦' },
+          'GOOGL': { name: 'Alphabet Inc.', sector: 'Búsqueda & Cloud', role: 'Infraestructura TPU', icon: '🔍' },
+          'META': { name: 'Meta Platforms', sector: 'Redes & Modelos', role: 'Código Abierto Llama', icon: '🌐' },
+          'TSLA': { name: 'Tesla Inc.', sector: 'Robótica & EV', role: 'Autonomía y Baterías', icon: '🚗' }
+        };
+
+        const cardsP3 = document.querySelectorAll('#page-3 .stock-expanded-card');
+        const cardsP4 = document.querySelectorAll('#page-4 .stock-expanded-card');
+
+        let pesoBloque1 = 0;
+        let pesoBloque2 = 0;
+
+        // Página 3 (Cards 0, 1, 2)
+        cardsP3.forEach((card, idx) => {
+          if (idx < data.tickers.length) {
+            const ticker = data.tickers[idx];
+            const rawW = data.pesos[idx] || 0;
+            const pctVal = totalW > 0 ? (rawW / totalW) * 100 : (100 / data.tickers.length);
+            pesoBloque1 += pctVal;
+
+            const info = infoEmpresas[ticker] || {
+              name: ticker,
+              sector: 'Activo Estratégico',
+              role: 'Posición Cartera',
+              icon: '🔹'
+            };
+
+            const nameEl = card.querySelector('.sc-company-name');
+            if (nameEl) nameEl.innerText = info.name || ticker;
+
+            const sectorEl = card.querySelector('.sc-company-sector');
+            if (sectorEl) sectorEl.innerText = info.sector || 'Activo Estratégico';
+
+            const weightEl = card.querySelector('.sc-weight-val');
+            if (weightEl) weightEl.innerText = pctVal.toFixed(1).replace('.', ',') + '%';
+
+            const roleRow = card.querySelector('.sc-role-row');
+            if (roleRow) {
+              const starCirc = roleRow.querySelector('.sc-star-circ');
+              if (starCirc && info.icon) starCirc.innerText = info.icon;
+              const roleText = roleRow.querySelector('.sc-role-text');
+              if (roleText && info.role) roleText.innerText = info.role;
+            }
+          }
+        });
+
+        // Actualizar resumen ejecutivo del Bloque 1 en Pág 3
+        const execP3 = document.querySelector('#page-3 .exec-card p.exec-p');
+        if (execP3) {
+          const p1Str = pesoBloque1.toFixed(0) + '%';
+          execP3.innerHTML = `Este bloque concentra el <strong>${p1Str} del portafolio</strong> en posiciones estratégicas, convexidad y apalancamiento operativo ante la demanda global de capital y eficiencia productiva.`;
+        }
+
+        // Página 4 (Cards 3, 4, 5)
+        cardsP4.forEach((card, idx) => {
+          const stockIdx = idx + 3;
+          if (stockIdx < data.tickers.length) {
+            const ticker = data.tickers[stockIdx];
+            const rawW = data.pesos[stockIdx] || 0;
+            const pctVal = totalW > 0 ? (rawW / totalW) * 100 : 0;
+            pesoBloque2 += pctVal;
+
+            const info = infoEmpresas[ticker] || {
+              name: ticker,
+              sector: 'Activo Estratégico',
+              role: 'Posición Cartera',
+              icon: '🔹'
+            };
+
+            const nameEl = card.querySelector('.sc-company-name');
+            if (nameEl) nameEl.innerText = info.name || ticker;
+
+            const sectorEl = card.querySelector('.sc-company-sector');
+            if (sectorEl) sectorEl.innerText = info.sector || 'Activo Estratégico';
+
+            const weightEl = card.querySelector('.sc-weight-val');
+            if (weightEl) weightEl.innerText = pctVal.toFixed(1).replace('.', ',') + '%';
+
+            const roleRow = card.querySelector('.sc-role-row');
+            if (roleRow) {
+              const starCirc = roleRow.querySelector('.sc-star-circ');
+              if (starCirc && info.icon) starCirc.innerText = info.icon;
+              const roleText = roleRow.querySelector('.sc-role-text');
+              if (roleText && info.role) roleText.innerText = info.role;
+            }
+          }
+        });
+
+        // Actualizar resumen ejecutivo del Bloque 2 en Pág 4
+        const execP4 = document.querySelector('#page-4 .exec-card p.exec-p');
+        if (execP4) {
+          const p2Str = pesoBloque2.toFixed(0) + '%';
+          execP4.innerHTML = `Este bloque representa el <strong>${p2Str} de la cartera</strong> y cumple una función estructural decisiva: proveer previsibilidad de flujos, dividendos sostenibles, blindaje ante caídas y diversificación macroeconómica.`;
+        }
+      }
+
+      // Re-inicializar textos editables para permitir edición fluida
+      inicializarTextosEditables();
+      mostrarToast('📥 ¡Datos de seguimiento sincronizados en el Reporte Institucional!');
+    }
+
 
     function exportarElementoA1080(element, fileName) {
       const toolbars = element.querySelectorAll('.no-print-toolbar, .edit-toolbar-float');

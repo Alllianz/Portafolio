@@ -1425,14 +1425,20 @@ const INDEX_HTML: &str = r##"<!DOCTYPE html>
         <div class="view-header">
           <div class="view-title-group">
             <h2>Reporte Institucional Completo (Club de Finanzas UBA)</h2>
-            <p>Maquetación oficial de 6 páginas editable en vivo: haz clic en cualquier texto para modificarlo e importa datos y gráficos reales de Markowitz.</p>
+            <p>Maquetación oficial de 5 páginas editable en vivo: haz clic en cualquier texto para modificarlo, formato en negrita e importa datos y gráficos de Markowitz y Seguimiento.</p>
           </div>
           <div style="display: flex; gap: 8px; flex-wrap: wrap;">
             <button id="btnParentEditReport" class="btn-action-primary" style="background: #D97706;" onclick="toggleModoEdicionReporte()">
               <span id="iconParentEdit">✏️</span> <span id="textParentEdit">Modo Edición: OFF</span>
             </button>
+            <button class="btn-action-primary" style="background: #1E293B; font-weight: 900;" onclick="aplicarNegritaReporte()" title="Pone en negrita el texto seleccionado">
+              <strong>B</strong> Negrita
+            </button>
             <button class="btn-action-primary" style="background: #0D9488;" onclick="importarDatosMarkowitzAReporte()">
               <span>📥</span> Importar de Markowitz
+            </button>
+            <button class="btn-action-primary" style="background: #0062FF;" onclick="importarDatosSeguimientoAReporteInstitucional()">
+              <span>📊</span> Importar de Seguimiento
             </button>
             <button class="btn-action-primary" style="background: #2563EB;" onclick="guardarTextosReporte()">
               <span>💾</span> Guardar Textos
@@ -2914,6 +2920,11 @@ const INDEX_HTML: &str = r##"<!DOCTYPE html>
           iframeSeg.contentWindow.postMessage({ type: 'IMPORT_TRACKING', payload: d }, '*');
         }
 
+        const iframeInst = document.getElementById('iframeReporte');
+        if (iframeInst && iframeInst.contentWindow) {
+          iframeInst.contentWindow.postMessage({ type: 'IMPORT_TRACKING', payload: d }, '*');
+        }
+
         document.getElementById('kpiTrackGain').innerText = d.tracking_gain_pct.toFixed(1) + '%';
         document.getElementById('kpiTrackMaxDd').innerText = d.tracking_max_dd_pct.toFixed(1) + '%';
         document.getElementById('kpiTrackSharpe').innerText = d.tracking_sharpe.toFixed(2);
@@ -3604,6 +3615,17 @@ const INDEX_HTML: &str = r##"<!DOCTYPE html>
       showToast(modoEdicionReporteActivo ? "✏️ Modo edición activado: haz clic en cualquier texto del informe para editarlo." : "🔒 Modo edición desactivado.");
     }
 
+    function aplicarNegritaReporte() {
+      if (!modoEdicionReporteActivo) {
+        toggleModoEdicionReporte();
+      }
+      const iframe = document.getElementById('iframeReporte');
+      if (iframe && iframe.contentWindow) {
+        iframe.contentWindow.postMessage({ type: 'EXEC_BOLD' }, '*');
+        showToast("𝐁 Negrita aplicada a la selección");
+      }
+    }
+
     function importarDatosMarkowitzAReporte() {
       if (!window.lastOptResult) {
         const saved = localStorage.getItem('cfuba_last_opt_result');
@@ -3619,6 +3641,28 @@ const INDEX_HTML: &str = r##"<!DOCTYPE html>
       if (iframe && iframe.contentWindow) {
         iframe.contentWindow.postMessage({ type: 'IMPORT_MARKOWITZ', payload: window.lastOptResult }, '*');
         showToast("📥 ¡Datos y gráficos de Markowitz importados al reporte!");
+      }
+    }
+
+    function importarDatosSeguimientoAReporteInstitucional() {
+      let data = window.lastTrackResult;
+      if (!data) {
+        const saved = localStorage.getItem('cfuba_last_tracking_data');
+        if (saved) {
+          try { data = JSON.parse(saved); } catch(e){}
+        }
+      }
+      if (!data) {
+        showToast("⚠️ Primero ejecute una simulación en la pestaña 'Seguimiento vs SPY'.");
+        return;
+      }
+      const integrantes = document.getElementById('trackIntegrantes')?.value.trim() || 'Fausto Crivelli (Presidente de Portafolio) · Luciano Mora (Analista Sr) · Florencia Beluzzo (Analista Sr)';
+      data.integrantes = integrantes;
+
+      const iframe = document.getElementById('iframeReporte');
+      if (iframe && iframe.contentWindow) {
+        iframe.contentWindow.postMessage({ type: 'IMPORT_TRACKING', payload: data }, '*');
+        showToast("📥 ¡Estadísticas, activos y tesis de Seguimiento sincronizados en el Reporte Institucional!");
       }
     }
 
